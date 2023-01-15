@@ -37,6 +37,7 @@ jobs:
           newVersion="$currentMainVersion".1
         fi
         git tag "$newVersion"
+        git push --tag
     - name: Build
       run: dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
