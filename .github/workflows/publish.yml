@@ -24,7 +24,7 @@ jobs:
     - name: Configure version
       run: |
         git fetch --tags
-        git describe --tags --abbrev=0
+        git describe --tags --abbrev=0 --always
     - name: Build
       run: dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
