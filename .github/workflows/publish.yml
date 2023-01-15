@@ -40,8 +40,8 @@ jobs:
         fi
     - name: Create tag
       uses: rickstaa/action-create-tag@v1
-        with:
-          tag: "Test tag"
+      with:
+        tag: "$newVersion"
     - name: Build
       run: dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
