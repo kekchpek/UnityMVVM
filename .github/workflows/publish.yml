@@ -38,6 +38,7 @@ jobs:
         else
           newVersion="$currentMainVersion".1
         fi
+        echo "newVersion=$(newVersion)"
         echo "newVersion=$(newVersion)" >> $GITHUB_ENV
     - name: Create tag
       uses: rickstaa/action-create-tag@v1
