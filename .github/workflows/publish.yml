@@ -23,8 +23,8 @@ jobs:
       run: dotnet restore
     - name: Configure version
       run: |
-        git fetch --tags
-        git describe --tags --abbrev=0 --always
+        git fetch --unshallow
+        git describe --tags --abbrev=0
     - name: Build
       run: dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
