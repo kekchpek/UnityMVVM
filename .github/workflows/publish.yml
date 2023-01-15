@@ -24,7 +24,19 @@ jobs:
     - name: Configure version
       run: |
         git fetch --unshallow
-        git describe --tags --abbrev=0
+        lastTag=$(git describe --tags --abbrev=0)
+        lastTagMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <<<"$lastTag")
+        currentVersion=$(cat VERSION)
+        currentMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <VERSION)
+        if [lastTagMainVersion=currentVersion]
+        then
+          lastTagBuildVersion=$(sed -n 's/^[0-9]*\.[0-9]*\.\([0-9]*\).*/\1/p' <<<"$lastTag")
+          newBuildVersion=$((lastTagBuildVersion+1))
+          newVersion="$lastTagMainVersion"."$newBuildVersion"
+        else
+          newVersion="$currentMainVersion".1
+        fi
+        git tag "$newVersion"
     - name: Build
       run: dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
