@@ -35,12 +35,12 @@ jobs:
           echo "Version the same."
           lastTagBuildVersion=$(sed -n 's/^[0-9]*\.[0-9]*\.\([0-9]*\).*/\1/p' <<<"$lastTag")
           newBuildVersion=$((lastTagBuildVersion+1))
-          newVersion="$(lastTagMainVersion).$(newBuildVersion)"
-          echo "newVersion=$(newVersion)"
-          echo "newVersion=$(newVersion)" >> $GITHUB_ENV
+          newVersion="$lastTagMainVersion"."$newBuildVersion"
+          echo "newVersion=$newVersion"
+          echo "newVersion=$newVersion" >> $GITHUB_ENV
         else
           echo "New version!"
-          newVersion="$(currentMainVersion).1"
+          newVersion="$currentMainVersion".1
           echo "newVersion=$(newVersion)"
           echo "newVersion=$(newVersion)" >> $GITHUB_ENV
         fi
