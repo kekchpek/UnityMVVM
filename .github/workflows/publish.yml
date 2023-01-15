@@ -11,7 +11,7 @@ jobs:
     environment: CommonEnv
     
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
 
     steps:
     - uses: actions/checkout@v3
@@ -37,6 +37,7 @@ jobs:
           newVersion="$currentMainVersion".1
         fi
         git tag "$newVersion"
+        git push https://"$PAT_TOKEN"@github.com/kekchpek/UnityMVVM.git
         git push --tag
     - name: Build
       run: dotnet build UnityMVVM.sln --no-dependencies --output build
