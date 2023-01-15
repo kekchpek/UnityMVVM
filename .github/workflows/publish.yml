@@ -38,10 +38,11 @@ jobs:
         else
           newVersion="$currentMainVersion".1
         fi
+        echo "newVersion=$(newVersion)" >> $GITHUB_ENV
     - name: Create tag
       uses: rickstaa/action-create-tag@v1
       with:
-        tag: ${newVersion}
+        tag: ${{env.newVersion}}
     - name: Build
       run: dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
