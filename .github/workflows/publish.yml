@@ -1,0 +1,30 @@
+name: publish
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    environment: CommonEnv
+    
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core SDK 3.1.x
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: '3.1.x'
+    - name: Restore .Net
+      run: dotnet restore
+    - name: Build
+      run: dotnet build UnityMVVM.sln --no-dependencies --output build
+    - name: Expose as artifact
+      uses: actions/upload-artifact@v2
+      with:
+       name: Build
+       path: build
