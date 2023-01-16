@@ -51,7 +51,7 @@ jobs:
         tag: ${{env.newVersion}}
     - name: Build
       run: |
-        VersionPrefix=22.33.23
+        sed -i "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" UnityMVVM/UnityMVVM.csproj
         dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
       uses: actions/upload-artifact@v2
