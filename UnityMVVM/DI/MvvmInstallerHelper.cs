@@ -33,7 +33,7 @@ namespace UnityMVVM.DI
         /// <typeparam name="TView">The type of a view</typeparam>
         /// <typeparam name="TViewModel">The type of a view model.</typeparam>
         /// <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
-        protected void InstallFactoryFor<TView, TViewModel, TViewModelImpl>(GameObject viewPrefab)
+        public void InstallFactoryFor<TView, TViewModel, TViewModelImpl>(GameObject viewPrefab)
         where TView : ViewBehaviour<TViewModel>
         where TViewModel : class, IViewModel
         where TViewModelImpl : class, TViewModel
