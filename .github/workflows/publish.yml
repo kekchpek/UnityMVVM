@@ -50,7 +50,9 @@ jobs:
       with:
         tag: ${{env.newVersion}}
     - name: Build
-      run: dotnet build UnityMVVM.sln --no-dependencies --output build
+      run: |
+        VersionPrefix=22.33.23
+        dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Expose as artifact
       uses: actions/upload-artifact@v2
       with:
