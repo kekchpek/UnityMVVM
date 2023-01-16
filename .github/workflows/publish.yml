@@ -41,6 +41,7 @@ jobs:
         else
           echo "New version!"
           newVersion="$currentMainVersion".1
+          VersionPrefix=$newVersion
           echo "newVersion=$newVersion"
           echo "newVersion=$newVersion" >> $GITHUB_ENV
         fi
