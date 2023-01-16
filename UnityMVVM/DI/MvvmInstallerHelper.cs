@@ -4,6 +4,7 @@ using Zenject;
 using UnityMVVM.ViewModelCore;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
+using System.Collections.Generic;
 
 namespace UnityMVVM.DI
 {

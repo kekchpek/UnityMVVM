@@ -1,4 +1,7 @@
-﻿using UnityMVVM.DI;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityMVVM.DI;
 using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
 

@@ -1,4 +1,6 @@
-﻿namespace UnityMVVM.ViewModelCore
+﻿using System;
+
+namespace UnityMVVM.ViewModelCore
 {
     public class Mutable<T> : IMutable<T>
     {

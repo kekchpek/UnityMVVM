@@ -1,4 +1,6 @@
-﻿namespace UnityMVVM.ViewModelCore
+﻿using System;
+
+namespace UnityMVVM.ViewModelCore
 {
     public interface IBindable<T>
     {
