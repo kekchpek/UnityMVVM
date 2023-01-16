@@ -51,7 +51,7 @@ jobs:
         dotnet build UnityMVVM.sln --no-dependencies --output build
     - name: Publish package to GitHub
       run: |
-       dotnet nuget add source --username kek_chpek --password ${{ secrets.PAT_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kek_chpek/index.json"
+       dotnet nuget add source --username kekchpek --password ${{ secrets.PAT_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kek_chpek/index.json"
        dotnet nuget push build/*.nupkg --api-key ${{secrets.PAT_TOKEN}} --source github
     - name: Publish package to Nuget
       run: |
