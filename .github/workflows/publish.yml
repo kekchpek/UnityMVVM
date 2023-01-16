@@ -45,14 +45,26 @@ jobs:
           echo "newVersion=$newVersion"
           echo "newVersion=$newVersion" >> $GITHUB_ENV
         fi
-    - name: Create tag
-      uses: rickstaa/action-create-tag@v1
-      with:
-        tag: ${{env.newVersion}}
     - name: Build
       run: |
         sed -i "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" UnityMVVM/UnityMVVM.csproj
         dotnet build UnityMVVM.sln --no-dependencies --output build
+    - name: Publish package to GitHub
+      run: |
+       dotnet nuget add source --username kek_chpek --password ${{ secrets.PAT_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kek_chpek/index.json"
+       dotnet nuget push build/*.nupkg --api-key ${{secrets.PAT_TOKEN}} --source github
+    - name: Publish package to Nuget
+      run: |
+       dotnet nuget push build/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+    - name: Zip build
+      run: zip UnityMVVM.zip build/UnityMVVM.dll build/UnityMVVM.xml
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ env.BUILD_VERSION }}
+        name: Release ${{ env.BUILD_VERSION }}
+        artifacts: "build/*.nupkg, UnityAuxiliaryTools.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Expose as artifact
       uses: actions/upload-artifact@v2
       with:

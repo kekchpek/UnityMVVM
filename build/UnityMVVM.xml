@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UnityMVVM</name>
+    </assembly>
+    <members>
+        <member name="M:UnityMVVM.DI.MvvmInstallerHelper.InstallFactoryFor``3(UnityEngine.GameObject)">
+            <summary>
+            Installs <see cref="T:UnityMVVM.ViewModelsFactory.IViewModelFactory`1"/> for specified View-ViewModel pair.
+            </summary>
+            <param name="viewPrefab">View prefab. It will be instantiated on creation. It should contains <see cref="!:TView"/> component inside.</param>
+            <param name="container">The container for created objects.</param>
+            <typeparam name="TView">The type of a view</typeparam>
+            <typeparam name="TViewModel">The type of a view model.</typeparam>
+            <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.IViewManager.Create``1(UnityMVVM.ViewModelCore.IViewModel)">
+            <summary>
+            Creates viewModel and corresponding view.
+            </summary>
+            <typeparam name="T">A view model type.</typeparam>
+            <param name="parent">Parent view model.</param>
+            <returns>Returns created view model.</returns>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.IViewManager.Open``1(System.String)">
+            <summary>
+            Creates view model and corresponding view. Destroys all views on layers above specified.
+            </summary>
+            <typeparam name="T">A view model type</typeparam>
+            <param name="viewLayerId">A layer, where view should be created.</param>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.IViewManager.Close(System.String)">
+            <summary>
+            Destroys all view on specified layer.
+            </summary>
+            <param name="viewLayerId">A layer on which views should be destroyed.</param>
+        </member>
+        <member name="P:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Id">
+            <summary>
+            The layer id.
+            </summary>
+        </member>
+        <member name="P:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Container">
+            <summary>
+            Container for views.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Clear">
+            <summary>
+            Destroy root view model.
+            </summary>
+        </member>
+        <member name="M:UnityMVVM.ViewManager.ViewLayer.IViewLayer.Set(UnityMVVM.ViewModelCore.IViewModel)">
+            <summary>
+            Set root view model. Destroy previous if it exists.
+            </summary>
+            <param name="viewModel">View model to be set.</param>
+        </member>
+    </members>
+</doc>
