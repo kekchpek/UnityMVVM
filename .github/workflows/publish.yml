@@ -61,10 +61,10 @@ jobs:
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
-        tag: ${{ env.BUILD_VERSION }}
-        name: Release ${{ env.BUILD_VERSION }}
+        tag: ${{ env.newVersion }}
+        name: Release ${{ env.newVersion }}
         artifacts: "build/*.nupkg, UnityAuxiliaryTools.zip"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT_TOKEN }}
     - name: Expose as artifact
       uses: actions/upload-artifact@v2
       with:
