@@ -10,16 +10,16 @@
 	<Description>MVVM pattern implemented for Unity3d game engine.</Description>
 	<PackageProjectUrl>https://github.com/kekchpek/UnityMVVM</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/kekchpek/UnityMVVM</RepositoryUrl>
-	<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\UnityAuxiliaryTools\LICENSE.md">
+    <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-    <None Include="..\..\UnityAuxiliaryTools\README.md">
+    <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
