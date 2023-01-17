@@ -15,7 +15,6 @@ namespace UnityMVVM.ViewModelCore
         /// </summary>
         public event Action OnDestroy;
 
-
         /// <summary>
         /// Layer, on which view was opened.
         /// </summary>

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
+using Zenject;
 
 namespace UnityMVVM.ViewModelCore
 {
@@ -13,11 +14,11 @@ namespace UnityMVVM.ViewModelCore
     /// </summary>
     public abstract class ViewModel : IViewModel
     {
-        private readonly IViewManager _viewManager;
-        private readonly IViewLayer _layer;
+        private IViewManager _viewManager;
+        private IViewLayer _layer;
 
         [CanBeNull]
-        private readonly IViewModel _parent;
+        private IViewModel _parent;
 
         private bool _destroyed;
 
@@ -34,7 +35,8 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewManager">View manager.</param>
         /// <param name="layer">Layer, on which it is placed.</param>
         /// <param name="parent">Parent view model. This view model will be destroyed with it.</param>
-        public ViewModel(IViewManager viewManager, IViewLayer layer, [CanBeNull] IViewModel parent)
+        [Inject]
+        public void SetInternalDependencies(IViewManager viewManager, IViewLayer layer, [CanBeNull] IViewModel parent)
         {
             _layer = layer;
             _viewManager = viewManager;

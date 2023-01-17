@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace UnityMVVM.ViewModelCore
+namespace UnityMVVM.ViewModelCore.Bindable
 {
 
     /// <inheritdoc cref="IMutable{T}"/>
@@ -17,7 +17,7 @@ namespace UnityMVVM.ViewModelCore
         /// <inheritdoc cref="IMutable{T}.Value"/>
         public T Value
         {
-            get => _value; 
+            get => _value;
             set
             {
                 _value = value;

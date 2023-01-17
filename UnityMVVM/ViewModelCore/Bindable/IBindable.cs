@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UnityMVVM.ViewModelCore
+namespace UnityMVVM.ViewModelCore.Bindable
 {
 
     /// <summary>
