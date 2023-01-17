@@ -8,6 +8,10 @@ using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager.ViewLayer
 {
+
+    /// <summary>
+    /// The layer to place a views.
+    /// </summary>
     public interface IViewLayer
     {
 

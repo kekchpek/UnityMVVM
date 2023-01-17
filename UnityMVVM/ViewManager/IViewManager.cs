@@ -3,6 +3,10 @@ using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager
 {
+
+    /// <summary>
+    /// Responsible for managing views and view models.
+    /// </summary>
     public interface IViewManager
     {
 

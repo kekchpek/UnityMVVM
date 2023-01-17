@@ -1,14 +1,20 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace UnityMVVM.ViewModelCore
 {
+
+    /// <inheritdoc cref="IMutable{T}"/>
     public class Mutable<T> : IMutable<T>
     {
 
+        [CanBeNull, AllowNull]
         private T _value;
 
         private event Action<T> _onChange;
 
+        /// <inheritdoc cref="IMutable{T}.Value"/>
         public T Value
         {
             get => _value; 
@@ -21,11 +27,17 @@ namespace UnityMVVM.ViewModelCore
 
         T IBindable<T>.Value => _value;
 
-        public Mutable(T initialValue = default)
+        /// <summary>
+        /// Default constructor to create changable mutable value.
+        /// </summary>
+        /// <param name="initialValue">Initial value.</param>
+        public Mutable([CanBeNull, AllowNull] T initialValue = default)
         {
             _value = initialValue;
         }
 
+        /// <inheritdoc cref="IBindable{T}.Bind(Action{T}, bool)"/>
+        /// <exception cref="ArgumentNullException"></exception>
         public void Bind(Action<T> handler, bool callImmediately = true)
         {
             if (handler == null)
@@ -39,6 +51,7 @@ namespace UnityMVVM.ViewModelCore
             _onChange += handler;
         }
 
+        /// <inheritdoc cref="IBindable{T}.Unbind(Action{T})"/>
         public void Unbind(Action<T> handler)
         {
             _onChange -= handler;

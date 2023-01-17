@@ -7,18 +7,28 @@ using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager
 {
+    /// <inheritdoc cref="IViewManager"/>
     public class ViewManagerImpl : IViewManager
     {
 
         private readonly IViewLayer[] _layers;
-        private readonly IViewsContainer _viewsContainer;
+        private readonly IViewsContainerAdapter _viewsContainer;
 
-        public ViewManagerImpl(IEnumerable<IViewLayer> layers, IViewsContainer viewsContainer)
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="layers">Layers to place views.</param>
+        /// <param name="viewsContainerAdapter">Adapter for views DI container.</param>
+        public ViewManagerImpl(IEnumerable<IViewLayer> layers, IViewsContainerAdapter viewsContainerAdapter)
         {
             _layers = layers.ToArray();
-            _viewsContainer = viewsContainer;
+            _viewsContainer = viewsContainerAdapter;
         }
 
+        /// <summary>
+        /// Closes all views on specified layer.
+        /// </summary>
+        /// <param name="viewLayerId">Id of layer to clear.</param>
         public void Close(string viewLayerId)
         {
             _layers.First(l => l.Id == viewLayerId).Clear();

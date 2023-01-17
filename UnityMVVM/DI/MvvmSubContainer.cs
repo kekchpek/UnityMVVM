@@ -1,18 +1,27 @@
-﻿using UnityMVVM.ViewModelsFactory;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 using UnityMVVM.ViewModelCore;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
 using System.Collections.Generic;
+using UnityMVVM.ViewModelCore.ViewModelsFactory;
+using UnityMVVM.ViewModelCore.ViewModelsContainer;
 
 namespace UnityMVVM.DI
 {
-    public class MvvmInstallerHelper
+    /// <summary>
+    /// Subcontainer for mvvm structure. It also modify parent container and inject there MVVM core control objects.
+    /// </summary>
+    public class MvvmSubContainer
     {
         private DiContainer _viewsContainer;
 
-        public MvvmInstallerHelper(DiContainer container, (string layerId, Transform layerContainer)[] layersData)
+        /// <summary>
+        /// Defautl constroctor.
+        /// </summary>
+        /// <param name="container">The parent container. There are MVVM core control object will be injected there.</param>
+        /// <param name="layersData">Data about presentation layers.</param>
+        public MvvmSubContainer(DiContainer container, (string layerId, Transform layerContainer)[] layersData)
         {
             _viewsContainer = container.CreateSubContainer();
             var layers = new IViewLayer[layersData.Length];
@@ -20,7 +29,7 @@ namespace UnityMVVM.DI
             {
                 layers[i] = new ViewLayerImpl(layersData[i].layerId, layersData[i].layerContainer);
             }
-            container.Bind<IViewsContainer>().FromInstance(new ViewsContainer(_viewsContainer));
+            container.Bind<IViewsContainerAdapter>().FromInstance(new ViewsContainerAdapter(_viewsContainer));
             container.Bind<IEnumerable<IViewLayer>>().FromInstance(layers);
             container.Bind<IViewManager>().To<ViewManagerImpl>().AsSingle();
         }
@@ -28,8 +37,7 @@ namespace UnityMVVM.DI
         /// <summary>
         /// Installs <see cref="IViewModelFactory{TViewModel}"/> for specified View-ViewModel pair.
         /// </summary>
-        /// <param name="viewPrefab">View prefab. It will be instantiated on creation. It should contains <see cref="TView"/> component inside.</param>
-        /// <param name="container">The container for created objects.</param>
+        /// <param name="viewPrefab">View prefab. It will be instantiated on creation. It should contains <typeparamref name="TView"/> component inside.</param>
         /// <typeparam name="TView">The type of a view</typeparam>
         /// <typeparam name="TViewModel">The type of a view model.</typeparam>
         /// <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
@@ -44,6 +52,12 @@ namespace UnityMVVM.DI
                 {
                     new TypeValuePair(typeof(GameObject), viewPrefab)
                 });
+            _viewsContainer.Bind(typeof(IViewModelsContainer<TViewModel>), typeof(IInitializable))
+                .To<ViewModelsContainer<TViewModel>>();
+#pragma warning disable CS8603 // Possible null reference return.
+            _viewsContainer.Bind<IViewModel>().FromMethod(x => 
+                x.Container.Resolve<IViewModelsContainer<TViewModel>>().Resolve());
+#pragma warning restore CS8603 // Possible null reference return.
         }
     }
 }
