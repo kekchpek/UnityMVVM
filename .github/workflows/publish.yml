@@ -22,7 +22,9 @@ jobs:
       with:
         dotnet-version: '6.0.x'
     - name: Restore .Net
-      run: dotnet restore
+      run: dotnet test --verbosity normal
+    - name: Run tests
+      run: dotnet test --verbo
     - name: Configure version
       run: |
         git fetch --unshallow
