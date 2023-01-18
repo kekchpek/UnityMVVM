@@ -1,5 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,23 +12,29 @@ namespace UnityMVVM.ViewManager.ViewLayer
 {
     internal class ViewLayerImpl : IViewLayer
     {
-        public string Id => throw new NotImplementedException();
 
-        public Transform Container => throw new NotImplementedException();
+        [AllowNull, CanBeNull]
+        private IViewModel _currentViewModel;
+
+        public string Id { get; }
+
+        public Transform Container { get; }
 
         public ViewLayerImpl(string id, Transform container)
         {
-
+            Id = id;
+            Container = container;
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            _currentViewModel?.Destroy();
         }
 
         public void Set(IViewModel viewModel)
         {
-            throw new NotImplementedException();
+            Clear();
+            _currentViewModel = viewModel;
         }
     }
 }
