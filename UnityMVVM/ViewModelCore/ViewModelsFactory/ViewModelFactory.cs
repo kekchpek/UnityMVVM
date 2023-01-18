@@ -52,6 +52,10 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             var view = _instantiator.InstantiatePrefabForComponent<TView>(_viewPrefab, viewLayer.Container);
             view.SetViewModel(viewModel);
             ViewModelCreated?.Invoke(viewModel);
+            if (viewModel is IInitializable initializable)
+            {
+                initializable.Initialize();
+            }
             return viewModel;
         }
     }
