@@ -53,7 +53,7 @@ namespace UnityMVVM.DI
                     new TypeValuePair(typeof(GameObject), viewPrefab)
                 });
             _viewsContainer.Bind(typeof(IViewModelsContainer<TViewModel>), typeof(IInitializable))
-                .To<ViewModelsContainer<TViewModel>>().AsSingle();
+                .To<IViewModelsContainer<TViewModel>>().AsSingle().NonLazy();
 #pragma warning disable CS8603 // Possible null reference return.
             _viewsContainer.Bind<TViewModel>().FromMethod(x => 
                 x.Container.Resolve<IViewModelsContainer<TViewModel>>().Resolve()).AsTransient();
