@@ -51,10 +51,11 @@ namespace UnityMVVM.ViewModelCore
         /// Creates a child view and view model.
         /// </summary>
         /// <typeparam name="T">Type of the view model.</typeparam>
+        /// <param name="payload">The view model payload.</param>
         /// <returns>Created view model.</returns>
-        protected T CreateSubView<T>() where T : class, IViewModel
+        protected T CreateSubView<T>([AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel
         {
-            var viewModel = _viewManager.Create<T>(this);
+            var viewModel = _viewManager.Create<T>(this, payload);
             return viewModel;
         }
 
@@ -63,9 +64,10 @@ namespace UnityMVVM.ViewModelCore
         /// </summary>
         /// <typeparam name="T">Type of the view model.</typeparam>
         /// <param name="viewLayerId">Id of the layer to open view on.</param>
-        protected void OpenView<T>(string viewLayerId) where T : class, IViewModel
+        /// <param name="payload">The view model payload.</param>
+        protected void OpenView<T>(string viewLayerId, [AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel
         {
-            _viewManager.Open<T>(viewLayerId);
+            _viewManager.Open<T>(viewLayerId, payload);
         }
 
         /// <inheritdoc cref="IViewModel.Destroy"/>

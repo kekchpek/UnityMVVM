@@ -20,4 +20,5 @@ namespace UnityMVVM.ViewModelCore
         void SetInternalDependencies(IViewManager viewManager, IViewLayer layer, [CanBeNull] IViewModel parent);
 
     }
+
 }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using UnityMVVM.DI;
 using UnityMVVM.ViewManager.ViewLayer;
@@ -25,28 +27,30 @@ namespace UnityMVVM.ViewManager
             _viewsContainer = viewsContainerAdapter;
         }
 
-        /// <summary>
-        /// Closes all views on specified layer.
-        /// </summary>
-        /// <param name="viewLayerId">Id of layer to clear.</param>
+
+        /// <inheritdoc cref="IViewManager.Close(string)"/>
         public void Close(string viewLayerId)
         {
             _layers.First(l => l.Id == viewLayerId).Clear();
         }
 
-        T IViewManager.Create<T>(IViewModel parent)
+        /// <inheritdoc cref="IViewManager.Create{T}(IViewModel, IPayload)"/>
+        public T Create<T>(IViewModel parent, [AllowNull, CanBeNull] IPayload payload = null)
+             where T : class, IViewModel
         {
             return _viewsContainer.ResolveFactory<T>().Create(parent.Layer.Container, parent);
         }
 
-        void IViewManager.Open<T>(string viewLayerId)
+        /// <inheritdoc cref="IViewManager.Open{T}(string, IPayload)"/>
+        public void Open<T>(string viewLayerId, [AllowNull, CanBeNull] IPayload payload = null)
+             where T : class, IViewModel
         {
             for(int i = _layers.Length - 1; i >= 0; i--)
             {
                 _layers[i].Clear();
                 if (_layers[i].Id == viewLayerId)
                 {
-                    var viewModel = _viewsContainer.ResolveFactory<T>().Create(_layers[i].Container, null);
+                    var viewModel = _viewsContainer.ResolveFactory<T>().Create(_layers[i].Container, null, payload);
                     _layers[i].Set(viewModel);
                     break;
                 }
