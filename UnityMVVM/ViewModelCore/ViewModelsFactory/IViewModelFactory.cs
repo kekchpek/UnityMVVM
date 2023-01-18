@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
+using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewModelCore.ViewModelsFactory
@@ -16,11 +17,11 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         /// <summary>
         /// Creates view and its view model
         /// </summary>
-        /// <param name="viewContainer">Container to place a view.</param>
+        /// <param name="viewLayer">Layer to place a view.</param>
         /// <param name="parent">Parent view model to set to the created view model.</param>
         /// <param name="payload">View model payload.</param>
         /// <returns>Returns created view model to conrol the view.</returns>
-        TViewModel Create(Transform viewContainer, 
+        TViewModel Create(IViewLayer viewLayer, 
             [CanBeNull, AllowNull] IViewModel parent,
             [CanBeNull, AllowNull] IPayload payload = null);
     }

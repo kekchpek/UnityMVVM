@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
+using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
 using Zenject;
 
@@ -32,8 +33,8 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             _viewPrefab = viewPrefab;
         }
 
-        /// <inheritdoc cref="IViewModelFactory{TViewModel}.Create(Transform, IViewModel, IPayload)"/>
-        public TViewModel Create(Transform viewContainer,
+        /// <inheritdoc cref="IViewModelFactory{TViewModel}.Create(IViewLayer, IViewModel, IPayload)"/>
+        public TViewModel Create(IViewLayer viewLayer,
             [CanBeNull, AllowNull] IViewModel parent, 
             [CanBeNull, AllowNull] IPayload payload = null)
         {
@@ -46,8 +47,9 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             {
                 implicitParams.Add(payload);
             }
+            implicitParams.Add(viewLayer);
             var viewModel = _instantiator.Instantiate<TViewModelImpl>(implicitParams);
-            var view = _instantiator.InstantiatePrefabForComponent<TView>(_viewPrefab, viewContainer);
+            var view = _instantiator.InstantiatePrefabForComponent<TView>(_viewPrefab, viewLayer.Container);
             view.SetViewModel(viewModel);
             ViewModelCreated?.Invoke(viewModel);
             return viewModel;

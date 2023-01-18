@@ -17,7 +17,7 @@ namespace UnityMVVM.ViewModelCore
         private IViewManager _viewManager;
         private IViewLayer _layer;
 
-        [CanBeNull]
+        [CanBeNull, AllowNull]
         private IViewModel _parent;
 
         private bool _destroyed;

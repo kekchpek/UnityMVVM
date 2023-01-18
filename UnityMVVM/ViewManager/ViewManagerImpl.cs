@@ -38,7 +38,7 @@ namespace UnityMVVM.ViewManager
         public T Create<T>(IViewModel parent, [AllowNull, CanBeNull] IPayload payload = null)
              where T : class, IViewModel
         {
-            return _viewsContainer.ResolveFactory<T>().Create(parent.Layer.Container, parent);
+            return _viewsContainer.ResolveFactory<T>().Create(parent.Layer, parent);
         }
 
         /// <inheritdoc cref="IViewManager.Open{T}(string, IPayload)"/>
@@ -50,7 +50,7 @@ namespace UnityMVVM.ViewManager
                 _layers[i].Clear();
                 if (_layers[i].Id == viewLayerId)
                 {
-                    var viewModel = _viewsContainer.ResolveFactory<T>().Create(_layers[i].Container, null, payload);
+                    var viewModel = _viewsContainer.ResolveFactory<T>().Create(_layers[i], null, payload);
                     _layers[i].Set(viewModel);
                     break;
                 }
