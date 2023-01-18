@@ -38,7 +38,7 @@ namespace UnityMVVM.ViewManager
         public T Create<T>(IViewModel parent, [AllowNull, CanBeNull] IPayload payload = null)
              where T : class, IViewModel
         {
-            return _viewsContainer.ResolveFactory<T>().Create(parent.Layer, parent);
+            return _viewsContainer.ResolveFactory<T>().Create(parent.Layer, parent, payload);
         }
 
         /// <inheritdoc cref="IViewManager.Open{T}(string, IPayload)"/>
