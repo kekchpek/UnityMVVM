@@ -36,7 +36,8 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="layer">Layer, on which it is placed.</param>
         /// <param name="parent">Parent view model. This view model will be destroyed with it.</param>
         [Inject]
-        public void SetInternalDependencies(IViewManager viewManager, IViewLayer layer, [CanBeNull] IViewModel parent)
+        public void SetInternalDependencies(IViewManager viewManager, IViewLayer layer, 
+            [CanBeNull, AllowNull, InjectOptional] IViewModel parent)
         {
             _layer = layer;
             _viewManager = viewManager;

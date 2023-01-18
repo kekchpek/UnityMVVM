@@ -38,7 +38,10 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             [CanBeNull, AllowNull] IPayload payload = null)
         {
             var implicitParams = new List<object>();
-            implicitParams.Add(parent);
+            if (parent != null)
+            {
+                implicitParams.Add(parent);
+            }
             if (payload != null)
             {
                 implicitParams.Add(payload);
