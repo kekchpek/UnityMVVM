@@ -46,7 +46,8 @@ namespace UnityMVVM.DI
         where TViewModel : class, IViewModel
         where TViewModelImpl : class, TViewModel
         {
-            _viewsContainer.Bind<IViewModelFactory<TViewModel>>().To<ViewModelFactory<TView, TViewModel, TViewModelImpl>>()
+            _viewsContainer.Bind(typeof(IViewModelFactoryInternal<TViewModel>), 
+                typeof(IViewModelFactory<TViewModel>)).To<ViewModelFactory<TView, TViewModel, TViewModelImpl>>()
                 .AsSingle()
                 .WithArgumentsExplicit(new []
                 {
