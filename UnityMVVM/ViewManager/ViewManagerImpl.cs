@@ -54,7 +54,7 @@ namespace UnityMVVM.ViewManager
                     _layers[i].Set(viewModel);
                     break;
                 }
-                if (i == 0)
+                if (i == -1)
                 {
                     throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
                 }
