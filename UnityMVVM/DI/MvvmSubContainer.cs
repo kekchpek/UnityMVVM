@@ -55,7 +55,7 @@ namespace UnityMVVM.DI
             _viewsContainer.Bind(typeof(IViewModelsContainer<TViewModel>), typeof(IInitializable))
                 .To<ViewModelsContainer<TViewModel>>().AsSingle();
 #pragma warning disable CS8603 // Possible null reference return.
-            _viewsContainer.Bind<IViewModel>().FromMethod(x => 
+            _viewsContainer.Bind<TViewModel>().FromMethod(x => 
                 x.Container.Resolve<IViewModelsContainer<TViewModel>>().Resolve()).AsTransient();
 #pragma warning restore CS8603 // Possible null reference return.
         }
