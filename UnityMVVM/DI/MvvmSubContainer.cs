@@ -29,8 +29,8 @@ namespace UnityMVVM.DI
             {
                 layers[i] = new ViewLayerImpl(layersData[i].layerId, layersData[i].layerContainer);
             }
-            container.Bind<IViewsContainerAdapter>().FromInstance(new ViewsContainerAdapter(_viewsContainer));
-            container.Bind<IEnumerable<IViewLayer>>().FromInstance(layers);
+            container.Bind<IViewsContainerAdapter>().FromInstance(new ViewsContainerAdapter(_viewsContainer)).AsSingle();
+            container.Bind<IEnumerable<IViewLayer>>().FromInstance(layers).AsSingle();
             container.Bind<IViewManager>().To<ViewManagerImpl>().AsSingle();
         }
 
@@ -53,10 +53,10 @@ namespace UnityMVVM.DI
                     new TypeValuePair(typeof(GameObject), viewPrefab)
                 });
             _viewsContainer.Bind(typeof(IViewModelsContainer<TViewModel>), typeof(IInitializable))
-                .To<ViewModelsContainer<TViewModel>>();
+                .To<ViewModelsContainer<TViewModel>>().AsSingle();
 #pragma warning disable CS8603 // Possible null reference return.
             _viewsContainer.Bind<IViewModel>().FromMethod(x => 
-                x.Container.Resolve<IViewModelsContainer<TViewModel>>().Resolve());
+                x.Container.Resolve<IViewModelsContainer<TViewModel>>().Resolve()).AsTransient();
 #pragma warning restore CS8603 // Possible null reference return.
         }
     }
