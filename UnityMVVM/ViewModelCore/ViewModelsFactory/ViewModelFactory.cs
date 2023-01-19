@@ -50,12 +50,12 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             implicitParams.Add(viewLayer);
             var viewModel = _instantiator.Instantiate<TViewModelImpl>(implicitParams);
             var view = _instantiator.InstantiatePrefabForComponent<TView>(_viewPrefab, viewLayer.Container);
-            view.SetViewModel(viewModel);
-            ViewModelCreated?.Invoke(viewModel);
             if (viewModel is IInitializable initializable)
             {
                 initializable.Initialize();
             }
+            view.SetViewModel(viewModel);
+            ViewModelCreated?.Invoke(viewModel);
             return viewModel;
         }
     }
