@@ -23,12 +23,17 @@ namespace UnityMVVM.ViewModelCore.Bindable
         /// <exception cref="ArgumentNullException">Handler is null.</exception>
         void Bind(Action<T> handler, bool callImmediately = true);
 
+        /// <inheritdoc cref="Bind(Action{T}, bool)"/>
+        void Bind(Action handler, bool callImmediately = true);
 
         /// <summary>
         /// Unbinds the value changing handler.
         /// </summary>
         /// <param name="handler">Value changing handler.</param>
         void Unbind(Action<T> handler);
+
+        /// <inheritdoc cref="Unbind(Action{T})"/>
+        void Unbind(Action handler);
 
     }
 }

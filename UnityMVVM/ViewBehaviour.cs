@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Diagnostics.CodeAnalysis;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM
@@ -13,11 +11,25 @@ namespace UnityMVVM
     public class ViewBehaviour<T> : MonoBehaviour, IViewInitializer<T> where T : class, IViewModel
     {
 
+        private bool _isViewModelDestoroyed;
+        private T _viewModel;
+
         /// <summary>
         /// Current view model.
         /// </summary>
-        [CanBeNull, AllowNull]
-        protected T ViewModel { get; private set; }
+        protected T ViewModel
+        {
+            get
+            {
+                if (_isViewModelDestoroyed)
+                    throw new System.Exception("View model was destroyed!");
+                return _viewModel;
+            }
+            private set
+            {
+                _viewModel = value;
+            }
+        }
 
 
         void IViewInitializer<T>.SetViewModel(T viewModel)
@@ -25,7 +37,7 @@ namespace UnityMVVM
             SetViewModelInternal(viewModel);
         }
 
-        private void SetViewModelInternal([CanBeNull, AllowNull] T viewModel)
+        private void SetViewModelInternal(T viewModel)
         {
             if (ViewModel != null)
             {
@@ -49,12 +61,12 @@ namespace UnityMVVM
 
         private void OnViewModelDestroyed()
         {
-            SetViewModelInternal(null);
-            Destroy(this);
+            _isViewModelDestoroyed = true;
+            Destroy(this.gameObject);
         }
 
         /// <summary>
-        /// Called after view mdoel cleared. Before changing also.
+        /// Called just befor the view model and the view destroyed.
         /// </summary>
         protected virtual void OnViewModelClear()
         {
