@@ -5,7 +5,6 @@ using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
 using System.Collections.Generic;
 using UnityMVVM.ViewModelCore.ViewModelsFactory;
-using UnityMVVM.ViewModelCore.ViewModelsContainer;
 
 namespace UnityMVVM.DI
 {
@@ -53,12 +52,6 @@ namespace UnityMVVM.DI
                 {
                     new TypeValuePair(typeof(GameObject), viewPrefab)
                 });
-            _viewsContainer.Bind(typeof(IViewModelsContainer<TViewModel>), typeof(IInitializable))
-                .To<ViewModelsContainer<TViewModel>>().AsSingle().NonLazy();
-#pragma warning disable CS8603 // Possible null reference return.
-            _viewsContainer.Bind<TViewModel>().FromMethod(x => 
-                x.Container.Resolve<IViewModelsContainer<TViewModel>>().Resolve()).AsTransient();
-#pragma warning restore CS8603 // Possible null reference return.
         }
     }
 }
