@@ -88,7 +88,10 @@ namespace UnityMVVM.ViewModelCore
         /// </summary>
         protected virtual void OnDestroyInternal()
         {
-            _parent.OnDestroy -= Destroy;
+            if (_parent != null)
+            {
+                _parent.OnDestroy -= Destroy;
+            }
         }
     }
 }
