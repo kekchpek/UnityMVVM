@@ -35,12 +35,12 @@ namespace UnityMVVM.ViewManager.ViewLayer
         {
             Clear();
             _currentViewModel = viewModel;
-            _currentViewModel.OnDestroy += OnViewModelDestoryed;
+            _currentViewModel.Destroyed += OnViewModelDestoryed;
         }
 
         private void OnViewModelDestoryed()
         {
-            _currentViewModel.OnDestroy -= OnViewModelDestoryed;
+            _currentViewModel.Destroyed -= OnViewModelDestoryed;
             _currentViewModel = null;
         }
 

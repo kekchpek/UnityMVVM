@@ -56,7 +56,7 @@ namespace UnityMVVM
         /// </summary>
         protected virtual void OnViewModelSet()
         {
-            ViewModel.OnDestroy += OnViewModelDestroyed;
+            ViewModel.Destroyed += OnViewModelDestroyed;
         }
 
         private void OnViewModelDestroyed()
@@ -70,7 +70,7 @@ namespace UnityMVVM
         /// </summary>
         protected virtual void OnViewModelClear()
         {
-            ViewModel.OnDestroy -= OnViewModelDestroyed;
+            ViewModel.Destroyed -= OnViewModelDestroyed;
         }
     }
 }

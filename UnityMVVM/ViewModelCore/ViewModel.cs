@@ -25,8 +25,8 @@ namespace UnityMVVM.ViewModelCore
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
 
-        /// <inheritdoc cref="IViewModel.OnDestroy"/>
-        public event Action OnDestroy;
+        /// <inheritdoc cref="IViewModel.Destroyed"/>
+        public event Action Destroyed;
 
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace UnityMVVM.ViewModelCore
             _parent = parent;
             if (_parent != null)
             {
-                _parent.OnDestroy += Destroy;
+                _parent.Destroyed += Destroy;
             }
         }
 
@@ -80,7 +80,7 @@ namespace UnityMVVM.ViewModelCore
             }
             _destroyed = true;
             OnDestroyInternal();
-            OnDestroy?.Invoke();
+            Destroyed?.Invoke();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace UnityMVVM.ViewModelCore
         {
             if (_parent != null)
             {
-                _parent.OnDestroy -= Destroy;
+                _parent.Destroyed -= Destroy;
             }
         }
     }
