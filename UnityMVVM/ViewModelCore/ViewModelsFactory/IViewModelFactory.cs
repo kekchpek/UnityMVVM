@@ -1,9 +1,6 @@
 ﻿using JetBrains.Annotations;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using UnityEngine;
 using UnityMVVM.ViewManager.ViewLayer;
-using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewModelCore.ViewModelsFactory
 {
@@ -12,7 +9,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
     /// Factory to create views and view models.
     /// </summary>
     /// <typeparam name="TViewModel">Type of view models, that will be created.</typeparam>
-    public interface IViewModelFactory<out TViewModel> where TViewModel : IViewModel
+    internal interface IViewModelFactory<out TViewModel> where TViewModel : IViewModel
     {
         /// <summary>
         /// Creates view and its view model

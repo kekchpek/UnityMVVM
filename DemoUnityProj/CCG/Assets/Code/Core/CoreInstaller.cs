@@ -32,34 +32,25 @@ namespace CCG.Core
         
         public override void InstallBindings()
         {
+            Container.UseAsMvvmContainer(new [] {(ViewLayerIds.Main, _viewRoot)});
 
-            var modelLayerContainer = Container.CreateSubContainer();
-            modelLayerContainer.Bind<IHandMutableModel>().To<HandModel>().AsSingle();
-            modelLayerContainer.Bind<IHandService>().To<HandService>().AsSingle();
-            modelLayerContainer.Bind<ICameraMutableModel>().To<CameraModel>().AsSingle();
-            modelLayerContainer.Bind<ICameraService>().To<CameraService>().AsSingle();
-            
-            Container.Bind<ICardFactory>().To<CardFactory>().AsSingle();
-            Container.Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
-            Container.Bind<IInputController>().FromComponentInNewPrefab(_inputControllerPrefab).AsSingle();
+            Container.FastBind<IHandMutableModel, IHandModel, HandModel>();
+            Container.FastBind<IHandService, HandService>();
+            Container.FastBind<ICameraMutableModel, ICameraModel, CameraModel>();
+            Container.FastBind<ICameraService, CameraService>();
+            Container.FastBind<IImageModel, ImageModel>();
+            Container.FastBind<IImageLoaderService, ImageLoaderService>();
+            Container.FastBind<ICardFactory, CardFactory>();
+            Container.FastBind<IPromiseFactory, PromiseFactory>();
             Container.Bind<IUnityExecutor>().To<UnityExecutor>().FromNewComponentOnNewGameObject().AsSingle();
-            Container.Bind<IPromiseFactory>().To<PromiseFactory>().AsSingle();
-            Container.Bind<IImageModel>().To<ImageModel>().AsSingle();
-            Container.Bind<IImageLoaderService>().To<ImageLoaderService>().AsSingle();
-            Container.Bind<ICameraService>().FromMethod(x => modelLayerContainer.Resolve<ICameraService>());
-            Container.Bind<ICameraModel>().FromMethod(x => modelLayerContainer.Resolve<ICameraMutableModel>());
-            Container.Bind<IHandModel>().FromMethod(x => modelLayerContainer.Resolve<IHandMutableModel>());
-            Container.Bind<IHandService>().FromMethod(x => modelLayerContainer.Resolve<IHandService>());
-
-            var mvvmContainer = new MvvmSubContainer(Container, new [] {(ViewLayerIds.Main, _viewRoot)});
-            mvvmContainer
-                .InstallFactoryFor<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(_mainViewPrefab);
-            mvvmContainer
-                .InstallFactoryFor<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>(_statsChangesPrefab);
-            mvvmContainer.
-                InstallFactoryFor<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(_handControllerPrefab);
-            mvvmContainer
-                .InstallFactoryFor<CardView, ICardViewModel, CardViewModel>(_cardPrefab);
+            
+            Container.GetViewModelsContainer().Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
+            Container.GetViewModelsContainer().Bind<IInputController>().FromComponentInNewPrefab(_inputControllerPrefab).AsSingle();
+            
+            Container.InstallView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(_mainViewPrefab);
+            Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>(_statsChangesPrefab);
+            Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(_handControllerPrefab);
+            Container.InstallView<CardView, ICardViewModel, CardViewModel>(_cardPrefab);
         }
     }
 }

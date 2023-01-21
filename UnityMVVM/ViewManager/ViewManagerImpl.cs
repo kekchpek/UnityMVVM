@@ -10,18 +10,18 @@ using UnityMVVM.ViewModelCore;
 namespace UnityMVVM.ViewManager
 {
     /// <inheritdoc cref="IViewManager"/>
-    public class ViewManagerImpl : IViewManager
+    internal class ViewManagerImpl : IViewManager
     {
 
         private readonly IViewLayer[] _layers;
-        private readonly IViewsContainerAdapter _viewsContainer;
+        private readonly IViewsModelsContainerAdapter _viewsContainer;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="layers">Layers to place views.</param>
         /// <param name="viewsContainerAdapter">Adapter for views DI container.</param>
-        public ViewManagerImpl(IEnumerable<IViewLayer> layers, IViewsContainerAdapter viewsContainerAdapter)
+        public ViewManagerImpl(IEnumerable<IViewLayer> layers, IViewsModelsContainerAdapter viewsContainerAdapter)
         {
             _layers = layers.ToArray();
             _viewsContainer = viewsContainerAdapter;
