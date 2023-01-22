@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityAuxiliaryTools.Promises;
+using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM
@@ -57,6 +59,23 @@ namespace UnityMVVM
         protected virtual void OnViewModelSet()
         {
             ViewModel.Destroyed += OnViewModelDestroyed;
+            ViewModel.CloseStarted += OnCloseStarted;
+        }
+
+        /// <summary>
+        /// Method that starts and handle close proccess.
+        /// </summary>
+        /// <returns>Promise, that indicates closing proccess.</returns>
+        protected virtual IPromise Close()
+        {
+            var promise = new ControllablePromise();
+            promise.Success();
+            return promise;
+        }
+
+        private void OnCloseStarted()
+        {
+            Close().OnSuccess(() => ViewModel.Destroy());
         }
 
         private void OnViewModelDestroyed()
@@ -71,6 +90,7 @@ namespace UnityMVVM
         protected virtual void OnViewModelClear()
         {
             ViewModel.Destroyed -= OnViewModelDestroyed;
+            ViewModel.Destroyed -= OnCloseStarted;
         }
     }
 }

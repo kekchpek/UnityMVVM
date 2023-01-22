@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityAuxiliaryTools.Promises;
 using UnityMVVM.ViewManager.ViewLayer;
 
 namespace UnityMVVM.ViewModelCore
@@ -11,9 +12,14 @@ namespace UnityMVVM.ViewModelCore
     {
 
         /// <summary>
+        /// Fired when view model receive start close call.
+        /// </summary>
+        event Action CloseStarted;
+
+        /// <summary>
         /// Fired on view model destroyed.
         /// </summary>
-        public event Action Destroyed;
+        event Action Destroyed;
 
         /// <summary>
         /// Layer, on which view was opened.
@@ -21,9 +27,15 @@ namespace UnityMVVM.ViewModelCore
         public IViewLayer Layer { get; }
 
         /// <summary>
-        /// Destroys the view modes and view.
+        /// Fire <see cref="CloseStarted"/> event and internal view model close handling.
         /// </summary>
-        public void Destroy();
+        /// <returns>Promise, that indicates close proccess.</returns>
+        IPromise Close();
+
+        /// <summary>
+        /// Destroys the view modes and view instantly.
+        /// </summary>
+        void Destroy();
 
     }
 }

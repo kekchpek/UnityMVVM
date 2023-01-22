@@ -28,7 +28,7 @@ namespace UnityMVVM.ViewManager.ViewLayer
 
         public void Clear()
         {
-            _currentViewModel?.Destroy();
+            _currentViewModel?.Close();
         }
 
         public void Set(IViewModel viewModel)

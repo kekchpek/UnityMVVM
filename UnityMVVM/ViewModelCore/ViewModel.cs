@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using UnityAuxiliaryTools.Promises;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
@@ -22,11 +23,16 @@ namespace UnityMVVM.ViewModelCore
 
         private bool _destroyed;
 
+        private IControllablePromise _closePromise;
+
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
 
         /// <inheritdoc cref="IViewModel.Destroyed"/>
         public event Action Destroyed;
+
+        /// <inheritdoc cref="IViewModel.CloseStarted"/>
+        public event Action CloseStarted;
 
 
         /// <summary>
@@ -79,8 +85,27 @@ namespace UnityMVVM.ViewModelCore
                 Debug.LogException(new InvalidOperationException("Trying destroy already destroyed view model."));
             }
             _destroyed = true;
+            _closePromise?.Success();
+            if (_parent != null)
+            {
+                _parent.Destroyed -= Destroy;
+            }
             OnDestroyInternal();
             Destroyed?.Invoke();
+        }
+
+        /// <inheritdoc cref="IViewModel.Close"/>
+        public IPromise Close()
+        {
+            if (_closePromise != null)
+            {
+                return _closePromise;
+            }
+            _closePromise = new ControllablePromise();
+            CloseStarted?.Invoke();
+            OnCloseStartedInternal();
+            return _closePromise;
+
         }
 
         /// <summary>
@@ -88,10 +113,15 @@ namespace UnityMVVM.ViewModelCore
         /// </summary>
         protected virtual void OnDestroyInternal()
         {
-            if (_parent != null)
-            {
-                _parent.Destroyed -= Destroy;
-            }
+
+        }
+
+        /// <summary>
+        /// Protected method to handle close call.
+        /// </summary>
+        protected virtual void OnCloseStartedInternal()
+        {
+
         }
     }
 }

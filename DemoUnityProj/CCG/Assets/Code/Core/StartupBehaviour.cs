@@ -1,5 +1,4 @@
 using CCG.Core.Camera;
-using CCG.Core.Input;
 using CCG.MVVM.MainScreen.ViewModel;
 using UnityEngine;
 using UnityMVVM.ViewManager;
