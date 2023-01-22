@@ -14,19 +14,24 @@ namespace UnityMVVM.ViewManager
         /// <summary>
         /// Creates viewModel and corresponding view.
         /// </summary>
-        /// <typeparam name="T">A view model type.</typeparam>
         /// <param name="parent">Parent view model.</param>
+        /// <param name="viewName">The identifier of the view.</param>
         /// <param name="payload">View model payload.</param>
         /// <returns>Returns created view model.</returns>
-        public T Create<T>(IViewModel parent, [AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel;
+        public IViewModel Create(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null);
+
+        /// <inheritdoc cref="Create(IViewModel, string, IPayload)"/>
+        /// <typeparam name="T">A view model type.</typeparam>
+        public T Create<T>(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel;
+
 
         /// <summary>
         /// Creates view model and corresponding view. Destroys all views on layers above specified.
         /// </summary>
-        /// <typeparam name="T">A view model type</typeparam>
         /// <param name="viewLayerId">A layer, where view should be created.</param>
         /// <param name="payload">View model payload.</param>
-        public void Open<T>(string viewLayerId, [AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel;
+        /// <param name="viewName">The identifier of the view.</param>
+        public void Open(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null);
 
         /// <summary>
         /// Destroys all view on specified layer.

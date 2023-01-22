@@ -1,6 +1,4 @@
-﻿using CCG.MVVM.Hand;
-using CCG.MVVM.Hand.Model;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CCG.MVVM.Card.Model
 {

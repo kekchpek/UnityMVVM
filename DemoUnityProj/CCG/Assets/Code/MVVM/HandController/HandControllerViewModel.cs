@@ -1,4 +1,4 @@
-﻿using CCG.MVVM.Hand.Service;
+﻿using CCG.Models.Hand.Service;
 using UnityMVVM.ViewModelCore;
 
 namespace CCG.MVVM.HandController

@@ -46,7 +46,7 @@ namespace CCG.MVVM.MainMenu
         public void OnPlayButtonPressed()
         {
             _viewManager.Close(ViewLayerIds.Main3d);
-            _viewManager.Open<IMainScreenViewModel>(ViewLayerIds.MainUI);
+            _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainScreen);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace UnityMVVM.DI
         /// </summary>
         /// <typeparam name="T">Type of view models to be created from factory.</typeparam>
         /// <returns>The factory, that creates views and view models.</returns>
-        IViewModelFactory<T> ResolveFactory<T>() where T : IViewModel;
+        IViewModelFactory<T> ResolveFactory<T>(string viewName) where T : IViewModel;
 
     }
 }

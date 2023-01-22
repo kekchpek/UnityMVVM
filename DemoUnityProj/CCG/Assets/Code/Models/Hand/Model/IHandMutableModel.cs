@@ -1,6 +1,6 @@
 ﻿using CCG.MVVM.Card.Model;
 
-namespace CCG.MVVM.Hand.Model
+namespace CCG.Models.Hand.Model
 {
     public interface IHandMutableModel : IHandModel
     {
@@ -15,5 +15,7 @@ namespace CCG.MVVM.Hand.Model
         /// </summary>
         /// <returns>Returns all cards in hand by mutable interface.</returns>
         ICardMutableModel[] GetCardsForMutation();
+
+        void RemoveAllCards();
     }
 }

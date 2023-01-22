@@ -42,11 +42,12 @@ namespace UnityMVVM.DI
         /// Installs <see cref="IViewModelFactory{TViewModel}"/> for specified View-ViewModel pair.
         /// </summary>
         /// <param name="container">MVVM container to configure.</param>
+        /// <param name="viewName">View identificator for openning.</param>
         /// <param name="viewPrefab">View prefab. It will be instantiated on creation. It should contains <typeparamref name="TView"/> component inside.</param>
         /// <typeparam name="TView">The type of a view</typeparam>
         /// <typeparam name="TViewModel">The type of a view model.</typeparam>
         /// <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
-        public static void InstallView<TView, TViewModel, TViewModelImpl>(this DiContainer container, GameObject viewPrefab)
+        public static void InstallView<TView, TViewModel, TViewModelImpl>(this DiContainer container, string viewName, GameObject viewPrefab)
         where TView : ViewBehaviour<TViewModel>
         where TViewModel : class, IViewModel
         where TViewModelImpl : class, TViewModel
@@ -55,8 +56,19 @@ namespace UnityMVVM.DI
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
                     $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
-            viewModelsContainer.Container.Bind(typeof(IViewModelFactoryInternal<TViewModel>), 
-                typeof(IViewModelFactory<TViewModel>)).To<ViewModelFactory<TView, TViewModel, TViewModelImpl>>()
+            var typesBindingList = new List<Type>
+            {
+                typeof(IViewModelFactoryInternal<TViewModel>),
+                typeof(IViewModelFactory<TViewModel>),
+            };
+            if (typeof(TViewModel) != typeof(IViewModel))
+            {
+                typesBindingList.Add(typeof(IViewModelFactory<IViewModel>));
+            }
+            viewModelsContainer.Container
+                .Bind(typesBindingList)
+                .WithId(viewName)
+                .To<ViewModelFactory<TView, TViewModel, TViewModelImpl>>()
                 .AsSingle()
                 .WithArgumentsExplicit(new []
                 {

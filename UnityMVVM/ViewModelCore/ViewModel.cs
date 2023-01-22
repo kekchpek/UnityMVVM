@@ -13,7 +13,7 @@ namespace UnityMVVM.ViewModelCore
     /// <summary>
     /// Base class for view model.
     /// </summary>
-    public abstract class ViewModel : IViewModel
+    public class ViewModel : IViewModel
     {
         private IViewManager _viewManager;
         private IViewLayer _layer;
@@ -54,27 +54,35 @@ namespace UnityMVVM.ViewModelCore
             }
         }
 
+        /// <inheritdoc cref="CreateSubView(string, IPayload)"/>
+        /// <typeparam name="T">Type of the view model.</typeparam>
+        protected T CreateSubView<T>(string viewName, [AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel
+        {
+            var viewModel = _viewManager.Create<T>(this, viewName, payload);
+            return viewModel;
+        }
+
         /// <summary>
         /// Creates a child view and view model.
         /// </summary>
-        /// <typeparam name="T">Type of the view model.</typeparam>
+        /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
         /// <returns>Created view model.</returns>
-        protected T CreateSubView<T>([AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel
+        protected IViewModel CreateSubView(string viewName, [AllowNull, CanBeNull] IPayload payload = null)
         {
-            var viewModel = _viewManager.Create<T>(this, payload);
+            var viewModel = _viewManager.Create(this, viewName, payload);
             return viewModel;
         }
 
         /// <summary>
         /// Clear layer and opens view on it.
         /// </summary>
-        /// <typeparam name="T">Type of the view model.</typeparam>
         /// <param name="viewLayerId">Id of the layer to open view on.</param>
+        /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
-        protected void OpenView<T>(string viewLayerId, [AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel
+        protected void OpenView(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
         {
-            _viewManager.Open<T>(viewLayerId, payload);
+            _viewManager.Open(viewLayerId, viewName, payload);
         }
 
         /// <inheritdoc cref="IViewModel.Destroy"/>

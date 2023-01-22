@@ -1,8 +1,8 @@
 ﻿using CCG.Config;
 using CCG.Core.Input;
 using CCG.Core.Screen;
+using CCG.Models.Hand.Model;
 using CCG.MVVM.Card.Model;
-using CCG.MVVM.Hand.Model;
 using UnityEngine;
 using UnityMVVM.ViewModelCore.Bindable;
 

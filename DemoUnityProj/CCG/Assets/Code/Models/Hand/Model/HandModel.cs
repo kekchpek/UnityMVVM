@@ -5,7 +5,7 @@ using CCG.MVVM.Card.Model;
 using UnityEngine;
 using UnityMVVM.ViewModelCore.Bindable;
 
-namespace CCG.MVVM.Hand.Model
+namespace CCG.Models.Hand.Model
 {
     public class HandModel : IHandMutableModel
     {
@@ -77,6 +77,14 @@ namespace CCG.MVVM.Hand.Model
         public ICardMutableModel[] GetCardsForMutation()
         {
             return _cards.ToArray();
+        }
+
+        public void RemoveAllCards()
+        {
+            while (_cards.Any())
+            {
+                _cards[0].Destroy();
+            }
         }
     }
 }

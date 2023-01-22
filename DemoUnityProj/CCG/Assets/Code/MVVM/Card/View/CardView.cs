@@ -184,6 +184,18 @@ namespace CCG.MVVM.Card.View
         protected override void OnViewModelClear()
         {
             base.OnViewModelClear();
+            
+            ViewModel.Health.Unbind(SetHealth);
+            ViewModel.Mana.Unbind(SetMana);
+            ViewModel.Attack.Unbind(SetAttack);
+            ViewModel.Description.Unbind(SetDescription);
+            ViewModel.Title.Unbind(SetTitle);
+            ViewModel.Icon.Unbind(SetIcon);
+            ViewModel.IsSelected.Unbind(SetIsSelected);
+            ViewModel.IsOverBoard.Unbind(SetIsOverBoard);
+            ViewModel.Rotation.Unbind(SetRotation);
+            ViewModel.Position.Unbind(SetPosition);
+            
             _attackTween.Kill();
             _healthTween.Kill();
             _manaTween.Kill();

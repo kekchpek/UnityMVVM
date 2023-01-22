@@ -27,7 +27,7 @@ namespace CCG.MVVM.MainMenu
 
         public void Initialize()
         {
-            _viewManager.Open<IMainMenuViewModelUi>(ViewLayerIds.MainUI, new MainMenuPayloadUi(this));
+            _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainMenuUi, new MainMenuPayloadUi(this));
         }
 
         public void OnStateChangeCompleted()

@@ -1,9 +1,9 @@
-﻿using CCG.Models.ImageModel;
+﻿using CCG.Models.Hand.Model;
+using CCG.Models.ImageModel;
 using CCG.MVVM.Card.Model;
-using CCG.MVVM.Hand.Model;
 using UnityEngine;
 
-namespace CCG.MVVM.Hand.Service
+namespace CCG.Models.Hand.Service
 {
     public class HandService : IHandService
     {
@@ -66,6 +66,11 @@ namespace CCG.MVVM.Hand.Service
                 _changingCardIndex = 0;
             ChangeRandomStat(cards[_changingCardIndex]);
             _changingCardIndex++;
+        }
+
+        public void ClearHand()
+        {
+            _handModel.RemoveAllCards();
         }
 
         private void ChangeRandomStat(ICardMutableModel card)

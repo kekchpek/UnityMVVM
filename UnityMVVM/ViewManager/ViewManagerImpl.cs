@@ -34,15 +34,20 @@ namespace UnityMVVM.ViewManager
             _layers.First(l => l.Id == viewLayerId).Clear();
         }
 
-        /// <inheritdoc cref="IViewManager.Create{T}(IViewModel, IPayload)"/>
-        public T Create<T>(IViewModel parent, [AllowNull, CanBeNull] IPayload payload = null)
+        /// <inheritdoc cref="IViewManager.Create{T}(IViewModel, string, IPayload)"/>
+        public T Create<T>(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
              where T : class, IViewModel
         {
-            return _viewsContainer.ResolveFactory<T>().Create(parent.Layer, parent, payload);
+            return _viewsContainer.ResolveFactory<T>(viewName).Create(parent.Layer, parent, payload);
         }
 
-        /// <inheritdoc cref="IViewManager.Open{T}(string, IPayload)"/>
-        public void Open<T>(string viewLayerId, [AllowNull, CanBeNull] IPayload payload = null)
+        public IViewModel Create(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
+        {
+            return Create<IViewModel>(parent, viewName, payload);
+        }
+
+        /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
+        public void Open<T>(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
              where T : class, IViewModel
         {
             for(int i = _layers.Length - 1; i >= 0; i--)
@@ -50,7 +55,7 @@ namespace UnityMVVM.ViewManager
                 _layers[i].Clear();
                 if (_layers[i].Id == viewLayerId)
                 {
-                    var viewModel = _viewsContainer.ResolveFactory<T>().Create(_layers[i], null, payload);
+                    var viewModel = _viewsContainer.ResolveFactory<T>(viewName).Create(_layers[i], null, payload);
                     _layers[i].Set(viewModel);
                     break;
                 }
@@ -59,6 +64,11 @@ namespace UnityMVVM.ViewManager
                     throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
                 }
             }
+        }
+
+        public void Open(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
+        {
+            Open<IViewModel>(viewLayerId, viewName, payload);
         }
     }
 }

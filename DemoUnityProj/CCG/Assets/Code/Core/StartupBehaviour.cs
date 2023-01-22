@@ -33,7 +33,7 @@ namespace CCG.Core
             _cameraService.SetDefaultCamera(_mainCamera);
             _uiService.SetCanvasDistance(_mainCanvas.planeDistance);
             _uiService.SetCanvas(_mainCanvas);
-            _viewManager.Open<IMainMenuViewModel3d>(ViewLayerIds.Main3d);
+            _viewManager.Open(ViewLayerIds.Main3d, ViewNames.MainMenu3d);
         }
     }
 }

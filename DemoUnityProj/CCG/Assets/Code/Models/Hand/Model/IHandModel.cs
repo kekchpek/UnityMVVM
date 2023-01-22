@@ -2,7 +2,7 @@
 using CCG.MVVM.Card.Model;
 using UnityMVVM.ViewModelCore.Bindable;
 
-namespace CCG.MVVM.Hand.Model
+namespace CCG.Models.Hand.Model
 {
     public interface IHandModel
     {
