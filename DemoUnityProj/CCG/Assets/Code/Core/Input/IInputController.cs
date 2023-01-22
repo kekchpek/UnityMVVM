@@ -7,6 +7,6 @@ namespace CCG.Core.Input
     {
         event Action MouseUp;
         event Action<Vector2> MousePositionChanged;
-        Vector2 MousePosition { get; }
+        Vector2 MouseWorldPositionOnCanvas { get; }
     }
 }

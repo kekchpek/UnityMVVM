@@ -2,6 +2,8 @@
 {
     public interface ICameraService
     {
-        void SetCamera(UnityEngine.Camera camera);
+        void SetDefaultCamera(UnityEngine.Camera camera);
+        void UseDefaultCamera();
+        void UseCamera(UnityEngine.Camera camera);
     }
 }

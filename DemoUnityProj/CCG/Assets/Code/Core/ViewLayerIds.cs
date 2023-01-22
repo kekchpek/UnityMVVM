@@ -2,6 +2,7 @@
 {
     public static class ViewLayerIds
     {
-        public static string Main => "Main";
+        public static string MainUI => "MainUi";
+        public static string Main3d => "Main3d";
     }
 }

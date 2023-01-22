@@ -24,6 +24,7 @@ namespace Zenject
 
         public virtual void InstallBindings()
         {
+            throw new NotImplementedException();
         }
     }
 }

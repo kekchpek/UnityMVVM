@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CCG.Services.ImageLoaderService;
 using UnityAuxiliaryTools.Promises;
-using UnityAuxiliaryTools.Promises.Factory;
 using UnityEngine;
 
 namespace CCG.Models.ImageModel
@@ -11,24 +10,21 @@ namespace CCG.Models.ImageModel
     public class ImageModel : IImageModel
     {
         private readonly IImageLoaderService _imageLoaderService;
-        private readonly IPromiseFactory _promiseFactory;
 
         private int _pendingImagesCount;
         private IControllablePromise _initPromise;
 
         private readonly IDictionary<string, Texture2D> _images = new Dictionary<string, Texture2D>();
 
-        public ImageModel(IImageLoaderService imageLoaderService,
-            IPromiseFactory promiseFactory)
+        public ImageModel(IImageLoaderService imageLoaderService)
         {
             _imageLoaderService = imageLoaderService;
-            _promiseFactory = promiseFactory;
         }
 
         public IPromise LoadImages()
         {
             _pendingImagesCount = Config.ConfigData.ImageInitBuffer;
-            _initPromise = _promiseFactory.CreatePromise();
+            _initPromise = new ControllablePromise();
             for (var i = 0; i < Config.ConfigData.ImageInitBuffer; i++)
             {
                 _imageLoaderService.LoadRandomImage()
@@ -60,7 +56,6 @@ namespace CCG.Models.ImageModel
 
         private void CheckIsInitialized()
         {
-            Debug.Log(_pendingImagesCount);
             if (--_pendingImagesCount == 0)
             {
                 _initPromise.Success();

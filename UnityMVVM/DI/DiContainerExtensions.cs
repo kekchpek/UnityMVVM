@@ -32,8 +32,8 @@ namespace UnityMVVM.DI
 
             container.Bind<IViewsModelsContainerAdapter>().FromInstance(new ViewModelsContainerAdapter(viewModelsContainer)).AsSingle();
             container.Bind<IViewsContainerAdapter>().FromInstance(viewsContainerAdapter).AsSingle();
-            container.FastBind<IViewManager, ViewManagerImpl>();
             container.Bind<IEnumerable<IViewLayer>>().FromInstance(layers).AsSingle().WhenInjectedInto<ViewManagerImpl>();
+            container.FastBind<IViewManager, ViewManagerImpl>();
 
             viewModelsContainer.Bind<IViewsContainerAdapter>().FromInstance(viewsContainerAdapter).AsSingle();
         }
@@ -172,7 +172,7 @@ namespace UnityMVVM.DI
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
                     $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            container.Bind<TModelAccessInterface>()
+            container.Bind(typeof(TModelAccessInterface), typeof(TCommonAccessInterface))
                 .To<TImpl>().AsSingle();
             viewModelsContainer.Container.Bind<TCommonAccessInterface>()
                 .FromMethod(_ =>

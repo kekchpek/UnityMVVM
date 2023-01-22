@@ -82,7 +82,7 @@ namespace CCG.MVVM.Card.ViewModel
             _inputController.MouseUp += MouseUp;
             _isSelected.Value = true;
             _rotation.Value = 0;
-            _position.Value = _inputController.MousePosition;
+            _position.Value = _inputController.MouseWorldPositionOnCanvas;
         }
 
         public void OnCardEnterBoard()

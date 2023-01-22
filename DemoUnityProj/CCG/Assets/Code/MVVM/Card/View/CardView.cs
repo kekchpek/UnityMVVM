@@ -67,7 +67,7 @@ namespace CCG.MVVM.Card.View
         {
             _positionTween?.Kill();
             _positionTween = transform.DOMove(ViewModel.Position.Value,
-                ((Vector3)position - transform.position).magnitude / _moveSpeed);
+                (position - (Vector2)transform.position).magnitude / _moveSpeed);
         }
 
         private void SetRotation(float rotation)

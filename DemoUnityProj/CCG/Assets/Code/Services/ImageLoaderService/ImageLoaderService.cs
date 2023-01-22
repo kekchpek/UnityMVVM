@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityAuxiliaryTools.Promises;
-using UnityAuxiliaryTools.Promises.Factory;
 using UnityAuxiliaryTools.UnityExecutor;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -10,21 +9,19 @@ namespace CCG.Services.ImageLoaderService
 {
     public class ImageLoaderService : IImageLoaderService
     {
-        private readonly IPromiseFactory _promiseFactory;
         private readonly IUnityExecutor _unityExecutor;
 
         private const string RandomImageURL = "https://picsum.photos/200";
 
-        public ImageLoaderService(IPromiseFactory promiseFactory,
+        public ImageLoaderService(
             IUnityExecutor unityExecutor)
         {
-            _promiseFactory = promiseFactory;
             _unityExecutor = unityExecutor;
         }
         
         public IPromise<Texture2D> LoadRandomImage()
         {
-            IControllablePromise<Texture2D> promise = _promiseFactory.CreatePromise<Texture2D>();
+            IControllablePromise<Texture2D> promise = new ControllablePromise<Texture2D>();
             _unityExecutor.ExcuteCoroutine(DownloadImageCoroutine(promise));
             return promise;
         }
