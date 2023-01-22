@@ -31,6 +31,12 @@ namespace CCG.MVVM.MainMenu
             ViewModel.State.Bind(OnStateChanged);
         }
 
+        // required for animation
+        private void Animation_StateChanged()
+        {
+            ViewModel.OnStateChangeCompleted();
+        }
+
         private void OnStateChanged(MainMenuState state)
         {
             string trigger;
