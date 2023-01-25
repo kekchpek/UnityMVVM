@@ -13,7 +13,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
 
     /// <inheritdoc cref="IViewFactory"/>
     internal class ViewFactory<TView, TViewModel> : IViewFactory
-        where TView : IViewInitializer<TViewModel>
+        where TView : IViewInitializer
         where TViewModel : IViewModel
     {
         private readonly IViewsContainerAdapter _viewsContainerAdapter;
@@ -90,6 +90,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                     {
                         initializable.Initialize();
                     }
+                    ((IViewInitializer)view).SetViewModel((IViewModel)viewModel);
                     if (rootViewModel == null)
                     {
                         rootViewModel = (IViewModel)viewModel;

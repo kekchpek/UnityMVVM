@@ -1,5 +1,4 @@
-﻿using System;
-using CCG.Core;
+﻿using CCG.Core;
 using CCG.Models.Hand.Model;
 using CCG.Models.Hand.Service;
 using CCG.Models.ImageModel;
@@ -30,8 +29,6 @@ namespace CCG.MVVM.MainScreen.ViewModel
         
         public void Initialize()
         {
-            CreateSubView(ViewNames.HandController);
-            CreateSubView(ViewNames.StatsChanger);
             _handModel.CardAdded += OnCardAdded;
             IntiGame();
         }

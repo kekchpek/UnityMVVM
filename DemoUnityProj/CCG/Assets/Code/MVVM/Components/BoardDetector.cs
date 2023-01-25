@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace CCG.MVVM.Components
 {
-    [RequireComponent(typeof(BoxCollider2D))]
     public class BoardDetector : MonoBehaviour
     {
         private void OnTriggerEnter2D(Collider2D other)

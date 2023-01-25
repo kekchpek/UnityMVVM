@@ -9,7 +9,7 @@ namespace UnityMVVM
     /// Base class for views.
     /// </summary>
     /// <typeparam name="T">The view model type for this view.</typeparam>
-    public class ViewBehaviour<T> : MonoBehaviour, IViewInitializer<T>, IViewBehaviour where T : class, IViewModel
+    public class ViewBehaviour<T> : MonoBehaviour, IViewInitializer, IViewBehaviour where T : class, IViewModel
     {
 
         private bool _isViewModelDestoroyed;
@@ -33,9 +33,9 @@ namespace UnityMVVM
         }
 
 
-        void IViewInitializer<T>.SetViewModel(T viewModel)
+        void IViewInitializer.SetViewModel(IViewModel viewModel)
         {
-            SetViewModelInternal(viewModel);
+            SetViewModelInternal((T)viewModel);
         }
 
         private void SetViewModelInternal(T viewModel)
@@ -90,7 +90,7 @@ namespace UnityMVVM
         protected virtual void OnViewModelClear()
         {
             ViewModel.Destroyed -= OnViewModelDestroyed;
-            ViewModel.Destroyed -= OnCloseStarted;
+            ViewModel.CloseStarted -= OnCloseStarted;
         }
     }
 }

@@ -92,13 +92,13 @@ namespace UnityMVVM.ViewModelCore
             {
                 Debug.LogException(new InvalidOperationException("Trying destroy already destroyed view model."));
             }
+            OnDestroyInternal();
             _destroyed = true;
-            _closePromise?.Success();
             if (_parent != null)
             {
                 _parent.Destroyed -= Destroy;
             }
-            OnDestroyInternal();
+            _closePromise?.Success();
             Destroyed?.Invoke();
         }
 
@@ -110,8 +110,8 @@ namespace UnityMVVM.ViewModelCore
                 return _closePromise;
             }
             _closePromise = new ControllablePromise();
-            CloseStarted?.Invoke();
             OnCloseStartedInternal();
+            CloseStarted?.Invoke();
             return _closePromise;
 
         }
