@@ -38,7 +38,10 @@ namespace UnityMVVM.ViewManager
         public T Create<T>(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
              where T : class, IViewModel
         {
-            return _viewsContainer.ResolveFactory<T>(viewName).Create(parent.Layer, parent, payload);
+            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, payload);
+            if (viewModel is T concreteViewModel)
+                return concreteViewModel;
+            throw new InvalidCastException($"Can not cast view model of type {viewModel.GetType().Name} to {typeof(T).Name}");
         }
 
         public IViewModel Create(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
@@ -55,7 +58,7 @@ namespace UnityMVVM.ViewManager
                 _layers[i].Clear();
                 if (_layers[i].Id == viewLayerId)
                 {
-                    var viewModel = _viewsContainer.ResolveFactory<T>(viewName).Create(_layers[i], null, payload);
+                    var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(_layers[i], null, payload);
                     _layers[i].Set(viewModel);
                     break;
                 }

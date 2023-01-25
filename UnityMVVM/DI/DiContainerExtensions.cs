@@ -6,6 +6,7 @@ using UnityMVVM.ViewManager.ViewLayer;
 using System.Collections.Generic;
 using UnityMVVM.ViewModelCore.ViewModelsFactory;
 using System;
+using UnityMVVM.DI.Mapper;
 
 namespace UnityMVVM.DI
 {
@@ -29,17 +30,23 @@ namespace UnityMVVM.DI
                 layers[i] = new ViewLayerImpl(layersData[i].layerId, layersData[i].layerContainer);
             }
             var viewsContainerAdapter = new ViewsContainerAdapter(viewsContainer);
+            var viewModelsContainerAdapter = new ViewModelsContainerAdapter(viewModelsContainer);
 
-            container.Bind<IViewsModelsContainerAdapter>().FromInstance(new ViewModelsContainerAdapter(viewModelsContainer)).AsSingle();
+            container.Bind<IViewsModelsContainerAdapter>().FromInstance(viewModelsContainerAdapter).AsSingle();
             container.Bind<IViewsContainerAdapter>().FromInstance(viewsContainerAdapter).AsSingle();
             container.Bind<IEnumerable<IViewLayer>>().FromInstance(layers).AsSingle().WhenInjectedInto<ViewManagerImpl>();
             container.FastBind<IViewManager, ViewManagerImpl>();
 
+            viewModelsContainer.Bind(new Type[]
+            {
+                typeof(IViewToViewModelMapper),
+                typeof(IViewToViewModelMutableMapper)
+            }).To<ViewToViewModelMapper>().AsSingle();
             viewModelsContainer.Bind<IViewsContainerAdapter>().FromInstance(viewsContainerAdapter).AsSingle();
         }
 
         /// <summary>
-        /// Installs <see cref="IViewModelFactory{TViewModel}"/> for specified View-ViewModel pair.
+        /// Installs <see cref="IViewFactory"/> for specified View-ViewModel pair.
         /// </summary>
         /// <param name="container">MVVM container to configure.</param>
         /// <param name="viewName">View identificator for openning.</param>
@@ -56,24 +63,16 @@ namespace UnityMVVM.DI
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
                     $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
-            var typesBindingList = new List<Type>
-            {
-                typeof(IViewModelFactoryInternal<TViewModel>),
-                typeof(IViewModelFactory<TViewModel>),
-            };
-            if (typeof(TViewModel) != typeof(IViewModel))
-            {
-                typesBindingList.Add(typeof(IViewModelFactory<IViewModel>));
-            }
             viewModelsContainer.Container
-                .Bind(typesBindingList)
+                .Bind<IViewFactory>()
                 .WithId(viewName)
-                .To<ViewModelFactory<TView, TViewModel, TViewModelImpl>>()
+                .To<ViewFactory<TView, TViewModel>>()
                 .AsSingle()
                 .WithArgumentsExplicit(new []
                 {
                     new TypeValuePair(typeof(GameObject), viewPrefab)
                 });
+            viewModelsContainer.Container.Resolve<IViewToViewModelMutableMapper>().Map<TView, TViewModelImpl>();
         }
 
         /// <summary>

@@ -33,10 +33,10 @@ namespace UnityMVVM.DI
         public DiContainer Container => _viewsContainer;
 
 
-        /// <inheritdoc cref="IViewsModelsContainerAdapter.ResolveFactory{T}"/>
-        public IViewModelFactory<T> ResolveFactory<T>(string viewName) where T : IViewModel
+        /// <inheritdoc cref="IViewsModelsContainerAdapter.ResolveViewFactory"/>
+        public IViewFactory ResolveViewFactory(string viewName)
         {
-            return _viewsContainer.ResolveId<IViewModelFactory<T>>(viewName);
+            return _viewsContainer.ResolveId<IViewFactory>(viewName);
         }
     }
 }

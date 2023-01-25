@@ -5,12 +5,11 @@ using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM
 {
-
     /// <summary>
     /// Base class for views.
     /// </summary>
     /// <typeparam name="T">The view model type for this view.</typeparam>
-    public class ViewBehaviour<T> : MonoBehaviour, IViewInitializer<T> where T : class, IViewModel
+    public class ViewBehaviour<T> : MonoBehaviour, IViewInitializer<T>, IViewBehaviour where T : class, IViewModel
     {
 
         private bool _isViewModelDestoroyed;
