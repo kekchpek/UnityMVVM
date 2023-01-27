@@ -1,5 +1,6 @@
 using System;
 using CCG.Core.Camera;
+using UnityAuxiliaryTools.Promises;
 using UnityEngine;
 using UnityMVVM;
 using Zenject;
@@ -13,6 +14,8 @@ namespace CCG.MVVM.MainMenu
         [SerializeField] private Camera _camera;
 
         private ICameraService _cameraService;
+
+        private IControllablePromise _exitPromise;
 
         [Inject]
         public void Construct(ICameraService cameraService)
@@ -36,6 +39,12 @@ namespace CCG.MVVM.MainMenu
         {
             ViewModel.OnStateChangeCompleted();
         }
+        
+        private void Animation_Exit()
+        {
+            _exitPromise.Success();
+        }
+
 
         private void OnStateChanged(MainMenuState state)
         {
@@ -61,6 +70,13 @@ namespace CCG.MVVM.MainMenu
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
             _animator.SetTrigger(trigger);
+        }
+
+        protected override IPromise Close()
+        {
+            _animator.SetTrigger("Exit");
+            _exitPromise = new ControllablePromise();
+            return _exitPromise;
         }
 
         protected override void OnViewModelClear()

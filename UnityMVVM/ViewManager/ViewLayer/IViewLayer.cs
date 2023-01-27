@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityAuxiliaryTools.Promises;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
@@ -26,9 +27,15 @@ namespace UnityMVVM.ViewManager.ViewLayer
         Transform Container { get; }
 
         /// <summary>
+        /// Close root view model.
+        /// </summary>
+        /// <returns>A promise that indicates the close proccess.</returns>
+        IPromise Clear();
+
+        /// <summary>
         /// Destroy root view model.
         /// </summary>
-        void Clear();
+        void ClearInstantly();
 
         /// <summary>
         /// Set root view model. Destroy previous if it exists.

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using UnityAuxiliaryTools.Promises;
 using UnityMVVM.DI;
 using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
@@ -29,16 +30,16 @@ namespace UnityMVVM.ViewManager
 
 
         /// <inheritdoc cref="IViewManager.Close(string)"/>
-        public void Close(string viewLayerId)
+        public async IPromise Close(string viewLayerId)
         {
-            _layers.First(l => l.Id == viewLayerId).Clear();
+            await _layers.First(l => l.Id == viewLayerId).Clear();
         }
 
         /// <inheritdoc cref="IViewManager.Create{T}(IViewModel, string, IPayload)"/>
         public T Create<T>(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
              where T : class, IViewModel
         {
-            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, payload);
+            var viewModel = Create<IViewModel>(parent, viewName, payload);
             if (viewModel is T concreteViewModel)
                 return concreteViewModel;
             throw new InvalidCastException($"Can not cast view model of type {viewModel.GetType().Name} to {typeof(T).Name}");
@@ -46,16 +47,16 @@ namespace UnityMVVM.ViewManager
 
         public IViewModel Create(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
         {
-            return Create<IViewModel>(parent, viewName, payload);
+             return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, payload);
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
-        public void Open<T>(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
+        public async IPromise Open<T>(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
              where T : class, IViewModel
         {
             for(int i = _layers.Length - 1; i >= 0; i--)
             {
-                _layers[i].Clear();
+                await _layers[i].Clear();
                 if (_layers[i].Id == viewLayerId)
                 {
                     var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(_layers[i], null, payload);
@@ -69,9 +70,9 @@ namespace UnityMVVM.ViewManager
             }
         }
 
-        public void Open(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
+        public async IPromise Open(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
         {
-            Open<IViewModel>(viewLayerId, viewName, payload);
+            await Open<IViewModel>(viewLayerId, viewName, payload);
         }
     }
 }

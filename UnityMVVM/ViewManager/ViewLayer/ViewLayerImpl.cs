@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityAuxiliaryTools.Promises;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
@@ -26,9 +27,20 @@ namespace UnityMVVM.ViewManager.ViewLayer
             Container = container;
         }
 
-        public void Clear()
+        public IPromise Clear()
         {
-            _currentViewModel?.Close();
+            if (_currentViewModel == null)
+            {
+                var promise = new ControllablePromise();
+                promise.Success();
+                return promise;
+            }
+            return _currentViewModel.Close();
+        }
+
+        public void ClearInstantly()
+        {
+           _currentViewModel.Destroy();
         }
 
         public void Set(IViewModel viewModel)
@@ -43,6 +55,5 @@ namespace UnityMVVM.ViewManager.ViewLayer
             _currentViewModel.Destroyed -= OnViewModelDestoryed;
             _currentViewModel = null;
         }
-
     }
 }

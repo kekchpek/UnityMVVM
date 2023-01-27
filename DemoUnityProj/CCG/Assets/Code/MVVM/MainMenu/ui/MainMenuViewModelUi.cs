@@ -43,10 +43,10 @@ namespace CCG.MVVM.MainMenu
             });
         }
 
-        public void OnPlayButtonPressed()
+        public async void OnPlayButtonPressed()
         {
-            _viewManager.Close(ViewLayerIds.Main3d);
-            _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainScreen);
+            await _viewManager.Close(ViewLayerIds.Main3d);
+            await _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainScreen);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using System.Diagnostics.CodeAnalysis;
+using UnityAuxiliaryTools.Promises;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager
@@ -31,13 +32,13 @@ namespace UnityMVVM.ViewManager
         /// <param name="viewLayerId">A layer, where view should be created.</param>
         /// <param name="payload">View model payload.</param>
         /// <param name="viewName">The identifier of the view.</param>
-        public void Open(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null);
+        public IPromise Open(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null);
 
         /// <summary>
         /// Destroys all view on specified layer.
         /// </summary>
         /// <param name="viewLayerId">A layer on which views should be destroyed.</param>
-        public void Close(string viewLayerId);
+        public IPromise Close(string viewLayerId);
 
     }
 }

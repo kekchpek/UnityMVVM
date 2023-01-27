@@ -15,7 +15,6 @@ using CCG.MVVM.MainScreen.View;
 using CCG.MVVM.MainScreen.ViewModel;
 using CCG.MVVM.StatsChanger;
 using CCG.Services.ImageLoaderService;
-using UnityAuxiliaryTools.UnityExecutor;
 using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.ViewModelCore;
@@ -56,7 +55,6 @@ namespace CCG.Core
             Container.FastBind<IImageLoaderService, ImageLoaderService>();
             Container.FastBind<ICardFactory, CardFactory>();
             Container.FastBind<IUiService, UiService>();
-            Container.Bind<IUnityExecutor>().To<UnityExecutor>().FromNewComponentOnNewGameObject().AsSingle();
             
             Container.GetViewModelsContainer().Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
             Container.GetViewModelsContainer().Bind<IInputController>().FromComponentInNewPrefab(_inputControllerPrefab).AsSingle();
