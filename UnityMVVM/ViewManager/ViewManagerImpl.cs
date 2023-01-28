@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using UnityAuxiliaryTools.Promises;
+using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
@@ -16,6 +17,9 @@ namespace UnityMVVM.ViewManager
 
         private readonly IViewLayer[] _layers;
         private readonly IViewsModelsContainerAdapter _viewsContainer;
+
+        [AllowNull, CanBeNull]
+        private string _openingLayer;
 
         /// <summary>
         /// Default constructor.
@@ -47,32 +51,40 @@ namespace UnityMVVM.ViewManager
 
         public IViewModel Create(IViewModel parent, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
         {
-             return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, payload);
+            return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, payload);
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
-        public async IPromise Open<T>(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
-             where T : class, IViewModel
-        {
-            for(int i = _layers.Length - 1; i >= 0; i--)
-            {
-                await _layers[i].Clear();
-                if (_layers[i].Id == viewLayerId)
-                {
-                    var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(_layers[i], null, payload);
-                    _layers[i].Set(viewModel);
-                    break;
-                }
-                if (i == -1)
-                {
-                    throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
-                }
-            }
-        }
-
         public async IPromise Open(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
         {
-            await Open<IViewModel>(viewLayerId, viewName, payload);
+            if (_openingLayer == viewLayerId)
+            {
+                Debug.LogError("Attempt to open view while other one is being opened.");
+                return;
+            }
+            _openingLayer = viewLayerId;
+            try
+            {
+                for (int i = _layers.Length - 1; i >= 0; i--)
+                {
+                    await _layers[i].Clear();
+                    if (_layers[i].Id == viewLayerId)
+                    {
+                        var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(_layers[i], null, payload);
+                        _layers[i].Set(viewModel);
+                        break;
+                    }
+                    if (i == -1)
+                    {
+                        throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
+                    }
+                }
+            }
+            finally
+            {
+                _openingLayer = null;
+            }
+
         }
     }
 }
