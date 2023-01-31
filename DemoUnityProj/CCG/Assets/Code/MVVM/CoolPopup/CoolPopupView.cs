@@ -10,6 +10,7 @@ namespace CCG.MVVM.CoolPopup
 
         [SerializeField] private Button _closeBtn;
         [SerializeField] private Button _openOtherBth;
+        [SerializeField] private Button _openOtherWithErrorBth;
         [SerializeField] private Toggle _animationToggle;
 
         [SerializeField] private Animator _animator;
@@ -20,10 +21,10 @@ namespace CCG.MVVM.CoolPopup
 
         protected override void OnViewModelSet()
         {
-            Debug.Log("SET");
             base.OnViewModelSet();
             _closeBtn.onClick.AddListener(() => ViewModel.OnCloseBtn());
             _openOtherBth.onClick.AddListener(() => ViewModel.OnOpenCoolPopupBtn());
+            _openOtherWithErrorBth.onClick.AddListener(() => ViewModel.OnOpenCoolPopupWithErrorBtn());
             ViewModel.SetClosingAnimationActive(_animationToggle.isOn);
             _animationToggle.onValueChanged.AddListener(v => ViewModel.SetClosingAnimationActive(v));
         }
@@ -54,10 +55,10 @@ namespace CCG.MVVM.CoolPopup
 
         protected override void OnViewModelClear()
         {
-            Debug.Log("CLEAR");
             base.OnViewModelClear();
             _closeBtn.onClick.RemoveAllListeners();
             _openOtherBth.onClick.RemoveAllListeners();
+            _openOtherWithErrorBth.onClick.RemoveAllListeners();
             _animationToggle.onValueChanged.RemoveAllListeners();
         }
     }

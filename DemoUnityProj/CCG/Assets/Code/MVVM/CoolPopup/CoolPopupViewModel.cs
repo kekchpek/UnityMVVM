@@ -1,4 +1,8 @@
-﻿using CCG.Core;
+﻿using System;
+using CCG.Core;
+using CCG.MVVM.CoolPopup.Payload;
+using UnityAuxiliaryTools.Promises;
+using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
 namespace CCG.MVVM.CoolPopup
@@ -7,11 +11,24 @@ namespace CCG.MVVM.CoolPopup
     {
         public bool IsClosingAnimationActive { get; private set; }
 
-        public void OnOpenCoolPopupBtn()
+        public CoolPopupViewModel(ICoolPopupPayload payload)
         {
-            OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup);
+            if (payload != null && payload.ThrowError)
+            {
+                throw new Exception("Test exception!!");
+            }
         }
 
+        public void OnOpenCoolPopupBtn()
+        {
+            OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false));
+        }
+
+        public async void OnOpenCoolPopupWithErrorBtn()
+        {
+            await OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(true));
+        }
+        
         public void OnCloseBtn()
         {
             Close();

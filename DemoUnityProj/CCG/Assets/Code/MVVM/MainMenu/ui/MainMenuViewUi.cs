@@ -59,6 +59,7 @@ namespace CCG.MVVM.MainMenu
             _cylinderButton.interactable = isInteractable;
             _capsuleButton.interactable = isInteractable;
             _backButton.interactable = isInteractable;
+            _coolPopupButton.interactable = isInteractable;
         }
 
         protected override void OnViewModelClear()

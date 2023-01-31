@@ -1,4 +1,5 @@
 ﻿using CCG.Core;
+using CCG.MVVM.CoolPopup.Payload;
 using CCG.MVVM.MainScreen.ViewModel;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewModelCore;
@@ -51,7 +52,7 @@ namespace CCG.MVVM.MainMenu
 
         public void OnCoolPopupBtn()
         {
-            OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup);
+            OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false));
         }
     }
 }

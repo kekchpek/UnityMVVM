@@ -1,4 +1,5 @@
-﻿using UnityMVVM.ViewModelCore;
+﻿using UnityAuxiliaryTools.Promises;
+using UnityMVVM.ViewModelCore;
 
 namespace CCG.MVVM.CoolPopup
 {
@@ -6,8 +7,8 @@ namespace CCG.MVVM.CoolPopup
     {
         
         bool IsClosingAnimationActive { get; }
-        
         void OnOpenCoolPopupBtn();
+        void OnOpenCoolPopupWithErrorBtn();
         void OnCloseBtn();
         void SetClosingAnimationActive(bool isActive);
     }
