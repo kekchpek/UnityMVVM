@@ -45,7 +45,10 @@ namespace UnityMVVM.ViewManager.ViewLayer
 
         public void Set(IViewModel viewModel)
         {
-            Clear();
+            if (_currentViewModel != null)
+            {
+                throw new InvalidOperationException("It is not possible to set new view model for layer, that already has view ");
+            }
             _currentViewModel = viewModel;
             _currentViewModel.Destroyed += OnViewModelDestoryed;
         }

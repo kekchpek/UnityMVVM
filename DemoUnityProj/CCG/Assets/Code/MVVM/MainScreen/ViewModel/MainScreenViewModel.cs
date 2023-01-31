@@ -30,6 +30,7 @@ namespace CCG.MVVM.MainScreen.ViewModel
         public void Initialize()
         {
             _handModel.CardAdded += OnCardAdded;
+            OpenView(ViewLayerIds.Popup, ViewNames.LoadingPopup);
             IntiGame();
         }
 
@@ -40,7 +41,6 @@ namespace CCG.MVVM.MainScreen.ViewModel
         
         private void IntiGame()
         {
-            OpenView(ViewLayerIds.Popup, ViewNames.LoadingPopup);
             _imageModel.LoadImages().OnSuccess(() =>
             {
                 var cardsCount = Random.Range(4, 7);
@@ -52,7 +52,6 @@ namespace CCG.MVVM.MainScreen.ViewModel
             }).OnFail(e =>
             {
                 Debug.LogError(e.Message);
-                // perpetual retrying
                 IntiGame();
             });
         }

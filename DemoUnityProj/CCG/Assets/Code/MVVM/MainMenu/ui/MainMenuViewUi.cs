@@ -15,6 +15,7 @@ namespace CCG.MVVM.MainMenu
         [SerializeField] private Button _sphereButton;
         [SerializeField] private Button _cylinderButton;
         [SerializeField] private Button _capsuleButton;
+        [SerializeField] private Button _coolPopupButton;
         
         protected override void OnViewModelSet()
         {
@@ -29,6 +30,7 @@ namespace CCG.MVVM.MainMenu
             _cylinderButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Cylinder));
             _capsuleButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Capsule));
             _backButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.None));
+            _coolPopupButton.onClick.AddListener(() => ViewModel.OnCoolPopupBtn());
         }
 
         private void OnPlayButtonShownChange(bool shown)
@@ -63,12 +65,16 @@ namespace CCG.MVVM.MainMenu
         {
             base.OnViewModelClear();
             ViewModel.IsInteractable.Unbind(OnInteractableChanged);
+            ViewModel.PlayButtonShown.Unbind(OnPlayButtonShownChange);
+            ViewModel.StatesButtonsShown.Unbind(OnStatesButtonsShownChanged);
+            ViewModel.BackButtonShown.Unbind(OnBackButtonShownChanged);
             _playButton.onClick.RemoveAllListeners();
             _cubeButton.onClick.RemoveAllListeners();
             _sphereButton.onClick.RemoveAllListeners();
             _cylinderButton.onClick.RemoveAllListeners();
             _capsuleButton.onClick.RemoveAllListeners();
             _backButton.onClick.RemoveAllListeners();
+            _coolPopupButton.onClick.RemoveAllListeners();
         }
     }
 }

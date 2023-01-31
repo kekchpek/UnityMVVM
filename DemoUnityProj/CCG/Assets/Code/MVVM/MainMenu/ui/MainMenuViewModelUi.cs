@@ -48,5 +48,10 @@ namespace CCG.MVVM.MainMenu
             await _viewManager.Close(ViewLayerIds.Main3d);
             await _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainScreen);
         }
+
+        public void OnCoolPopupBtn()
+        {
+            OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup);
+        }
     }
 }

@@ -8,6 +8,7 @@ using CCG.Models.ImageModel;
 using CCG.MVVM.Card.Model;
 using CCG.MVVM.Card.View;
 using CCG.MVVM.Card.ViewModel;
+using CCG.MVVM.CoolPopup;
 using CCG.MVVM.HandController;
 using CCG.MVVM.LoadingPopup;
 using CCG.MVVM.MainMenu;
@@ -36,6 +37,7 @@ namespace CCG.Core
         [SerializeField] private GameObject _mainMenu3dPrefab;
         [SerializeField] private GameObject _mainMenuUiPrefab;
         [SerializeField] private GameObject _loadingPopupPrefab;
+        [SerializeField] private GameObject _coolPopupPrefab;
         
         public override void InstallBindings()
         {
@@ -66,6 +68,7 @@ namespace CCG.Core
             Container.InstallView<MainMenuView3d, IMainMenuViewModel3d, MainMenuViewModel3d>(ViewNames.MainMenu3d, _mainMenu3dPrefab);
             Container.InstallView<MainMenuViewUi, IMainMenuViewModelUi, MainMenuViewModelUi>(ViewNames.MainMenuUi, _mainMenuUiPrefab);
             Container.InstallView<LoadingPopupView, IViewModel, ViewModel>(ViewNames.LoadingPopup, _loadingPopupPrefab);
+            Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.CoolPopup, _coolPopupPrefab);
             
             Container.ProvideAccessForViewLayer<ICameraService>();
         }

@@ -80,9 +80,9 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewLayerId">Id of the layer to open view on.</param>
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
-        protected void OpenView(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
+        protected async IPromise OpenView(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
         {
-            _viewManager.Open(viewLayerId, viewName, payload);
+            await _viewManager.Open(viewLayerId, viewName, payload);
         }
 
         /// <inheritdoc cref="IViewModel.Destroy"/>
@@ -98,8 +98,8 @@ namespace UnityMVVM.ViewModelCore
             {
                 _parent.Destroyed -= Destroy;
             }
-            _closePromise?.Success();
             Destroyed?.Invoke();
+            _closePromise?.Success();
         }
 
         /// <inheritdoc cref="IViewModel.Close"/>

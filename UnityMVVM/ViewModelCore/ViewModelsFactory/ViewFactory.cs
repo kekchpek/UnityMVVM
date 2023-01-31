@@ -51,8 +51,6 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             if (view is Component c)
             {
                 var rootViewModel = CreateViewModels(c.transform, viewLayer, parent, payload);
-
-                view.SetViewModel((TViewModel)rootViewModel);
                 return rootViewModel;
             }
 

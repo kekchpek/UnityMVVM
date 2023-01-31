@@ -9,5 +9,6 @@
         public static string HandController => "HandController";
         public static string StatsChanger => "StatsChanges";
         public static string LoadingPopup => "LoadingPopup";
+        public static string CoolPopup => "CoolPopup";
     }
 }

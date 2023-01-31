@@ -65,18 +65,19 @@ namespace UnityMVVM.ViewManager
             _openingLayer = viewLayerId;
             try
             {
-                for (int i = _layers.Length - 1; i >= 0; i--)
+                for (int i = _layers.Length - 1; i >= -1; i--)
                 {
+                    if (i == -1)
+                    {
+                        throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
+                    }
+
                     await _layers[i].Clear();
                     if (_layers[i].Id == viewLayerId)
                     {
                         var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(_layers[i], null, payload);
                         _layers[i].Set(viewModel);
                         break;
-                    }
-                    if (i == -1)
-                    {
-                        throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
                     }
                 }
             }

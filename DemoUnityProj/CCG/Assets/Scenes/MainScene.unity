@@ -211,6 +211,7 @@ MonoBehaviour:
   _mainMenu3dPrefab: {fileID: 6844672908092825761, guid: 57a4895f69b06fd43a67ecbbeedf91b3, type: 3}
   _mainMenuUiPrefab: {fileID: 7049968486846840150, guid: 8e507ad382d209a4c9e5dc98ee019775, type: 3}
   _loadingPopupPrefab: {fileID: 7049968486846840150, guid: 495203c708a641e4ca5faeab583dc02a, type: 3}
+  _coolPopupPrefab: {fileID: 7049968486846840150, guid: b37838275be87ce4683842520d2d877b, type: 3}
 --- !u!1 &152387466
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,10 +620,10 @@ RectTransform:
   m_Father: {fileID: 1608189053}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1600, y: 900}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1819522589
 CanvasRenderer:
