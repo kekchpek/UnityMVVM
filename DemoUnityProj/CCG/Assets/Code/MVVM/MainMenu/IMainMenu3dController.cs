@@ -1,4 +1,4 @@
-﻿using UnityAuxiliaryTools.Promises;
+﻿using AsyncReactAwait.Promises;
 
 namespace CCG.MVVM.MainMenu
 {

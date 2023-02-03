@@ -1,5 +1,5 @@
-﻿using UnityMVVM.ViewModelCore;
-using UnityMVVM.ViewModelCore.Bindable;
+﻿using AsyncReactAwait.Bindable;
+using UnityMVVM.ViewModelCore;
 
 namespace CCG.MVVM.MainMenu
 {

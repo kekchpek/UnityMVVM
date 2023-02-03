@@ -1,5 +1,4 @@
-﻿using CCG.MVVM.Card;
-using CCG.MVVM.Card.View;
+﻿using CCG.MVVM.Card.View;
 using UnityEngine;
 
 namespace CCG.MVVM.Components

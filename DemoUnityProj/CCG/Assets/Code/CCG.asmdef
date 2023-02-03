@@ -10,10 +10,10 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "UnityAuxiliaryTools.dll",
         "Zenject-usage.dll",
         "DOTween.dll",
-        "UnityMVVM.dll"
+        "UnityMVVM.dll",
+        "AsyncReactAwait.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

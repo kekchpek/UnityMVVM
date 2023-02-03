@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using AsyncReactAwait.Bindable;
+using UnityEngine;
 using UnityMVVM.ViewModelCore;
-using UnityMVVM.ViewModelCore.Bindable;
 
 namespace CCG.MVVM.Card.ViewModel
 {

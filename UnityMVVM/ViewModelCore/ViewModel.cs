@@ -1,7 +1,7 @@
-﻿using JetBrains.Annotations;
+﻿using AsyncReactAwait.Promises;
+using JetBrains.Annotations;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using UnityAuxiliaryTools.Promises;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;

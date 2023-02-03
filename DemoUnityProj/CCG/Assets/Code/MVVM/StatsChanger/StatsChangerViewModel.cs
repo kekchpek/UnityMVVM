@@ -1,8 +1,5 @@
 ﻿using CCG.Models.Hand.Service;
-using CCG.MVVM.Card.Model;
-using UnityEngine;
 using UnityMVVM.ViewModelCore;
-using Random = UnityEngine.Random;
 
 namespace CCG.MVVM.StatsChanger
 {

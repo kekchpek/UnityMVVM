@@ -1,6 +1,6 @@
 ﻿using System;
+using AsyncReactAwait.Bindable;
 using CCG.MVVM.Card.Model;
-using UnityMVVM.ViewModelCore.Bindable;
 
 namespace CCG.Models.Hand.Model
 {
@@ -22,6 +22,8 @@ namespace CCG.Models.Hand.Model
         /// </summary>
         int MaxCardsCount { get; }
         
+        IBindable<int> CardsCount { get; }
+
         /// <summary>
         /// Pattern of placing cards in the hand.
         /// </summary>

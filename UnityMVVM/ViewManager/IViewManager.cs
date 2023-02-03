@@ -1,6 +1,6 @@
-﻿using JetBrains.Annotations;
+﻿using AsyncReactAwait.Promises;
+using JetBrains.Annotations;
 using System.Diagnostics.CodeAnalysis;
-using UnityAuxiliaryTools.Promises;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager

@@ -1,8 +1,6 @@
 ﻿using System;
 using CCG.Core;
 using CCG.MVVM.CoolPopup.Payload;
-using UnityAuxiliaryTools.Promises;
-using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
 namespace CCG.MVVM.CoolPopup

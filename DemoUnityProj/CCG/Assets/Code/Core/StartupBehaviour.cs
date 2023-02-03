@@ -1,7 +1,5 @@
 using CCG.Core.Camera;
 using CCG.Core.UI;
-using CCG.MVVM.MainMenu;
-using CCG.MVVM.MainScreen.ViewModel;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using Zenject;

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AsyncReactAwait.Promises;
 using CCG.Services.ImageLoaderService;
-using UnityAuxiliaryTools.Promises;
 using UnityEngine;
 
 namespace CCG.Models.ImageModel

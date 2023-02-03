@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="UnityAuxiliaryTools" Version="0.5.16" />
+    <PackageReference Include="AsyncReactAwait" Version="0.6.19" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
+using AsyncReactAwait.Bindable;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityMVVM.ViewModelCore.Bindable;
 
 namespace CCG.MVVM.Card.Model
 {

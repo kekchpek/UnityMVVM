@@ -1,9 +1,8 @@
-﻿using CCG.Core;
+﻿using AsyncReactAwait.Bindable;
+using CCG.Core;
 using CCG.MVVM.CoolPopup.Payload;
-using CCG.MVVM.MainScreen.ViewModel;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewModelCore;
-using UnityMVVM.ViewModelCore.Bindable;
 
 namespace CCG.MVVM.MainMenu
 {

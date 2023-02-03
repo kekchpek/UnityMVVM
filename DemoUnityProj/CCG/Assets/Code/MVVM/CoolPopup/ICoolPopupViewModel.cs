@@ -1,5 +1,4 @@
-﻿using UnityAuxiliaryTools.Promises;
-using UnityMVVM.ViewModelCore;
+﻿using UnityMVVM.ViewModelCore;
 
 namespace CCG.MVVM.CoolPopup
 {

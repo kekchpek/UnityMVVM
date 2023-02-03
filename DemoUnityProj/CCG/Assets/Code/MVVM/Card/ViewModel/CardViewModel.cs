@@ -1,10 +1,10 @@
-﻿using CCG.Config;
+﻿using AsyncReactAwait.Bindable;
+using CCG.Config;
 using CCG.Core.Input;
 using CCG.Core.Screen;
 using CCG.Models.Hand.Model;
 using CCG.MVVM.Card.Model;
 using UnityEngine;
-using UnityMVVM.ViewModelCore.Bindable;
 
 namespace CCG.MVVM.Card.ViewModel
 {
@@ -50,6 +50,7 @@ namespace CCG.MVVM.Card.ViewModel
             _screenAdapter = screenAdapter;
             _card.Destroyed += Destroy;
             _card.IndexInHand.Bind(UpdateHandPosition);
+            _handModel.CardsCount.Bind(UpdateHandPosition);
             _handModel.IsArchPattern.Bind(UpdateHandPosition);
         }
 

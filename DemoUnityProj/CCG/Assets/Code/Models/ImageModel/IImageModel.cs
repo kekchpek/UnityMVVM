@@ -1,4 +1,4 @@
-﻿using UnityAuxiliaryTools.Promises;
+﻿using AsyncReactAwait.Promises;
 using UnityEngine;
 
 namespace CCG.Models.ImageModel

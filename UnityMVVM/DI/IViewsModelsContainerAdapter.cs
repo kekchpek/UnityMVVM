@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using UnityMVVM.ViewModelCore;
-using UnityMVVM.ViewModelCore.ViewModelsFactory;
+﻿using UnityMVVM.ViewModelCore.ViewModelsFactory;
 using Zenject;
 
 namespace UnityMVVM.DI

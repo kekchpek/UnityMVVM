@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AsyncReactAwait.Bindable;
 using CCG.MVVM.Card.Model;
 using UnityEngine;
-using UnityMVVM.ViewModelCore.Bindable;
 
 namespace CCG.Models.Hand.Model
 {
@@ -12,11 +12,13 @@ namespace CCG.Models.Hand.Model
         private readonly IList<ICardMutableModel> _cards = new List<ICardMutableModel>();
 
         private readonly IMutable<bool> _isArcPattern = new Mutable<bool>(true);
+        private readonly IMutable<int> _cardsCount = new Mutable<int>();
 
         public event Action<ICardModel> CardRemoved;
         public event Action<ICardModel> CardAdded;
         public int MaxCardsCount => Config.ConfigData.MaxCardsInHand;
-        
+        public IBindable<int> CardsCount => _cardsCount;
+
         public IBindable<bool> IsArchPattern => _isArcPattern;
 
         public void AddCard(ICardMutableModel card)
@@ -28,6 +30,7 @@ namespace CCG.Models.Hand.Model
             }
 
             _cards.Add(card);
+            _cardsCount.Value = _cards.Count;
             void OnCardPlayed()
             {
                 card.Played -= OnCardPlayed;
@@ -51,6 +54,7 @@ namespace CCG.Models.Hand.Model
         private void RemoveCard(ICardMutableModel card)
         {
             _cards.Remove(card);
+            _cardsCount.Value = _cards.Count;
             CardRemoved?.Invoke(card);
             UpdateCardsIndices();
         }
@@ -83,7 +87,7 @@ namespace CCG.Models.Hand.Model
         {
             while (_cards.Any())
             {
-                _cards[0].Destroy();
+                RemoveCard(_cards[0]);
             }
         }
     }

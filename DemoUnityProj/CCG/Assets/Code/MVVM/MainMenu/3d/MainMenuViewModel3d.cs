@@ -1,10 +1,10 @@
 ﻿using System;
+using AsyncReactAwait.Bindable;
+using AsyncReactAwait.Promises;
 using CCG.Core;
 using CCG.Core.Camera;
-using UnityAuxiliaryTools.Promises;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewModelCore;
-using UnityMVVM.ViewModelCore.Bindable;
 using Zenject;
 
 namespace CCG.MVVM.MainMenu

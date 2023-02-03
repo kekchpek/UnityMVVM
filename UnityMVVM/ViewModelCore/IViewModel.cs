@@ -1,5 +1,5 @@
-﻿using System;
-using UnityAuxiliaryTools.Promises;
+﻿using AsyncReactAwait.Promises;
+using System;
 using UnityMVVM.ViewManager.ViewLayer;
 
 namespace UnityMVVM.ViewModelCore
