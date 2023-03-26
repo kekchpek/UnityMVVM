@@ -2,18 +2,20 @@
 using CCG.Models.ImageModel;
 using CCG.MVVM.Card.Model;
 using UnityEngine;
+using Zenject;
 
 namespace CCG.Models.Hand.Service
 {
-    public class HandService : IHandService
+    public class HandService : MonoBehaviour, IHandService, IInitializable
     {
-        private readonly ICardFactory _cardFactory;
-        private readonly IHandMutableModel _handModel;
-        private readonly IImageModel _imageModel;
+        private ICardFactory _cardFactory;
+        private IHandMutableModel _handModel;
+        private IImageModel _imageModel;
 
         private int _changingCardIndex;
 
-        public HandService(
+        [Inject]
+        public void Construct(
             ICardFactory cardFactory,
             IHandMutableModel handModel,
             IImageModel imageModel)
@@ -25,6 +27,7 @@ namespace CCG.Models.Hand.Service
         
         public void Initialize()
         {
+            Debug.Log("THIRD INITIALIZED!");
             _handModel.CardRemoved += OnCardRemoved;
         }
 

@@ -4,10 +4,11 @@ using System.Linq;
 using AsyncReactAwait.Promises;
 using CCG.Services.ImageLoaderService;
 using UnityEngine;
+using Zenject;
 
 namespace CCG.Models.ImageModel
 {
-    public class ImageModel : IImageModel
+    public class ImageModel : IImageModel, IInitializable
     {
         private readonly IImageLoaderService _imageLoaderService;
 
@@ -19,6 +20,11 @@ namespace CCG.Models.ImageModel
         public ImageModel(IImageLoaderService imageLoaderService)
         {
             _imageLoaderService = imageLoaderService;
+        }
+
+        public void Initialize()
+        {
+            Debug.Log("FIRST INITIALIZED!");
         }
 
         public IPromise LoadImages()

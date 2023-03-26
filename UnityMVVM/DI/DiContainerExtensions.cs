@@ -6,6 +6,8 @@ using UnityMVVM.ViewManager.ViewLayer;
 using System.Collections.Generic;
 using UnityMVVM.ViewModelCore.ViewModelsFactory;
 using System;
+using System.Linq;
+using ModestTree;
 using UnityMVVM.DI.Mapper;
 
 namespace UnityMVVM.DI
@@ -49,7 +51,7 @@ namespace UnityMVVM.DI
         /// Installs <see cref="IViewFactory"/> for specified View-ViewModel pair.
         /// </summary>
         /// <param name="container">MVVM container to configure.</param>
-        /// <param name="viewName">View identificator for openning.</param>
+        /// <param name="viewName">View identificator for opening.</param>
         /// <param name="viewPrefab">View prefab. It will be instantiated on creation. It should contains <typeparamref name="TView"/> component inside.</param>
         /// <typeparam name="TView">The type of a view</typeparam>
         /// <typeparam name="TViewModel">The type of a view model.</typeparam>
@@ -96,23 +98,23 @@ namespace UnityMVVM.DI
         /// <summary>
         /// Provides an access for specified objet types for view layer.
         /// </summary>
-        /// <typeparam name="TModelAcceesInterface">How the dependency is bound in the model layer.</typeparam>
-        /// <typeparam name="TCommmonAccessInterface">How the dependency should be bound in the view layer.</typeparam>
+        /// <typeparam name="TModelAccessInterface">How the dependency is bound in the model layer.</typeparam>
+        /// <typeparam name="TCommonAccessInterface">How the dependency should be bound in the view layer.</typeparam>
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
         /// Use <see cref="UseAsMvvmContainer"/> to configure container.
         /// </exception>
-        public static void ProvideAccessForViewLayer<TModelAcceesInterface, TCommmonAccessInterface>(this DiContainer container)
+        public static void ProvideAccessForViewLayer<TModelAccessInterface, TCommonAccessInterface>(this DiContainer container)
         {
             var viewsContainer = container.TryResolve<IViewsContainerAdapter>();
             if (viewsContainer == null)
                 throw new InvalidOperationException("Provided container does not contain container for the view layer. " +
                     $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            viewsContainer.Container.Bind<TCommmonAccessInterface>()
+            viewsContainer.Container.Bind<TCommonAccessInterface>()
                 .FromMethod(_ =>
                 {
-                    if (container.Resolve<TModelAcceesInterface>() is TCommmonAccessInterface common)
+                    if (container.Resolve<TModelAccessInterface>() is TCommonAccessInterface common)
                     {
                         return common;
                     }
@@ -141,23 +143,23 @@ namespace UnityMVVM.DI
         /// <summary>
         /// Provides an access for specified objet types for view-model layer.
         /// </summary>
-        /// <typeparam name="TModelAcceesInterface">How the dependency is bound in the model layer.</typeparam>
-        /// <typeparam name="TCommmonAccessInterface">How the dependency should be bound in the view-model layer.</typeparam>
+        /// <typeparam name="TModelAccessInterface">How the dependency is bound in the model layer.</typeparam>
+        /// <typeparam name="TCommonAccessInterface">How the dependency should be bound in the view-model layer.</typeparam>
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
         /// Use <see cref="UseAsMvvmContainer"/> to configure container.
         /// </exception>
-        public static void ProvideAccessForViewModelLayer<TModelAcceesInterface, TCommmonAccessInterface>(this DiContainer container)
+        public static void ProvideAccessForViewModelLayer<TModelAccessInterface, TCommonAccessInterface>(this DiContainer container)
         {
             var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
                     $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            viewModelsContainer.Container.Bind<TCommmonAccessInterface>()
+            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
                 .FromMethod(_ =>
                 {
-                    if (container.Resolve<TModelAcceesInterface>() is TCommmonAccessInterface common)
+                    if (container.Resolve<TModelAccessInterface>() is TCommonAccessInterface common)
                     {
                         return common;
                     }
@@ -183,7 +185,16 @@ namespace UnityMVVM.DI
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
                     $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            container.Bind(typeof(TModelAccessInterface), typeof(TCommonAccessInterface))
+            var bindTypes = new List<Type>
+            {
+                typeof(TModelAccessInterface),
+                typeof(TCommonAccessInterface)
+            };
+            if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
+            {
+                bindTypes.Add(typeof(IInitializable));
+            }
+            container.Bind(bindTypes)
                 .To<TImpl>().AsSingle();
             viewModelsContainer.Container.Bind<TCommonAccessInterface>()
                 .FromMethod(_ =>
@@ -197,29 +208,129 @@ namespace UnityMVVM.DI
         }
 
         /// <summary>
-        /// Binds a dependency for both model and common access layers.
+        /// Binds a dependency for both model and view-model layers.
+        /// </summary>
+        /// <typeparam name="TModelAccessInterface">The interface to access the dependency in the model layer.</typeparam>
+        /// <typeparam name="TCommonAccessInterface">The interface to access the dependency in view-model layer.</typeparam>
+        /// <typeparam name="TImpl"></typeparam>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="prefab">The dependency prefab.</param>
+        /// <exception cref="InvalidOperationException">
+        /// Being thrown if it is not MVVM container.
+        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// </exception>
+        public static void FastBindMono<TModelAccessInterface, TCommonAccessInterface, TImpl>(this DiContainer container,
+            GameObject? prefab = null)
+        where TImpl : MonoBehaviour, TCommonAccessInterface, TModelAccessInterface
+        {
+            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
+            if (viewModelsContainer == null)
+                throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
+                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
+            var bindTypes = new List<Type>
+            {
+                typeof(TModelAccessInterface),
+                typeof(TCommonAccessInterface)
+            };
+            if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
+            {
+                bindTypes.Add(typeof(IInitializable));
+            }
+
+            if (prefab == null)
+            {
+                container.Bind(bindTypes)
+                    .To<TImpl>().FromNewComponentOnNewGameObject().AsSingle();
+            }
+            else
+            {
+                container.Bind(bindTypes)
+                    .To<TImpl>().FromComponentInNewPrefab(prefab).AsSingle();
+            }
+
+            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
+                .FromMethod(_ =>
+                {
+                    if (container.Resolve<TModelAccessInterface>() is TCommonAccessInterface common)
+                    {
+                        return common;
+                    }
+                    throw new Exception($"Can not convert dependency for view-model layer.");
+                }).AsSingle();
+        }
+
+        /// <summary>
+        /// Binds a dependency for both model and view model access layers.
         /// </summary>
         /// <typeparam name="TCommonAccessInterface">The interface to access the model in view-model layer.</typeparam>
-        /// <typeparam name="TModelImpl"></typeparam>
+        /// <typeparam name="TImpl">The implementation of the dependency</typeparam>
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
         /// Use <see cref="UseAsMvvmContainer"/> to configure container.
         /// </exception>
-        public static void FastBind<TCommonAccessInterface, TModelImpl>(this DiContainer container)
-        where TModelImpl : TCommonAccessInterface
+        public static void FastBind<TCommonAccessInterface, TImpl>(this DiContainer container)
+        where TImpl : TCommonAccessInterface
         {
             var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} mithod to configure container.");
-            container.Bind<TCommonAccessInterface>().To<TModelImpl>().AsSingle();
+                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            var bindTypes = new List<Type>
+            {
+                typeof(TCommonAccessInterface)
+            };
+            if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
+            {
+                bindTypes.Add(typeof(IInitializable));
+            }
+            container.Bind(bindTypes).To<TImpl>().AsSingle();
             viewModelsContainer.Container.Bind<TCommonAccessInterface>()
                 .FromMethod(_ => container.Resolve<TCommonAccessInterface>()).AsSingle();
         }
 
         /// <summary>
-        /// Returens a container for view-model layer.
+        /// Binds a dependency for both model and view model access layers.
+        /// </summary>
+        /// <typeparam name="TCommonAccessInterface">The interface to access the model in view-model layer.</typeparam>
+        /// <typeparam name="TImpl">The implementation of the dependency.</typeparam>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="prefab">The dependency prefab</param>
+        /// <exception cref="InvalidOperationException">
+        /// Being thrown if it is not MVVM container.
+        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// </exception>
+        public static void FastBindMono<TCommonAccessInterface, TImpl>(this DiContainer container, GameObject? prefab = null)
+            where TImpl : MonoBehaviour, TCommonAccessInterface
+        {
+            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
+            if (viewModelsContainer == null)
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            var bindTypes = new List<Type>
+            {
+                typeof(TCommonAccessInterface)
+            };
+            if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
+            {
+                bindTypes.Add(typeof(IInitializable));
+            }
+
+            if (prefab == null)
+            {
+                container.Bind(bindTypes).To<TImpl>().FromNewComponentOnNewGameObject().AsSingle();
+            }
+            else
+            {
+                container.Bind(bindTypes).To<TImpl>().FromComponentInNewPrefab(prefab).AsSingle();
+            }
+
+            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
+                .FromMethod(_ => container.Resolve<TCommonAccessInterface>()).AsSingle();
+        }
+
+        /// <summary>
+        /// Returns a container for view-model layer.
         /// </summary>
         /// <param name="container">The MVVM container.</param>
         public static DiContainer GetViewModelsContainer(this DiContainer container)
@@ -232,7 +343,7 @@ namespace UnityMVVM.DI
         }
 
         /// <summary>
-        /// Returens a container for view layer.
+        /// Returns a container for view layer.
         /// </summary>
         /// <param name="container">The MVVM container.</param>
         public static DiContainer GetViewsContainer(this DiContainer container)

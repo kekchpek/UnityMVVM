@@ -49,7 +49,7 @@ namespace CCG.Core
             });
 
             Container.FastBind<IHandMutableModel, IHandModel, HandModel>();
-            Container.FastBind<IHandService, HandService>();
+            Container.FastBindMono<IHandService, HandService>();
             Container.FastBind<ICameraMutableModel, ICameraModel, CameraModel>();
             Container.FastBind<ICameraService, CameraService>();
             Container.FastBind<IUiMutableModel, IUiModel, UiModel>();
