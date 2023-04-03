@@ -1,7 +1,5 @@
 ﻿using AsyncReactAwait.Promises;
-using JetBrains.Annotations;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
@@ -10,8 +8,7 @@ namespace UnityMVVM.ViewManager.ViewLayer
     internal class ViewLayerImpl : IViewLayer
     {
 
-        [AllowNull, CanBeNull]
-        private IViewModel _currentViewModel;
+        private IViewModel? _currentViewModel;
 
         public string Id { get; }
 
@@ -36,7 +33,12 @@ namespace UnityMVVM.ViewManager.ViewLayer
 
         public void ClearInstantly()
         {
-           _currentViewModel.Destroy();
+           _currentViewModel?.Destroy();
+        }
+
+        public IViewModel? GetCurrentView()
+        {
+            return _currentViewModel;
         }
 
         public void Set(IViewModel viewModel)
@@ -46,12 +48,13 @@ namespace UnityMVVM.ViewManager.ViewLayer
                 throw new InvalidOperationException("It is not possible to set new view model for layer, that already has view ");
             }
             _currentViewModel = viewModel;
-            _currentViewModel.Destroyed += OnViewModelDestoryed;
+            _currentViewModel.Destroyed += OnViewModelDestroyed;
         }
 
-        private void OnViewModelDestoryed()
+        private void OnViewModelDestroyed()
         {
-            _currentViewModel.Destroyed -= OnViewModelDestoryed;
+            if (_currentViewModel == null) return;
+            _currentViewModel.Destroyed -= OnViewModelDestroyed;
             _currentViewModel = null;
         }
     }

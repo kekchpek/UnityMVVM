@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsyncReactAwait" Version="0.7.23" />
+    <PackageReference Include="AsyncReactAwait" Version="0.7.24" />
   </ItemGroup>
 
   <ItemGroup>

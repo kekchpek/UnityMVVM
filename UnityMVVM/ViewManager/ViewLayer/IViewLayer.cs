@@ -33,6 +33,12 @@ namespace UnityMVVM.ViewManager.ViewLayer
         void ClearInstantly();
 
         /// <summary>
+        /// Gets current layer view model.
+        /// </summary>
+        /// <returns>Current layer view model</returns>
+        IViewModel? GetCurrentView();
+
+        /// <summary>
         /// Set root view model. Destroy previous if it exists.
         /// </summary>
         /// <param name="viewModel">View model to be set.</param>

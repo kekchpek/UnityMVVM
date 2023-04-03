@@ -45,7 +45,7 @@ namespace CCG.MVVM.MainMenu
 
         public async void OnPlayButtonPressed()
         {
-            await _viewManager.Close(ViewLayerIds.Main3d);
+            await _viewManager.CloseAbove(ViewLayerIds.Main3d);
             await _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainScreen);
         }
 

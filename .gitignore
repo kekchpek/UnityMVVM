@@ -401,7 +401,7 @@ FodyWeavers.xsd
 build/*
 
 # Idea
-.idea/*
+*.idea/
 
 # OSX
 *.DS_Store
