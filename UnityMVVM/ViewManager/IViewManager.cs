@@ -24,12 +24,21 @@ namespace UnityMVVM.ViewManager
         public T Create<T>(IViewModel parent, string viewName, IPayload? payload = null) where T : class, IViewModel;
         
         /// <summary>
-        /// Creates view model and corresponding view. Destroys all views on layers above specified.
+        /// Creates view model and corresponding view. Closes all views on layers above specified.
         /// </summary>
         /// <param name="viewLayerId">A layer, where view should be created.</param>
         /// <param name="payload">View model payload.</param>
         /// <param name="viewName">The identifier of the view.</param>
         public IPromise Open(string viewLayerId, string viewName, IPayload? payload = null);
+
+        /// <summary>
+        /// Creates view model and corresponding view.
+        /// </summary>
+        /// <param name="viewLayerId">A layer, where view should be created.</param>
+        /// <param name="payload">View model payload.</param>
+        /// <param name="viewName">The identifier of the view.</param>
+        /// <returns>The promise that indicates open process.</returns>
+        public IPromise OpenExact(string viewLayerId, string viewName, IPayload? payload = null);
 
         /// <summary>
         /// Destroys all view on specified layer.

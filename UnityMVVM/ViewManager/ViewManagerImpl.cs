@@ -34,6 +34,18 @@ namespace UnityMVVM.ViewManager
         }
 
 
+        public async IPromise OpenExact(string viewLayerId, string viewName, IPayload? payload = null)
+        {
+            var layer = _layers.FirstOrDefault(x => x.Id == viewLayerId);
+            if (layer == null)
+            {
+                throw new Exception($"Can not find layer with id = {viewLayerId}");
+            }
+
+            await layer.Clear();
+            CreateViewOnLayer(viewName, layer, payload);
+        }
+
         /// <inheritdoc cref="IViewManager.Close(string)"/>
         public async IPromise Close(string viewLayerId)
         {
@@ -112,15 +124,7 @@ namespace UnityMVVM.ViewManager
                     await _layers[i].Clear();
                     if (_layers[i].Id == viewLayerId)
                     {
-                        var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(_layers[i], null, payload);
-                        _createdViewsNames.Add(viewModel, viewName);
-                        void OnViewModelDestroyed()
-                        {
-                            viewModel.Destroyed -= OnViewModelDestroyed;
-                            _createdViewsNames.Remove(viewModel);
-                        }
-                        viewModel.Destroyed += OnViewModelDestroyed;
-                        _layers[i].Set(viewModel);
+                        CreateViewOnLayer(viewName, _layers[i], payload);
                         break;
                     }
                 }
@@ -130,6 +134,20 @@ namespace UnityMVVM.ViewManager
                 _openingLayer = null;
             }
 
+        }
+
+        private void CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
+        {
+            
+            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, payload);
+            _createdViewsNames.Add(viewModel, viewName);
+            void OnViewModelDestroyed()
+            {
+                viewModel.Destroyed -= OnViewModelDestroyed;
+                _createdViewsNames.Remove(viewModel);
+            }
+            viewModel.Destroyed += OnViewModelDestroyed;
+            layer.Set(viewModel);
         }
     }
 }
