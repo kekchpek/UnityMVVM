@@ -1,7 +1,5 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.DI.Mapper;
@@ -12,9 +10,8 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
 {
 
     /// <inheritdoc cref="IViewFactory"/>
-    internal class ViewFactory<TView, TViewModel> : IViewFactory
+    internal class ViewFactory<TView> : IViewFactory
         where TView : IViewInitializer
-        where TViewModel : IViewModel
     {
         private readonly IViewsContainerAdapter _viewsContainerAdapter;
         private readonly IInstantiator _instantiator;
@@ -41,9 +38,9 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         }
 
         /// <inheritdoc cref="IViewFactory.Create(IViewLayer, IViewModel, IPayload)"/>
-        public IViewModel Create(IViewLayer viewLayer,
-            [CanBeNull, AllowNull] IViewModel parent, 
-            [CanBeNull, AllowNull] IPayload payload = null)
+        public IViewModelInternal Create(IViewLayer viewLayer,
+            IViewModel? parent, 
+            IPayload? payload = null)
         {
 
             var view = _viewsContainerAdapter.Container.InstantiatePrefabForComponent<TView>(_viewPrefab, viewLayer.Container);
@@ -57,15 +54,15 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             throw new Exception("View should be a Component");
         }
 
-        private IViewModel CreateViewModels(
+        private IViewModelInternal CreateViewModels(
             Transform initialObj,
             IViewLayer layer, 
-            [CanBeNull, AllowNull] IViewModel initialParent, 
-            [CanBeNull, AllowNull] IPayload payload)
+            IViewModel? initialParent, 
+            IPayload? payload)
         {
             Queue<(Transform obj, IViewModel? parent)> creationQueue = new Queue<(Transform obj, IViewModel? parent)>();
             creationQueue.Enqueue((initialObj, initialParent));
-            IViewModel? rootViewModel = null;
+            IViewModelInternal? rootViewModel = null;
             while (creationQueue.Count > 0)
             {
                 var data = creationQueue.Dequeue();
@@ -91,7 +88,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                     ((IViewInitializer)view).SetViewModel((IViewModel)viewModel);
                     if (rootViewModel == null)
                     {
-                        rootViewModel = (IViewModel)viewModel;
+                        rootViewModel = (IViewModelInternal)viewModel;
                     }
                     parent = data.parent;
                 }

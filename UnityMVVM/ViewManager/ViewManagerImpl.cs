@@ -148,6 +148,7 @@ namespace UnityMVVM.ViewManager
             }
             viewModel.Destroyed += OnViewModelDestroyed;
             layer.Set(viewModel);
+            viewModel.OnOpened();
         }
     }
 }

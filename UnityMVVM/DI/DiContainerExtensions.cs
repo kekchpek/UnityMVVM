@@ -68,7 +68,7 @@ namespace UnityMVVM.DI
             viewModelsContainer.Container
                 .Bind<IViewFactory>()
                 .WithId(viewName)
-                .To<ViewFactory<TView, TViewModel>>()
+                .To<ViewFactory<TView>>()
                 .AsSingle()
                 .WithArgumentsExplicit(new []
                 {

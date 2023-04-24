@@ -17,8 +17,8 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         /// <param name="parent">Parent view model to set to the created view model.</param>
         /// <param name="payload">View model payload.</param>
         /// <returns>Returns created view model to conrol the view.</returns>
-        IViewModel Create(IViewLayer viewLayer, 
-            [CanBeNull, AllowNull] IViewModel parent,
-            [CanBeNull, AllowNull] IPayload payload = null);
+        IViewModelInternal Create(IViewLayer viewLayer, 
+            IViewModel? parent,
+            IPayload? payload = null);
     }
 }

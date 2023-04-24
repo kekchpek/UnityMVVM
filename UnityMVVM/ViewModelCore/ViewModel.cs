@@ -1,7 +1,5 @@
 ﻿using AsyncReactAwait.Promises;
-using JetBrains.Annotations;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
@@ -13,26 +11,25 @@ namespace UnityMVVM.ViewModelCore
     /// <summary>
     /// Base class for view model.
     /// </summary>
-    public class ViewModel : IViewModel
+    public class ViewModel : IViewModelInternal
     {
         private IViewManager _viewManager;
         private IViewLayer _layer;
 
-        [CanBeNull, AllowNull]
-        private IViewModel _parent;
+        private IViewModel? _parent;
 
         private bool _destroyed;
 
-        private IControllablePromise _closePromise;
+        private IControllablePromise? _closePromise;
 
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
 
         /// <inheritdoc cref="IViewModel.Destroyed"/>
-        public event Action Destroyed;
+        public event Action? Destroyed;
 
         /// <inheritdoc cref="IViewModel.CloseStarted"/>
-        public event Action CloseStarted;
+        public event Action? CloseStarted;
 
 
         /// <summary>
@@ -43,7 +40,7 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="parent">Parent view model. This view model will be destroyed with it.</param>
         [Inject]
         public void SetInternalDependencies(IViewManager viewManager, IViewLayer layer, 
-            [CanBeNull, AllowNull, InjectOptional] IViewModel parent)
+            [InjectOptional] IViewModel? parent)
         {
             _layer = layer;
             _viewManager = viewManager;
@@ -56,7 +53,7 @@ namespace UnityMVVM.ViewModelCore
 
         /// <inheritdoc cref="CreateSubView(string, IPayload)"/>
         /// <typeparam name="T">Type of the view model.</typeparam>
-        protected T CreateSubView<T>(string viewName, [AllowNull, CanBeNull] IPayload payload = null) where T : class, IViewModel
+        protected T CreateSubView<T>(string viewName, IPayload? payload = null) where T : class, IViewModel
         {
             var viewModel = _viewManager.Create<T>(this, viewName, payload);
             return viewModel;
@@ -68,7 +65,7 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
         /// <returns>Created view model.</returns>
-        protected IViewModel CreateSubView(string viewName, [AllowNull, CanBeNull] IPayload payload = null)
+        protected IViewModel CreateSubView(string viewName, IPayload? payload = null)
         {
             var viewModel = _viewManager.Create(this, viewName, payload);
             return viewModel;
@@ -80,7 +77,7 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewLayerId">Id of the layer to open view on.</param>
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
-        protected async IPromise OpenView(string viewLayerId, string viewName, [AllowNull, CanBeNull] IPayload payload = null)
+        protected async IPromise OpenView(string viewLayerId, string viewName, IPayload? payload = null)
         {
             await _viewManager.Open(viewLayerId, viewName, payload);
         }
@@ -130,6 +127,22 @@ namespace UnityMVVM.ViewModelCore
         protected virtual void OnCloseStartedInternal()
         {
 
+        }
+        
+        /// <summary>
+        /// Protected method to handle view opened.
+        /// </summary>
+        protected virtual void OnOpenedInternal()
+        {
+
+        }
+
+        /// <summary>
+        /// Invoked by MVVM core when view is opened.
+        /// </summary>
+        public void OnOpened()
+        {
+            OnOpenedInternal();
         }
     }
 }
