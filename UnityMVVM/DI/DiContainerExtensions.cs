@@ -78,6 +78,26 @@ namespace UnityMVVM.DI
         }
 
         /// <summary>
+        /// Installs <see cref="IViewFactory"/> for specified View-ViewModel pair.
+        /// </summary>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <typeparam name="TView">The type of a view</typeparam>
+        /// <typeparam name="TViewModel">The type of a view model.</typeparam>
+        /// <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
+        public static void InstallView<TView, TViewModel, TViewModelImpl>(this DiContainer container)
+            where TView : ViewBehaviour<TViewModel>
+            where TViewModel : class, IViewModel
+            where TViewModelImpl : class, TViewModel
+        {
+            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
+            if (viewModelsContainer == null)
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+     
+            viewModelsContainer.Container.Resolve<IViewToViewModelMutableMapper>().Map<TView, TViewModelImpl>();
+        }
+
+        /// <summary>
         /// Provides an access for specified objet types for view layer.
         /// </summary>
         /// <typeparam name="T">The type of dependency to be resolved in view layer.</typeparam>

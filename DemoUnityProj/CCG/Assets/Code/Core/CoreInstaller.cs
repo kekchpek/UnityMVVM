@@ -31,7 +31,6 @@ namespace CCG.Core
         [SerializeField] private InputController _inputControllerPrefab;
 
         [SerializeField] private GameObject _mainViewPrefab;
-        [SerializeField] private GameObject _statsChangesPrefab;
         [SerializeField] private GameObject _handControllerPrefab;
         [SerializeField] private GameObject _cardPrefab;
         [SerializeField] private GameObject _mainMenu3dPrefab;
@@ -62,7 +61,7 @@ namespace CCG.Core
             Container.GetViewModelsContainer().Bind<IInputController>().FromComponentInNewPrefab(_inputControllerPrefab).AsSingle();
             
             Container.InstallView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen, _mainViewPrefab);
-            Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>(ViewNames.StatsChanger, _statsChangesPrefab);
+            Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>();
             Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(ViewNames.HandController, _handControllerPrefab);
             Container.InstallView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, _cardPrefab);
             Container.InstallView<MainMenuView3d, IMainMenuViewModel3d, MainMenuViewModel3d>(ViewNames.MainMenu3d, _mainMenu3dPrefab);
