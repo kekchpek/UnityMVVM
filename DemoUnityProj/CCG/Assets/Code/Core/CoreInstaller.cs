@@ -60,7 +60,8 @@ namespace CCG.Core
             Container.GetViewModelsContainer().Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
             Container.GetViewModelsContainer().Bind<IInputController>().FromComponentInNewPrefab(_inputControllerPrefab).AsSingle();
             
-            Container.InstallView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen, _mainViewPrefab);
+            Container.InstallView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen,
+                () => Resources.Load<GameObject>("Prefabs/Views/MainScreenView"));
             Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>();
             Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(ViewNames.HandController, _handControllerPrefab);
             Container.InstallView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, _cardPrefab);

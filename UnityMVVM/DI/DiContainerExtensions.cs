@@ -72,7 +72,37 @@ namespace UnityMVVM.DI
                 .AsSingle()
                 .WithArgumentsExplicit(new []
                 {
-                    new TypeValuePair(typeof(GameObject), viewPrefab)
+                    new TypeValuePair(typeof(Func<GameObject>), new Func<GameObject>(() => viewPrefab))
+                });
+            viewModelsContainer.Container.Resolve<IViewToViewModelMutableMapper>().Map<TView, TViewModelImpl>();
+        }
+
+        /// <summary>
+        /// Installs <see cref="IViewFactory"/> for specified View-ViewModel pair.
+        /// </summary>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="viewName">View identificator for opening.</param>
+        /// <param name="viewPrefabGetter">The method to obtain view prefab. View should contains <typeparamref name="TView"/> component inside.</param>
+        /// <typeparam name="TView">The type of a view</typeparam>
+        /// <typeparam name="TViewModel">The type of a view model.</typeparam>
+        /// <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
+        public static void InstallView<TView, TViewModel, TViewModelImpl>(this DiContainer container, string viewName, Func<GameObject> viewPrefabGetter)
+            where TView : ViewBehaviour<TViewModel>
+            where TViewModel : class, IViewModel
+            where TViewModelImpl : class, TViewModel
+        {
+            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
+            if (viewModelsContainer == null)
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            viewModelsContainer.Container
+                .Bind<IViewFactory>()
+                .WithId(viewName)
+                .To<ViewFactory<TView>>()
+                .AsSingle()
+                .WithArgumentsExplicit(new []
+                {
+                    new TypeValuePair(typeof(Func<GameObject>), viewPrefabGetter)
                 });
             viewModelsContainer.Container.Resolve<IViewToViewModelMutableMapper>().Map<TView, TViewModelImpl>();
         }

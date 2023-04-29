@@ -16,23 +16,23 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         private readonly IViewsContainerAdapter _viewsContainerAdapter;
         private readonly IInstantiator _instantiator;
         private readonly IViewToViewModelMapper _viewToViewModelMapper;
-        private readonly GameObject _viewPrefab;
+        private readonly Func<GameObject> _viewPrefabGetter;
 
         /// <summary>
         /// Default constructor for view factory.
         /// </summary>
         /// <param name="viewsContainerAdapter"></param>
-        /// <param name="viewPrefab">Prefab of the view.</param>
+        /// <param name="viewPrefabGetter">The method to obtain prefab of the view.</param>
         /// <param name="instantiator">Instantiator for view models.</param>
         /// <param name="viewToViewModelMapper">Map of views and view models types.</param>
         public ViewFactory( 
             IViewsContainerAdapter viewsContainerAdapter, 
-            GameObject viewPrefab,
+            Func<GameObject> viewPrefabGetter,
             IInstantiator instantiator,
             IViewToViewModelMapper viewToViewModelMapper)
         {
             _viewsContainerAdapter = viewsContainerAdapter;
-            _viewPrefab = viewPrefab;
+            _viewPrefabGetter = viewPrefabGetter;
             _instantiator = instantiator;
             _viewToViewModelMapper = viewToViewModelMapper;
         }
@@ -43,7 +43,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             IPayload? payload = null)
         {
 
-            var view = _viewsContainerAdapter.Container.InstantiatePrefabForComponent<TView>(_viewPrefab, viewLayer.Container);
+            var view = _viewsContainerAdapter.Container.InstantiatePrefabForComponent<TView>(_viewPrefabGetter.Invoke(), viewLayer.Container);
 
             if (view is Component c)
             {
