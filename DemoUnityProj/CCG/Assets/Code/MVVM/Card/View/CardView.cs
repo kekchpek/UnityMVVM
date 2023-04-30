@@ -43,22 +43,22 @@ namespace CCG.MVVM.Card.View
         {
             base.OnViewModelSet();
             
-            ViewModel.Health.Bind(SetHealth, false);
+            SmartBind(ViewModel!.Health, SetHealth, false);
             SetHealthWithoutAnimation(ViewModel.Health.Value);
             
-            ViewModel.Mana.Bind(SetMana, false);
+            SmartBind(ViewModel.Mana, SetMana, false);
             SetManaWithoutAnimation(ViewModel.Mana.Value);
             
-            ViewModel.Attack.Bind(SetAttack, false);
+            SmartBind(ViewModel.Attack, SetAttack, false);
             SetAttackWithoutAnimation(ViewModel.Attack.Value);
             
-            ViewModel.Description.Bind(SetDescription);
-            ViewModel.Title.Bind(SetTitle);
-            ViewModel.Icon.Bind(SetIcon);
-            ViewModel.IsSelected.Bind(SetIsSelected);
-            ViewModel.IsOverBoard.Bind(SetIsOverBoard);
-            ViewModel.Rotation.Bind(SetRotation);
-            ViewModel.Position.Bind(SetPosition);
+            SmartBind(ViewModel.Description, SetDescription);
+            SmartBind(ViewModel.Title, SetTitle);
+            SmartBind(ViewModel.Icon, SetIcon);
+            SmartBind(ViewModel.IsSelected, SetIsSelected);
+            SmartBind(ViewModel.IsOverBoard, SetIsOverBoard);
+            SmartBind(ViewModel.Rotation, SetRotation);
+            SmartBind(ViewModel.Position, SetPosition);
 
             transform.localScale *= ConfigData.CardScale;
         }
@@ -66,21 +66,21 @@ namespace CCG.MVVM.Card.View
         private void SetPosition(Vector2 position)
         {
             _positionTween?.Kill();
-            _positionTween = transform.DOMove(ViewModel.Position.Value,
+            _positionTween = transform.DOMove(ViewModel!.Position.Value,
                 (position - (Vector2)transform.position).magnitude / _moveSpeed);
         }
 
         private void SetRotation(float rotation)
         {
             _rotationTween?.Kill();
-            _rotationTween = transform.DORotate(new Vector3(0f, 0f, ViewModel.Rotation.Value),
+            _rotationTween = transform.DORotate(new Vector3(0f, 0f, ViewModel!.Rotation.Value),
                 Mathf.Abs(transform.rotation.z - ViewModel.Rotation.Value) / _rotationSpeed);
         }
 
         private void SetHealth(int health)
         {
             _healthTween?.Kill();
-            _healthTween = DOTween.To(() => _health, SetHealthWithoutAnimation, ViewModel.Health.Value, _changeStatAnimationTime);
+            _healthTween = DOTween.To(() => _health, SetHealthWithoutAnimation, ViewModel!.Health.Value, _changeStatAnimationTime);
         }
 
         private void SetHealthWithoutAnimation(int health)
@@ -92,7 +92,7 @@ namespace CCG.MVVM.Card.View
         private void SetAttack(int attack)
         {
             _attackTween?.Kill();
-            _attackTween = DOTween.To(() => _attack, SetAttackWithoutAnimation, ViewModel.Attack.Value, _changeStatAnimationTime);
+            _attackTween = DOTween.To(() => _attack, SetAttackWithoutAnimation, ViewModel!.Attack.Value, _changeStatAnimationTime);
         }
 
         private void SetAttackWithoutAnimation(int attack)
@@ -104,7 +104,7 @@ namespace CCG.MVVM.Card.View
         private void SetMana(int mana)
         {
             _manaTween?.Kill();
-            _manaTween = DOTween.To(() => _mana, SetManaWithoutAnimation, ViewModel.Mana.Value, _changeStatAnimationTime);
+            _manaTween = DOTween.To(() => _mana, SetManaWithoutAnimation, ViewModel!.Mana.Value, _changeStatAnimationTime);
         }
 
         private void SetManaWithoutAnimation(int mana)
@@ -165,37 +165,25 @@ namespace CCG.MVVM.Card.View
         
         public void OnEnterToBoard()
         {
-            ViewModel.OnCardEnterBoard();
+            ViewModel!.OnCardEnterBoard();
         }
 
         public void OnExitFromBoard()
         {
             if (isActiveAndEnabled)
             {
-                ViewModel.OnCardExitBoard();
+                ViewModel!.OnCardExitBoard();
             }
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            ViewModel.OnMouseClickDown();
+            ViewModel!.OnMouseClickDown();
         }
 
         protected override void OnViewModelClear()
         {
             base.OnViewModelClear();
-            
-            ViewModel.Health.Unbind(SetHealth);
-            ViewModel.Mana.Unbind(SetMana);
-            ViewModel.Attack.Unbind(SetAttack);
-            ViewModel.Description.Unbind(SetDescription);
-            ViewModel.Title.Unbind(SetTitle);
-            ViewModel.Icon.Unbind(SetIcon);
-            ViewModel.IsSelected.Unbind(SetIsSelected);
-            ViewModel.IsOverBoard.Unbind(SetIsOverBoard);
-            ViewModel.Rotation.Unbind(SetRotation);
-            ViewModel.Position.Unbind(SetPosition);
-            
             _attackTween.Kill();
             _healthTween.Kill();
             _manaTween.Kill();

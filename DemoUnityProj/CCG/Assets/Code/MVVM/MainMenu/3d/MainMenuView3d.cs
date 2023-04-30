@@ -31,7 +31,7 @@ namespace CCG.MVVM.MainMenu
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
-            ViewModel.State.Bind(OnStateChanged);
+            SmartBind(ViewModel!.State, OnStateChanged);
         }
 
         // required for animation
@@ -77,12 +77,6 @@ namespace CCG.MVVM.MainMenu
             _animator.SetTrigger("Exit");
             _exitPromise = new ControllablePromise();
             return _exitPromise;
-        }
-
-        protected override void OnViewModelClear()
-        {
-            base.OnViewModelClear();
-            ViewModel.State.Unbind(OnStateChanged);
         }
     }
 }
