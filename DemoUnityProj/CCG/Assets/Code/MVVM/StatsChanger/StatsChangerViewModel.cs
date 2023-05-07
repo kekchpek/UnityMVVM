@@ -1,4 +1,5 @@
 ﻿using CCG.Models.Hand.Service;
+using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
 namespace CCG.MVVM.StatsChanger
@@ -17,6 +18,12 @@ namespace CCG.MVVM.StatsChanger
         public void ChangeCardStat()
         {
             _handService.ChangeRandomCardStats();
+        }
+
+        protected override void OnDestroyInternal()
+        {
+            Debug.Log("Stats changer destroyed!");
+            base.OnDestroyInternal();
         }
     }
 }

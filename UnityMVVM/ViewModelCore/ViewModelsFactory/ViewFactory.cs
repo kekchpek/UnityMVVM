@@ -90,7 +90,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                     {
                         rootViewModel = (IViewModelInternal)viewModel;
                     }
-                    parent = data.parent;
+                    parent = (IViewModelInternal)viewModel;
                 }
                 foreach (Transform child in data.obj)
                 {

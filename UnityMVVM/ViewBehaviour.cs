@@ -81,7 +81,10 @@ namespace UnityMVVM
         {
             OnViewModelClear();
             _isViewModelDestroyed = true;
-            Destroy(this.gameObject);
+            if (this)
+            {
+                Destroy(this.gameObject);
+            }
         }
 
         /// <summary>
