@@ -88,19 +88,19 @@ namespace UnityMVVM.ViewManager
             return _layers.First(x => x.Id == viewLayerId).GetCurrentView();
         }
 
-        /// <inheritdoc cref="IViewManager.Create{T}(IViewModel, string, IPayload)"/>
-        public T Create<T>(IViewModel parent, string viewName, IPayload? payload = null)
+        /// <inheritdoc cref="IViewManager.Create{T}(IViewModel, string, Transform, IPayload)"/>
+        public T Create<T>(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
              where T : class, IViewModel
         {
-            var viewModel = Create(parent, viewName, payload);
+            var viewModel = Create(parent, viewName, container, payload);
             if (viewModel is T concreteViewModel)
                 return concreteViewModel;
             throw new InvalidCastException($"Can not cast view model of type {viewModel.GetType().Name} to {typeof(T).Name}");
         }
 
-        public IViewModel Create(IViewModel parent, string viewName, IPayload? payload = null)
+        public IViewModel Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
         {
-            return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, payload);
+            return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, container, payload);
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
@@ -139,7 +139,7 @@ namespace UnityMVVM.ViewManager
         private void CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
         {
             
-            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, payload);
+            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, layer.Container, payload);
             _createdViewsNames.Add(viewModel, viewName);
             void OnViewModelDestroyed()
             {

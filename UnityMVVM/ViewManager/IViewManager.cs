@@ -1,4 +1,5 @@
 ﻿using AsyncReactAwait.Promises;
+using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager
@@ -15,14 +16,15 @@ namespace UnityMVVM.ViewManager
         /// </summary>
         /// <param name="parent">Parent view model.</param>
         /// <param name="viewName">The identifier of the view.</param>
+        /// <param name="container">The container to instantiate the view to.</param>
         /// <param name="payload">View model payload.</param>
         /// <returns>Returns created view model.</returns>
-        public IViewModel Create(IViewModel parent, string viewName, IPayload? payload = null);
+        public IViewModel Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null);
 
-        /// <inheritdoc cref="Create(IViewModel, string, IPayload)"/>
+        /// <inheritdoc cref="Create(IViewModel, string, Transform, IPayload)"/>
         /// <typeparam name="T">A view model type.</typeparam>
-        public T Create<T>(IViewModel parent, string viewName, IPayload? payload = null) where T : class, IViewModel;
-        
+        public T Create<T>(IViewModel parent, string viewName, Transform container, IPayload? payload = null) where T : class, IViewModel;
+
         /// <summary>
         /// Creates view model and corresponding view. Closes all views on layers above specified.
         /// </summary>

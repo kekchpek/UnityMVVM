@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
 using Zenject;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace UnityMVVM.ViewModelCore
 {
@@ -55,8 +56,7 @@ namespace UnityMVVM.ViewModelCore
         /// <typeparam name="T">Type of the view model.</typeparam>
         protected T CreateSubView<T>(string viewName, IPayload? payload = null) where T : class, IViewModel
         {
-            var viewModel = _viewManager.Create<T>(this, viewName, payload);
-            return viewModel;
+            return CreateSubView<T>(viewName, _layer.Container, payload);
         }
 
         /// <summary>
@@ -67,7 +67,22 @@ namespace UnityMVVM.ViewModelCore
         /// <returns>Created view model.</returns>
         protected IViewModel CreateSubView(string viewName, IPayload? payload = null)
         {
-            var viewModel = _viewManager.Create(this, viewName, payload);
+            return CreateSubView(viewName, _layer.Container, payload);
+        }
+
+        /// <inheritdoc cref="CreateSubView(string,UnityMVVM.ViewModelCore.IPayload?)"/>
+        /// <param name="container">The container to instantiate view to.</param>
+        protected IViewModel CreateSubView(string viewName, Transform container, IPayload? payload = null)
+        {
+            var viewModel = _viewManager.Create(this, viewName, container, payload);
+            return viewModel;
+        }
+        
+        /// <inheritdoc cref="CreateSubView{T}(string,UnityMVVM.ViewModelCore.IPayload?)"/>
+        /// <param name="container">The container to instantiate view to.</param>
+        protected T CreateSubView<T>(string viewName, Transform container, IPayload? payload = null) where T : class, IViewModel
+        {
+            var viewModel = _viewManager.Create<T>(this, viewName, container, payload);
             return viewModel;
         }
 

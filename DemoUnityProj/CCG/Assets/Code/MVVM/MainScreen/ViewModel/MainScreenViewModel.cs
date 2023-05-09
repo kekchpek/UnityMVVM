@@ -18,6 +18,8 @@ namespace CCG.MVVM.MainScreen.ViewModel
         private readonly IHandModel _handModel;
         private readonly IViewManager _viewManager;
 
+        private Transform _cardsContainer;
+
         public MainScreenViewModel(IImageModel imageModel, IHandService handService,
             IHandModel handModel, IViewManager viewManager)
         {
@@ -36,7 +38,7 @@ namespace CCG.MVVM.MainScreen.ViewModel
 
         private void OnCardAdded(ICardModel card)
         {
-            CreateSubView(ViewNames.Card, new CardPayload(card));
+            CreateSubView(ViewNames.Card, _cardsContainer, new CardPayload(card));
         }
         
         private void IntiGame()
@@ -59,6 +61,11 @@ namespace CCG.MVVM.MainScreen.ViewModel
         public void OnMainMenuButtonClicked()
         {
             OpenView(ViewLayerIds.Main3d, ViewNames.MainMenu3d);
+        }
+
+        public void SetCardsContainer(Transform container)
+        {
+            _cardsContainer = container;
         }
 
         protected override void OnDestroyInternal()

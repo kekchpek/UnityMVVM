@@ -12,6 +12,8 @@ namespace CCG.MVVM.MainScreen.View
         private ICameraService _cameraService;
 
         [SerializeField] private Button _mainMenuButton;
+
+        [SerializeField] private Transform _cardsContainer;
         
         [Inject]
         public void Construct(ICameraService cameraService)
@@ -27,6 +29,7 @@ namespace CCG.MVVM.MainScreen.View
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
+            ViewModel.SetCardsContainer(_cardsContainer);
             _mainMenuButton.onClick.AddListener(() => ViewModel.OnMainMenuButtonClicked());
         }
 

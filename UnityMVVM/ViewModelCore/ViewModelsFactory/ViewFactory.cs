@@ -39,11 +39,12 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
 
         /// <inheritdoc cref="IViewFactory.Create(IViewLayer, IViewModel, IPayload)"/>
         public IViewModelInternal Create(IViewLayer viewLayer,
-            IViewModel? parent, 
+            IViewModel? parent,
+            Transform transform,
             IPayload? payload = null)
         {
 
-            var view = _viewsContainerAdapter.Container.InstantiatePrefabForComponent<TView>(_viewPrefabGetter.Invoke(), viewLayer.Container);
+            var view = _viewsContainerAdapter.Container.InstantiatePrefabForComponent<TView>(_viewPrefabGetter.Invoke(), transform);
 
             if (view is Component c)
             {
