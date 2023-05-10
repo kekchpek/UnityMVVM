@@ -8,7 +8,7 @@ using Zenject;
 
 namespace CCG.Models.ImageModel
 {
-    public class ImageModel : IImageModel, IInitializable
+    public class ImageModel : IImageModel, IImageService, IInitializable
     {
         private readonly IImageLoaderService _imageLoaderService;
 

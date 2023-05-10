@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using ModestTree;
 using UnityMVVM.DI.Mapper;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace UnityMVVM.DI
 {
@@ -222,7 +223,7 @@ namespace UnityMVVM.DI
         /// </summary>
         /// <typeparam name="TModelAccessInterface">The interface to access the dependency in the model layer.</typeparam>
         /// <typeparam name="TCommonAccessInterface">The interface to access the dependency in view-model layer.</typeparam>
-        /// <typeparam name="TImpl"></typeparam>
+        /// <typeparam name="TImpl">The dependency implementation.</typeparam>
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
@@ -231,30 +232,43 @@ namespace UnityMVVM.DI
         public static void FastBind<TModelAccessInterface, TCommonAccessInterface, TImpl>(this DiContainer container)
         where TImpl : TCommonAccessInterface, TModelAccessInterface
         {
+            container.FastBind<TImpl>(new []{typeof(TModelAccessInterface)} ,
+                new []{typeof(TCommonAccessInterface)});
+        }
+
+        /// <summary>
+        /// Binds a dependency for both model and view-model layers.
+        /// </summary>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="modelAccessInterfaces">Interface to access the dependency in the model layer.</param>
+        /// <param name="commonAccessInterfaces">Interface to access the dependency in view-model layer.</param>
+        /// <typeparam name="TImpl">The dependency implementation.</typeparam>
+        /// <exception cref="InvalidOperationException">
+        /// Being thrown if it is not MVVM container.
+        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// </exception>
+        public static void FastBind<TImpl>(this DiContainer container, IReadOnlyCollection<Type> modelAccessInterfaces,
+            IReadOnlyCollection<Type> commonAccessInterfaces)
+        {
+            
             var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            var bindTypes = new List<Type>
-            {
-                typeof(TModelAccessInterface),
-                typeof(TCommonAccessInterface)
-            };
+                                                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
+            var bindTypes = modelAccessInterfaces.Concat(commonAccessInterfaces).ToList();
             if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
             {
                 bindTypes.Add(typeof(IInitializable));
             }
             container.Bind(bindTypes)
                 .To<TImpl>().AsSingle();
-            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
-                .FromMethod(_ =>
-                {
-                    if (container.Resolve<TModelAccessInterface>() is TCommonAccessInterface common)
-                    {
-                        return common;
-                    }
-                    throw new Exception($"Can not convert dependency for view-model layer.");
-                }).AsSingle();
+
+            if (commonAccessInterfaces.IsEmpty())
+            {
+                commonAccessInterfaces = modelAccessInterfaces;
+            }
+            viewModelsContainer.Container.Bind(commonAccessInterfaces)
+                .FromMethod<TImpl>(_ => (TImpl)container.Resolve(modelAccessInterfaces.First())).AsSingle();
         }
 
         /// <summary>
@@ -262,7 +276,7 @@ namespace UnityMVVM.DI
         /// </summary>
         /// <typeparam name="TModelAccessInterface">The interface to access the dependency in the model layer.</typeparam>
         /// <typeparam name="TCommonAccessInterface">The interface to access the dependency in view-model layer.</typeparam>
-        /// <typeparam name="TImpl"></typeparam>
+        /// <typeparam name="TImpl">The implementation of the dependency</typeparam>
         /// <param name="container">MVVM container to configure.</param>
         /// <param name="prefab">The dependency prefab.</param>
         /// <exception cref="InvalidOperationException">
@@ -273,15 +287,33 @@ namespace UnityMVVM.DI
             GameObject? prefab = null)
         where TImpl : MonoBehaviour, TCommonAccessInterface, TModelAccessInterface
         {
+            container.FastBindMono<TImpl>(new []{typeof(TModelAccessInterface)},
+                new []{typeof(TCommonAccessInterface)},
+                prefab);
+        }
+
+        /// <summary>
+        /// Binds a dependency for both model and view-model layers.
+        /// </summary>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="modelAccessInterfaces">Interfaces to access the dependency in the model layer.</param>
+        /// <param name="commonAccessInterfaces">Interfaces to access the dependency in view-model layer.</param>
+        /// <param name="prefab">The dependency prefab.</param>
+        /// <typeparam name="TImpl">The implementation of the dependency</typeparam>
+        /// <exception cref="InvalidOperationException">
+        /// Being thrown if it is not MVVM container.
+        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// </exception>
+        public static void FastBindMono<TImpl>(this DiContainer container,
+            IReadOnlyCollection<Type> modelAccessInterfaces,
+            IReadOnlyCollection<Type> commonAccessInterfaces,
+            GameObject? prefab = null)
+        {
             var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
             if (viewModelsContainer == null)
                 throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            var bindTypes = new List<Type>
-            {
-                typeof(TModelAccessInterface),
-                typeof(TCommonAccessInterface)
-            };
+                                                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
+            var bindTypes = modelAccessInterfaces.Concat(commonAccessInterfaces).ToList();
             if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
             {
                 bindTypes.Add(typeof(IInitializable));
@@ -298,15 +330,12 @@ namespace UnityMVVM.DI
                     .To<TImpl>().FromComponentInNewPrefab(prefab).AsSingle();
             }
 
-            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
-                .FromMethod(_ =>
-                {
-                    if (container.Resolve<TModelAccessInterface>() is TCommonAccessInterface common)
-                    {
-                        return common;
-                    }
-                    throw new Exception($"Can not convert dependency for view-model layer.");
-                }).AsSingle();
+            if (commonAccessInterfaces.IsEmpty())
+            {
+                commonAccessInterfaces = modelAccessInterfaces;
+            }
+            viewModelsContainer.Container.Bind(commonAccessInterfaces)
+                .FromMethod<TImpl>(_ => (TImpl)container.Resolve(modelAccessInterfaces.First())).AsSingle();
         }
 
         /// <summary>
@@ -322,21 +351,23 @@ namespace UnityMVVM.DI
         public static void FastBind<TCommonAccessInterface, TImpl>(this DiContainer container)
         where TImpl : TCommonAccessInterface
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
-                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
-            var bindTypes = new List<Type>
-            {
-                typeof(TCommonAccessInterface)
-            };
-            if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
-            {
-                bindTypes.Add(typeof(IInitializable));
-            }
-            container.Bind(bindTypes).To<TImpl>().AsSingle();
-            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
-                .FromMethod(_ => container.Resolve<TCommonAccessInterface>()).AsSingle();
+            container.FastBind<TImpl>(new [] {typeof(TCommonAccessInterface)});
+        }
+
+        /// <summary>
+        /// Binds a dependency for both model and view model access layers.
+        /// </summary>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="commonAccessInterfaces">Interfaces to access the model in view-model layer.</param>
+        /// <typeparam name="TImpl">The implementation of the dependency</typeparam>
+        /// <exception cref="InvalidOperationException">
+        /// Being thrown if it is not MVVM container.
+        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// </exception>
+        public static void FastBind<TImpl>(this DiContainer container,
+            IReadOnlyCollection<Type> commonAccessInterfaces)
+        {
+            container.FastBind<TImpl>(commonAccessInterfaces, Array.Empty<Type>());
         }
 
         /// <summary>
@@ -353,30 +384,28 @@ namespace UnityMVVM.DI
         public static void FastBindMono<TCommonAccessInterface, TImpl>(this DiContainer container, GameObject? prefab = null)
             where TImpl : MonoBehaviour, TCommonAccessInterface
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
-                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
-                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
-            var bindTypes = new List<Type>
-            {
-                typeof(TCommonAccessInterface)
-            };
-            if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
-            {
-                bindTypes.Add(typeof(IInitializable));
-            }
+            container.FastBindMono<TImpl>(new []{typeof(TCommonAccessInterface)}, prefab);
+        }
 
-            if (prefab == null)
-            {
-                container.Bind(bindTypes).To<TImpl>().FromNewComponentOnNewGameObject().AsSingle();
-            }
-            else
-            {
-                container.Bind(bindTypes).To<TImpl>().FromComponentInNewPrefab(prefab).AsSingle();
-            }
-
-            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
-                .FromMethod(_ => container.Resolve<TCommonAccessInterface>()).AsSingle();
+        /// <summary>
+        /// Binds a dependency for both model and view model access layers.
+        /// </summary>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="commonAccessInterfaces">Interfaces to access the model in view-model layer.</param>
+        /// <param name="prefab">The dependency prefab</param>
+        /// <typeparam name="TImpl">The implementation of the dependency.</typeparam>
+        /// <exception cref="InvalidOperationException">
+        /// Being thrown if it is not MVVM container.
+        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// </exception>
+        public static void FastBindMono<TImpl>(this DiContainer container,
+            IReadOnlyCollection<Type> commonAccessInterfaces,
+            GameObject? prefab)
+        {
+            container.FastBindMono<TImpl>(
+                commonAccessInterfaces, 
+                Array.Empty<Type>(),
+                prefab);
         }
 
         /// <summary>

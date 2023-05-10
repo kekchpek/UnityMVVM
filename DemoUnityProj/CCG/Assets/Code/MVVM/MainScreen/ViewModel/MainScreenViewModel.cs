@@ -13,17 +13,17 @@ namespace CCG.MVVM.MainScreen.ViewModel
 {
     public class MainScreenViewModel : UnityMVVM.ViewModelCore.ViewModel, IMainScreenViewModel, IInitializable
     {
-        private readonly IImageModel _imageModel;
+        private readonly IImageService _imageService;
         private readonly IHandService _handService;
         private readonly IHandModel _handModel;
         private readonly IViewManager _viewManager;
 
         private Transform _cardsContainer;
 
-        public MainScreenViewModel(IImageModel imageModel, IHandService handService,
+        public MainScreenViewModel(IImageService imageService, IHandService handService,
             IHandModel handModel, IViewManager viewManager)
         {
-            _imageModel = imageModel;
+            _imageService = imageService;
             _handService = handService;
             _handModel = handModel;
             _viewManager = viewManager;
@@ -43,7 +43,7 @@ namespace CCG.MVVM.MainScreen.ViewModel
         
         private void IntiGame()
         {
-            _imageModel.LoadImages().OnSuccess(() =>
+            _imageService.LoadImages().OnSuccess(() =>
             {
                 var cardsCount = Random.Range(4, 7);
                 for (var i = 0; i < cardsCount; i++)

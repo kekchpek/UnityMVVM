@@ -30,7 +30,6 @@ namespace CCG.Core
         [SerializeField] private Transform _popupRoot;
         [SerializeField] private InputController _inputControllerPrefab;
 
-        [SerializeField] private GameObject _mainViewPrefab;
         [SerializeField] private GameObject _handControllerPrefab;
         [SerializeField] private GameObject _cardPrefab;
         [SerializeField] private GameObject _mainMenu3dPrefab;
@@ -52,7 +51,7 @@ namespace CCG.Core
             Container.FastBind<ICameraMutableModel, ICameraModel, CameraModel>();
             Container.FastBind<ICameraService, CameraService>();
             Container.FastBind<IUiMutableModel, IUiModel, UiModel>();
-            Container.FastBind<IImageModel, ImageModel>();
+            Container.FastBind<ImageModel>(new []{typeof(IImageService), typeof(IImageModel)});
             Container.FastBind<IImageLoaderService, ImageLoaderService>();
             Container.FastBind<ICardFactory, CardFactory>();
             Container.FastBind<IUiService, UiService>();
