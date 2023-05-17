@@ -14,6 +14,7 @@ using CCG.MVVM.LoadingPopup;
 using CCG.MVVM.MainMenu;
 using CCG.MVVM.MainScreen.View;
 using CCG.MVVM.MainScreen.ViewModel;
+using CCG.MVVM.PlayButton;
 using CCG.MVVM.StatsChanger;
 using CCG.Services.ImageLoaderService;
 using UnityEngine;
@@ -62,6 +63,7 @@ namespace CCG.Core
             Container.InstallView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen,
                 () => Resources.Load<GameObject>("Prefabs/Views/MainScreenView"));
             Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>();
+            Container.InstallView<PlayButtonView, IPlayButtonViewModel, PlayButtonViewModel>();
             Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(ViewNames.HandController, _handControllerPrefab);
             Container.InstallView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, _cardPrefab);
             Container.InstallView<MainMenuView3d, IMainMenuViewModel3d, MainMenuViewModel3d>(ViewNames.MainMenu3d, _mainMenu3dPrefab);

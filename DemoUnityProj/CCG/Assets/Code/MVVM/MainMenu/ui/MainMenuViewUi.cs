@@ -24,7 +24,6 @@ namespace CCG.MVVM.MainMenu
             ViewModel.PlayButtonShown.Bind(OnPlayButtonShownChange);
             ViewModel.StatesButtonsShown.Bind(OnStatesButtonsShownChanged);
             ViewModel.BackButtonShown.Bind(OnBackButtonShownChanged);
-            _playButton.onClick.AddListener(() => ViewModel.OnPlayButtonPressed());
             _cubeButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Cube));
             _sphereButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Sphere));
             _cylinderButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Cylinder));

@@ -10,7 +10,6 @@ namespace CCG.MVVM.MainMenu
         IBindable<bool> BackButtonShown { get; }
         IBindable<bool> StatesButtonsShown { get; }
         void OnSwitchStateButtonPressed(MainMenuState state);
-        void OnPlayButtonPressed();
         void OnCoolPopupBtn();
     }
 }

@@ -400,7 +400,7 @@ namespace UnityMVVM.DI
         /// </exception>
         public static void FastBindMono<TImpl>(this DiContainer container,
             IReadOnlyCollection<Type> commonAccessInterfaces,
-            GameObject? prefab)
+            GameObject? prefab = null)
         {
             container.FastBindMono<TImpl>(
                 commonAccessInterfaces, 

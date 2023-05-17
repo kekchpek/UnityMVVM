@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using ModestTree;
 using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.DI.Mapper;
@@ -71,17 +73,19 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                 var view = data.obj.GetComponent<IViewBehaviour>();
                 if (view != null)
                 {
+                    var viewModelType = _viewToViewModelMapper.GetViewModelForView(view.GetType());
                     var implicitParams = new List<object>(3);
                     if (data.parent != null)
                     {
                         implicitParams.Add(data.parent);
                     }
-                    if (payload != null)
+                    if (payload != null 
+                        && viewModelType.Constructors().Any(x => x.GetParameters().Any(ctor => ctor.ParameterType.IsInstanceOfType(payload))))
                     {
                         implicitParams.Add(payload);
                     }
                     implicitParams.Add(layer);
-                    var viewModel = _instantiator.Instantiate(_viewToViewModelMapper.GetViewModelForView(view.GetType()), implicitParams);
+                    var viewModel = _instantiator.Instantiate(viewModelType, implicitParams);
                     if (viewModel is IInitializable initializable)
                     {
                         initializable.Initialize();

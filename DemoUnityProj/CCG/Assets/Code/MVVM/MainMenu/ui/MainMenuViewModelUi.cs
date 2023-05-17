@@ -43,12 +43,6 @@ namespace CCG.MVVM.MainMenu
             });
         }
 
-        public async void OnPlayButtonPressed()
-        {
-            await _viewManager.CloseAbove(ViewLayerIds.Main3d);
-            await _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainScreen);
-        }
-
         public void OnCoolPopupBtn()
         {
             OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false));
