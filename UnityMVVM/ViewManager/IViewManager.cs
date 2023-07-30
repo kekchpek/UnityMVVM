@@ -1,5 +1,7 @@
-﻿using AsyncReactAwait.Promises;
+﻿using System;
+using AsyncReactAwait.Promises;
 using UnityEngine;
+using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager
@@ -11,6 +13,17 @@ namespace UnityMVVM.ViewManager
     public interface IViewManager
     {
 
+        /// <summary>
+        /// Fires on any view opened.
+        /// </summary>
+        event Action<(string layerId, string viewName, IPayload? viewPayload)> ViewOpened;
+
+        /// <summary>
+        /// Returns all view layer ids.
+        /// </summary>
+        /// <returns>All layer ids.</returns>
+        string[] GetLayerIds();
+        
         /// <summary>
         /// Creates viewModel and corresponding view.
         /// </summary>

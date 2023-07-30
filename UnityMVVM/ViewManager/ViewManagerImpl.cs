@@ -22,6 +22,8 @@ namespace UnityMVVM.ViewManager
 
         private string? _openingLayer;
 
+        public event Action<(string layerId, string viewName, IPayload? viewPayload)>? ViewOpened;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -98,6 +100,11 @@ namespace UnityMVVM.ViewManager
             throw new InvalidCastException($"Can not cast view model of type {viewModel.GetType().Name} to {typeof(T).Name}");
         }
 
+        public string[] GetLayerIds()
+        {
+            return _layers.Select(x => x.Id).ToArray();
+        }
+
         public IViewModel Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
         {
             return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, container, payload);
@@ -149,6 +156,7 @@ namespace UnityMVVM.ViewManager
             viewModel.Destroyed += OnViewModelDestroyed;
             layer.Set(viewModel);
             viewModel.OnOpened();
+            ViewOpened?.Invoke((layer.Id, viewName, payload));
         }
     }
 }
