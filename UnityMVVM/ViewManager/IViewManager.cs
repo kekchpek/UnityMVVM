@@ -1,7 +1,6 @@
 ﻿using System;
 using AsyncReactAwait.Promises;
 using UnityEngine;
-using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager
