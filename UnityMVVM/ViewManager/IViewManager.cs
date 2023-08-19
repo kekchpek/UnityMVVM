@@ -18,6 +18,11 @@ namespace UnityMVVM.ViewManager
         event Action<(string layerId, string viewName, IPayload? viewPayload)> ViewOpened;
 
         /// <summary>
+        /// Fires on any view opened.
+        /// </summary>
+        event Action<(string layerId, string viewName)> ViewClosedImplicitly;
+        
+        /// <summary>
         /// Returns all view layer ids.
         /// </summary>
         /// <returns>All layer ids.</returns>
@@ -33,17 +38,13 @@ namespace UnityMVVM.ViewManager
         /// <returns>Returns created view model.</returns>
         public IViewModel Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null);
 
-        /// <inheritdoc cref="Create(IViewModel, string, Transform, IPayload)"/>
-        /// <typeparam name="T">A view model type.</typeparam>
-        public T Create<T>(IViewModel parent, string viewName, Transform container, IPayload? payload = null) where T : class, IViewModel;
-
         /// <summary>
         /// Creates view model and corresponding view. Closes all views on layers above specified.
         /// </summary>
         /// <param name="viewLayerId">A layer, where view should be created.</param>
-        /// <param name="payload">View model payload.</param>
         /// <param name="viewName">The identifier of the view.</param>
-        public IPromise Open(string viewLayerId, string viewName, IPayload? payload = null);
+        /// <param name="payload">View model payload.</param>
+        public IPromise<IViewModel?> Open(string viewLayerId, string viewName, IPayload? payload = null);
 
         /// <summary>
         /// Creates view model and corresponding view.
@@ -58,13 +59,13 @@ namespace UnityMVVM.ViewManager
         /// Destroys all view on specified layer.
         /// </summary>
         /// <param name="viewLayerId">A layer on which views should be closed.</param>
-        public IPromise Close(string viewLayerId);
+        public IPromise CloseExact(string viewLayerId);
         
         /// <summary>
         /// Close all view on specified layer and all layer above(Starting from the top one).
         /// </summary>
         /// <param name="viewLayerId">A layer on which views should be closed.</param>
-        public IPromise CloseAbove(string viewLayerId);
+        public IPromise Close(string viewLayerId);
 
         /// <summary>
         /// Gets a name of the view on the specified layer.

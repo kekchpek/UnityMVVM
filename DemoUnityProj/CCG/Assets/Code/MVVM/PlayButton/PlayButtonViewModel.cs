@@ -15,7 +15,7 @@ namespace CCG.MVVM.PlayButton
         
         public async void OnClicked()
         {
-            await _viewManager.CloseAbove(ViewLayerIds.Main3d);
+            await _viewManager.Close(ViewLayerIds.Main3d);
             await OpenView(ViewLayerIds.MainUI, ViewNames.MainScreen);
         }
     }

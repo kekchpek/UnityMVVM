@@ -23,6 +23,7 @@ namespace UnityMVVM.ViewManager
         private string? _openingLayer;
 
         public event Action<(string layerId, string viewName, IPayload? viewPayload)>? ViewOpened;
+        public event Action<(string layerId, string viewName)>? ViewClosedImplicitly;
 
         /// <summary>
         /// Default constructor.
@@ -48,14 +49,14 @@ namespace UnityMVVM.ViewManager
             CreateViewOnLayer(viewName, layer, payload);
         }
 
-        /// <inheritdoc cref="IViewManager.Close(string)"/>
-        public async IPromise Close(string viewLayerId)
+        /// <inheritdoc cref="IViewManager.CloseExact(string)"/>
+        public async IPromise CloseExact(string viewLayerId)
         {
             await _layers.First(l => l.Id == viewLayerId).Clear();
         }
 
-        /// <inheritdoc />
-        public async IPromise CloseAbove(string viewLayerId)
+        /// <inheritdoc cref="IViewManager.Close(string)"/>
+        public async IPromise Close(string viewLayerId)
         {
             for (var i = _layers.Length - 1;;i--)
             {
@@ -90,16 +91,6 @@ namespace UnityMVVM.ViewManager
             return _layers.First(x => x.Id == viewLayerId).GetCurrentView();
         }
 
-        /// <inheritdoc cref="IViewManager.Create{T}(IViewModel, string, Transform, IPayload)"/>
-        public T Create<T>(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
-             where T : class, IViewModel
-        {
-            var viewModel = Create(parent, viewName, container, payload);
-            if (viewModel is T concreteViewModel)
-                return concreteViewModel;
-            throw new InvalidCastException($"Can not cast view model of type {viewModel.GetType().Name} to {typeof(T).Name}");
-        }
-
         public string[] GetLayerIds()
         {
             return _layers.Select(x => x.Id).ToArray();
@@ -111,39 +102,43 @@ namespace UnityMVVM.ViewManager
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
-        public async IPromise Open(string viewLayerId, string viewName, IPayload? payload = null)
+        public async IPromise<IViewModel?> Open(string viewLayerId, string viewName, IPayload? payload = null)
         {
             if (_openingLayer == viewLayerId)
             {
                 Debug.LogError("Attempt to open view while other one is being opened.");
-                return;
+                return null;
             }
             _openingLayer = viewLayerId;
             try
             {
-                for (int i = _layers.Length - 1; i >= -1; i--)
+                for (int i = _layers.Length - 1; i >= 0; i--)
                 {
-                    if (i == -1)
-                    {
-                        throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
-                    }
-
+                    // close opened view
+                    var openedViewModel = _layers[i].GetCurrentView();
+                    string? openedViewName = null;
+                    if (openedViewModel!= null)
+                        openedViewName = _createdViewsNames[openedViewModel];
                     await _layers[i].Clear();
+                    if (openedViewName != null) 
+                        ViewClosedImplicitly?.Invoke((_layers[i].Id, openedViewName));
+                    
+                    // open required view
                     if (_layers[i].Id == viewLayerId)
                     {
-                        CreateViewOnLayer(viewName, _layers[i], payload);
-                        break;
+                        var viewModel = CreateViewOnLayer(viewName, _layers[i], payload);
+                        return viewModel;
                     }
                 }
+                throw new InvalidOperationException($"Can not find view layer with id = {viewLayerId}");
             }
             finally
             {
                 _openingLayer = null;
             }
-
         }
 
-        private void CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
+        private IViewModel CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
         {
             
             var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, layer.Container, payload);
@@ -157,6 +152,7 @@ namespace UnityMVVM.ViewManager
             layer.Set(viewModel);
             viewModel.OnOpened();
             ViewOpened?.Invoke((layer.Id, viewName, payload));
+            return viewModel;
         }
     }
 }
