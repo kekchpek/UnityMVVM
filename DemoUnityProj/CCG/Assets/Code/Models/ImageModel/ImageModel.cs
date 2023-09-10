@@ -70,9 +70,13 @@ namespace CCG.Models.ImageModel
 
         private void FailInitialization(Exception e)
         {
-            _pendingImagesCount = default;
-            _images.Clear();
-            _initPromise.Fail(new InvalidOperationException("Initialization failed!", e));
+            if (_initPromise != null)
+            {
+                _pendingImagesCount = default;
+                _images.Clear();
+                _initPromise.Fail(new InvalidOperationException("Initialization failed!", e));
+                _initPromise = null;
+            }
         }
     }
 }

@@ -6,11 +6,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityMVVM;
+using UnityMVVM.Pool;
 
 namespace CCG.MVVM.Card.View
 {
     [RequireComponent(typeof(RectTransform))]
-    public class CardView : ViewBehaviour<ICardViewModel>, IPointerDownHandler, ICardView
+    public class CardView : ViewBehaviour<ICardViewModel>, IPointerDownHandler, ICardView, IPoolableView
     {
 
         [SerializeField] private float _moveSpeed;
@@ -39,6 +40,11 @@ namespace CCG.MVVM.Card.View
         private bool _isSelected;
         private bool _isOverBoard;
         
+        public void OnTakenFromPool()
+        {
+            gameObject.SetActive(true);
+        }
+        
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
@@ -59,7 +65,7 @@ namespace CCG.MVVM.Card.View
             SmartBind(ViewModel.IsOverBoard, SetIsOverBoard);
             SmartBind(ViewModel.Rotation, SetRotation);
             SmartBind(ViewModel.Position, SetPosition);
-
+ 
             transform.localScale *= ConfigData.CardScale;
         }
 
@@ -189,6 +195,14 @@ namespace CCG.MVVM.Card.View
             _manaTween.Kill();
             _positionTween.Kill();
             _rotationTween.Kill();
+        }
+
+        public void OnReturnToPool()
+        {
+            var go = gameObject;
+            go.SetActive(false);
+            transform.SetParent(null);
+            DontDestroyOnLoad(go);
         }
     }
 }

@@ -60,12 +60,12 @@ namespace CCG.Core
             Container.GetViewModelsContainer().Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
             Container.GetViewModelsContainer().Bind<IInputController>().FromComponentInNewPrefab(_inputControllerPrefab).AsSingle();
             
-            Container.InstallView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen,
+            Container.InstallPoolableView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen,
                 () => Resources.Load<GameObject>("Prefabs/Views/MainScreenView"));
             Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>();
             Container.InstallView<PlayButtonView, IPlayButtonViewModel, PlayButtonViewModel>();
             Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(ViewNames.HandController, _handControllerPrefab);
-            Container.InstallView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, _cardPrefab);
+            Container.InstallPoolableView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, _cardPrefab);
             Container.InstallView<MainMenuView3d, IMainMenuViewModel3d, MainMenuViewModel3d>(ViewNames.MainMenu3d, _mainMenu3dPrefab);
             Container.InstallView<MainMenuViewUi, IMainMenuViewModelUi, MainMenuViewModelUi>(ViewNames.MainMenuUi, _mainMenuUiPrefab);
             Container.InstallView<LoadingPopupView, IViewModel, ViewModel>(ViewNames.LoadingPopup, _loadingPopupPrefab);

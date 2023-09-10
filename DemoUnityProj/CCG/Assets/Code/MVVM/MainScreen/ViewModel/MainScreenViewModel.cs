@@ -1,4 +1,5 @@
 ﻿using CCG.Core;
+using CCG.Core.Camera;
 using CCG.Models.Hand.Model;
 using CCG.Models.Hand.Service;
 using CCG.Models.ImageModel;
@@ -17,21 +18,24 @@ namespace CCG.MVVM.MainScreen.ViewModel
         private readonly IHandService _handService;
         private readonly IHandModel _handModel;
         private readonly IViewManager _viewManager;
+        private readonly ICameraService _cameraService;
 
         private Transform _cardsContainer;
 
         public MainScreenViewModel(IImageService imageService, IHandService handService,
-            IHandModel handModel, IViewManager viewManager)
+            IHandModel handModel, IViewManager viewManager, ICameraService cameraService)
         {
             _imageService = imageService;
             _handService = handService;
             _handModel = handModel;
             _viewManager = viewManager;
+            _cameraService = cameraService;
         }
         
         public void Initialize()
         {
             _handModel.CardAdded += OnCardAdded;
+            _cameraService.UseDefaultCamera();
             OpenView(ViewLayerIds.Popup, ViewNames.LoadingPopup);
             IntiGame();
         }
@@ -54,7 +58,7 @@ namespace CCG.MVVM.MainScreen.ViewModel
             }).OnFail(e =>
             {
                 Debug.LogError(e.Message);
-                IntiGame();
+                OpenView(ViewLayerIds.Main3d, ViewNames.MainMenu3d);
             });
         }
 

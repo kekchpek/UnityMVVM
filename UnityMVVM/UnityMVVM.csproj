@@ -12,6 +12,7 @@
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

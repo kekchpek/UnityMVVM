@@ -14,8 +14,8 @@ namespace UnityMVVM.ViewModelCore
     /// </summary>
     public class ViewModel : IViewModelInternal
     {
-        private IViewManager _viewManager;
-        private IViewLayer _layer;
+        private IViewManager _viewManager = null!;
+        private IViewLayer _layer = null!;
 
         private IViewModel? _parent;
 
@@ -72,7 +72,14 @@ namespace UnityMVVM.ViewModelCore
 
         /// <inheritdoc cref="CreateSubView(string,UnityMVVM.ViewModelCore.IPayload?)"/>
         /// <param name="container">The container to instantiate view to.</param>
-        protected IViewModel CreateSubView(string viewName, Transform container, IPayload? payload = null)
+        protected IViewModel CreateSubView(
+#pragma warning disable CS1573
+            string viewName, 
+#pragma warning restore CS1573
+            Transform container, 
+#pragma warning disable CS1573
+            IPayload? payload = null)
+#pragma warning restore CS1573
         {
             var viewModel = _viewManager.Create(this, viewName, container, payload);
             return viewModel;
@@ -80,7 +87,15 @@ namespace UnityMVVM.ViewModelCore
         
         /// <inheritdoc cref="CreateSubView{T}(string,UnityMVVM.ViewModelCore.IPayload?)"/>
         /// <param name="container">The container to instantiate view to.</param>
-        protected T CreateSubView<T>(string viewName, Transform container, IPayload? payload = null) where T : class, IViewModel
+        protected T CreateSubView<T>(
+#pragma warning disable CS1573
+            string viewName, 
+#pragma warning restore CS1573
+            Transform container, 
+#pragma warning disable CS1573
+            IPayload? payload = null) 
+#pragma warning restore CS1573
+            where T : class, IViewModel
         {
             var viewModel = _viewManager.Create<T>(this, viewName, container, payload);
             return viewModel;

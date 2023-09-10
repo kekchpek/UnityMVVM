@@ -1,35 +1,21 @@
-﻿using CCG.Core.Camera;
-using CCG.MVVM.MainScreen.ViewModel;
+﻿using CCG.MVVM.MainScreen.ViewModel;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityMVVM;
-using Zenject;
+using UnityMVVM.Pool;
 
 namespace CCG.MVVM.MainScreen.View
 {
-    public class MainScreenView : ViewBehaviour<IMainScreenViewModel>
+    public class MainScreenView : ViewBehaviour<IMainScreenViewModel>, IPoolableView
     {
-        private ICameraService _cameraService;
-
         [SerializeField] private Button _mainMenuButton;
 
         [SerializeField] private Transform _cardsContainer;
-        
-        [Inject]
-        public void Construct(ICameraService cameraService)
-        {
-            _cameraService = cameraService;
-        }
-
-        private void Awake()
-        {
-            _cameraService.UseDefaultCamera();
-        }
 
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
-            ViewModel.SetCardsContainer(_cardsContainer);
+            ViewModel!.SetCardsContainer(_cardsContainer);
             _mainMenuButton.onClick.AddListener(() => ViewModel.OnMainMenuButtonClicked());
         }
 
@@ -37,6 +23,19 @@ namespace CCG.MVVM.MainScreen.View
         {
             base.OnViewModelClear();
             _mainMenuButton.onClick.RemoveAllListeners();
+        }
+
+        public void OnTakenFromPool()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void OnReturnToPool()
+        {
+            transform.SetParent(null);
+            var go = gameObject;
+            go.SetActive(false);
+            DontDestroyOnLoad(go);
         }
     }
 }

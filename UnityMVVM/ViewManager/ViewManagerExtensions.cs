@@ -26,6 +26,8 @@ namespace UnityMVVM.ViewManager
             where T : class, IViewModel
         {
             var viewModel = await viewManager.Open(viewLayerId, viewName, payload);
+            if (viewModel is null)
+                return null;
             if (viewModel is T concreteViewModel)
                 return concreteViewModel;
             throw new InvalidCastException($"Can not cast view model of type {viewModel.GetType().Name} to {typeof(T).Name}");

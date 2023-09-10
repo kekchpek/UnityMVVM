@@ -5,6 +5,7 @@ using ModestTree;
 using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.DI.Mapper;
+using UnityMVVM.Pool;
 using UnityMVVM.ViewManager.ViewLayer;
 using Zenject;
 
@@ -19,6 +20,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         private readonly IInstantiator _instantiator;
         private readonly IViewToViewModelMapper _viewToViewModelMapper;
         private readonly Func<GameObject> _viewPrefabGetter;
+        private readonly IViewPool? _viewPool;
 
         /// <summary>
         /// Default constructor for view factory.
@@ -27,41 +29,59 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         /// <param name="viewPrefabGetter">The method to obtain prefab of the view.</param>
         /// <param name="instantiator">Instantiator for view models.</param>
         /// <param name="viewToViewModelMapper">Map of views and view models types.</param>
+        /// <param name="viewPool">The pool for views(if presented)</param>
         public ViewFactory( 
             IViewsContainerAdapter viewsContainerAdapter, 
             Func<GameObject> viewPrefabGetter,
             IInstantiator instantiator,
-            IViewToViewModelMapper viewToViewModelMapper)
+            IViewToViewModelMapper viewToViewModelMapper, 
+            IViewPool viewPool)
         {
             _viewsContainerAdapter = viewsContainerAdapter;
             _viewPrefabGetter = viewPrefabGetter;
             _instantiator = instantiator;
             _viewToViewModelMapper = viewToViewModelMapper;
+            _viewPool = viewPool;
         }
 
-        /// <inheritdoc cref="IViewFactory.Create(IViewLayer, IViewModel, IPayload)"/>
+        /// <inheritdoc cref="IViewFactory.Create(IViewLayer, IViewModel, Transform, IPayload)"/>
         public IViewModelInternal Create(IViewLayer viewLayer,
             IViewModel? parent,
             Transform transform,
             IPayload? payload = null)
         {
-
-            var view = _viewsContainerAdapter.Container.InstantiatePrefabForComponent<TView>(_viewPrefabGetter.Invoke(), transform);
-
-            if (view is Component c)
+            TView view;
+            if (_viewPool != null && _viewPool.TryPop(out var poolableView))
             {
-                var rootViewModel = CreateViewModels(c.transform, viewLayer, parent, payload);
-                return rootViewModel;
+                view = (TView)poolableView!;
+                view.SetParent(transform);
+            }
+            else
+            {
+                view = _viewsContainerAdapter.Container.InstantiatePrefabForComponent<TView>(
+                    _viewPrefabGetter.Invoke(), transform);
+                view.SetPool(_viewPool);
             }
 
-            throw new Exception("View should be a Component");
+            if (view is not Component c)
+                throw new Exception("View should be a Component");
+            
+            var rootViewModel = CreateViewModels(
+                c.transform, 
+                viewLayer, 
+                parent, 
+                payload, 
+                _viewPool != null);
+            return rootViewModel;
+
         }
 
         private IViewModelInternal CreateViewModels(
             Transform initialObj,
             IViewLayer layer, 
             IViewModel? initialParent, 
-            IPayload? payload)
+            IPayload? payload,
+            bool isPoolableView)
         {
             Queue<(Transform obj, IViewModel? parent)> creationQueue = new Queue<(Transform obj, IViewModel? parent)>();
             creationQueue.Enqueue((initialObj, initialParent));
@@ -91,10 +111,8 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                         initializable.Initialize();
                     }
                     ((IViewInitializer)view).SetViewModel((IViewModel)viewModel);
-                    if (rootViewModel == null)
-                    {
-                        rootViewModel = (IViewModelInternal)viewModel;
-                    }
+                    ((IViewInitializer)view).SetPartOfPoolableView(isPoolableView);
+                    rootViewModel ??= (IViewModelInternal)viewModel;
                     parent = (IViewModelInternal)viewModel;
                 }
                 foreach (Transform child in data.obj)

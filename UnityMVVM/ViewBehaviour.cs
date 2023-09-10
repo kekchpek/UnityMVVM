@@ -2,6 +2,7 @@
 using AsyncReactAwait.Bindable;
 using AsyncReactAwait.Promises;
 using UnityEngine;
+using UnityMVVM.Pool;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM
@@ -15,30 +16,58 @@ namespace UnityMVVM
     {
 
         private event Action? OnViewModelClearedInternal;
-        private bool _isViewModelDestroyed;
-        private T? _viewModel;
+        private IViewPool? _viewPool;
+        private bool _isPartOfPooledView;
+
+        private Vector3 _initialScale;
+
+        private void Awake()
+        {
+            _initialScale = transform.localScale;
+        }
 
         /// <summary>
         /// Current view model.
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
-        protected T? ViewModel
-        {
-            get
-            {
-                if (_isViewModelDestroyed)
-                    throw new Exception("View model was destroyed!");
-                return _viewModel;
-            }
-            private set => _viewModel = value;
-        }
+        protected T? ViewModel { get; private set; }
 
         void IViewInitializer.SetViewModel(IViewModel viewModel)
         {
             SetViewModelInternal((T)viewModel);
         }
 
-        private void SetViewModelInternal(T viewModel)
+        /// <inheritdoc />
+        public void SetParent(Transform parent)
+        {
+            Transform t = transform;
+            t.SetParent(parent);
+            t.localPosition = Vector3.zero;
+            t.localRotation = Quaternion.identity;
+            t.localScale = _initialScale;
+        }
+
+        /// <inheritdoc />
+        public void SetPartOfPoolableView(bool isPartOfPooledView)
+        {
+            _isPartOfPooledView = isPartOfPooledView;
+        }
+
+        void IViewInitializer.SetPool(IViewPool? viewPool)
+        {
+            if (viewPool == null)
+                return;
+            
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (!(this is IPoolableView))
+            {
+                Debug.LogWarning($"The view {this.GetType().Name} does not implement {nameof(IPoolableView)} but the pool for this view is set!");
+            }
+
+            _viewPool = viewPool;
+        }
+
+        private void SetViewModelInternal(T? viewModel)
         {
             if (ViewModel != null)
             {
@@ -79,11 +108,26 @@ namespace UnityMVVM
 
         private void OnViewModelDestroyed()
         {
-            OnViewModelClear();
-            _isViewModelDestroyed = true;
-            if (this)
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            if (this is IPoolableView poolableView)
             {
-                Destroy(this.gameObject);
+                SetViewModelInternal(null);
+                if (_viewPool != null)
+                {
+                    _viewPool.Push(poolableView);
+                }
+                else
+                {
+                    Debug.LogError($"The view pool for poolable view {this.GetType().Name} is not set.");
+                }
+            }
+            else
+            {
+                SetViewModelInternal(null);
+                if (this && !_isPartOfPooledView)
+                {
+                    Destroy(this.gameObject);
+                }
             }
         }
 
