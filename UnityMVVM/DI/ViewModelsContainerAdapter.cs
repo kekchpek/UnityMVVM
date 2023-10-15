@@ -27,9 +27,9 @@ namespace UnityMVVM.DI
 
 
         /// <inheritdoc cref="IViewsModelsContainerAdapter.ResolveViewFactory"/>
-        public IViewFactory ResolveViewFactory(string viewName)
+        public IViewModelsFactory ResolveViewFactory(string viewName)
         {
-            return _viewsContainer.ResolveId<IViewFactory>(viewName);
+            return _viewsContainer.ResolveId<IViewModelsFactory>(viewName);
         }
     }
 }

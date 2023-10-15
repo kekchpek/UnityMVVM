@@ -17,7 +17,7 @@ namespace UnityMVVM.DI
         /// Resolve the factory for specified view.
         /// </summary>
         /// <returns>The factory, that creates views.</returns>
-        IViewFactory ResolveViewFactory(string viewName);
+        IViewModelsFactory ResolveViewFactory(string viewName);
 
     }
 }

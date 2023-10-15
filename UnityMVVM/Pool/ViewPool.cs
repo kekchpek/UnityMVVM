@@ -6,6 +6,7 @@ namespace UnityMVVM.Pool
     /// <summary>
     /// A pool for the views.
     /// </summary>
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class ViewPool<T> : IViewPool where T : IPoolableView
     {
 

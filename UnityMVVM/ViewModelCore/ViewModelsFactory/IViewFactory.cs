@@ -1,27 +1,34 @@
-﻿using JetBrains.Annotations;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
-using UnityMVVM.ViewManager.ViewLayer;
+using UnityMVVM.Pool;
 
 namespace UnityMVVM.ViewModelCore.ViewModelsFactory
 {
-
+    
     /// <summary>
-    /// Factory to create views.
+    /// Factory to create and initialize views.
     /// </summary>
-    internal interface IViewFactory
+    public interface IViewFactory
     {
         /// <summary>
-        /// Creates view and its view model
+        /// Instantiates a view from a prefab.
         /// </summary>
-        /// <param name="viewLayer">Layer to place a view.</param>
-        /// <param name="parent">Parent view model to set to the created view model.</param>
-        /// <param name="parentTransform">The transform to instantiate the view to.</param>
-        /// <param name="payload">View model payload.</param>
-        /// <returns>Returns created view model to conrol the view.</returns>
-        IViewModelInternal Create(IViewLayer viewLayer, 
-            IViewModel? parent,
-            Transform parentTransform,
-            IPayload? payload = null);
+        /// <param name="viewPrefab">The view prefab.</param>
+        /// <param name="parent">Parent to attach view game object to.</param>
+        /// <param name="viewPool">The view pool for attempt to reuse old views.</param>
+        /// <typeparam name="TView">The type of a view.</typeparam>
+        /// <returns>Returns instantiated view.</returns>
+        TView Instantiate<TView>(
+            GameObject viewPrefab, 
+            Transform parent,
+            IViewPool? viewPool) 
+            where TView : IViewInitializer;
+
+        /// <summary>
+        /// Initializing a view.
+        /// </summary>
+        /// <param name="viewInitializer">The view to initialize.</param>
+        /// <param name="viewModel">The view model for the view.</param>
+        /// <param name="isPoolableView">Is view used as poolable view or subview of a poolable view.</param>
+        void Initialize(IViewInitializer viewInitializer, IViewModel viewModel, bool isPoolableView);
     }
 }

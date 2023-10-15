@@ -8,6 +8,7 @@ using UnityMVVM.ViewModelCore.ViewModelsFactory;
 using System;
 using System.Linq;
 using ModestTree;
+using UnityMVVM.DI.Environment;
 using UnityMVVM.DI.Mapper;
 using UnityMVVM.Pool;
 
@@ -20,6 +21,9 @@ namespace UnityMVVM.DI
     /// </summary>
     public static class DiContainerExtensions
     {
+
+        private static readonly Dictionary<DiContainer, IContainerEnvironment> ContainerEnvironments = new();
+
         /// <summary>
         /// Configure container for MVVM pattern usage.
         /// </summary>
@@ -27,6 +31,10 @@ namespace UnityMVVM.DI
         /// <param name="layersData">Data about presentation layers.</param>
         public static void UseAsMvvmContainer(this DiContainer container, (string layerId, Transform layerContainer)[] layersData)
         {
+            if (ContainerEnvironments.ContainsKey(container))
+            {
+                throw new Exception("The container is already used as MVVM container");
+            }
             var viewModelsContainer = new DiContainer();
             var viewsContainer = new DiContainer();
             var layers = new IViewLayer[layersData.Length];
@@ -36,22 +44,23 @@ namespace UnityMVVM.DI
             }
             var viewsContainerAdapter = new ViewsContainerAdapter(viewsContainer);
             var viewModelsContainerAdapter = new ViewModelsContainerAdapter(viewModelsContainer);
+            var mapper = new ViewToViewModelMapper();
 
-            container.Bind<IViewsModelsContainerAdapter>().FromInstance(viewModelsContainerAdapter).AsSingle();
-            container.Bind<IViewsContainerAdapter>().FromInstance(viewsContainerAdapter).AsSingle();
+            var env = new ContainerEnvironment(mapper, viewsContainerAdapter, viewModelsContainerAdapter);
+            
+            ContainerEnvironments.Add(container, env);
+            
             container.Bind<IEnumerable<IViewLayer>>().FromInstance(layers).AsSingle().WhenInjectedInto<ViewManagerImpl>();
+            container.Bind<IViewsModelsContainerAdapter>().FromInstance(viewModelsContainerAdapter);
             container.FastBind<IViewManager, ViewManagerImpl>();
 
-            viewModelsContainer.Bind(new Type[]
-            {
-                typeof(IViewToViewModelMapper),
-                typeof(IViewToViewModelMutableMapper)
-            }).To<ViewToViewModelMapper>().AsSingle();
+            viewModelsContainer.Bind<IViewFactory>().To<ViewFactory>().AsSingle();
+            viewModelsContainer.Bind<IViewToViewModelMapper>().FromInstance(mapper);
             viewModelsContainer.Bind<IViewsContainerAdapter>().FromInstance(viewsContainerAdapter).AsSingle();
         }
 
         /// <summary>
-        /// Installs <see cref="IViewFactory"/> for specified View-ViewModel pair.
+        /// Installs <see cref="IViewModelsFactory"/> for specified View-ViewModel pair.
         /// </summary>
         /// <param name="container">MVVM container to configure.</param>
         /// <param name="viewName">View identificator for opening.</param>
@@ -68,7 +77,7 @@ namespace UnityMVVM.DI
         }
 
         /// <summary>
-        /// Installs <see cref="IViewFactory"/> for specified View-ViewModel pair.
+        /// Installs <see cref="IViewModelsFactory"/> for specified View-ViewModel pair.
         /// </summary>
         /// <param name="container">MVVM container to configure.</param>
         /// <param name="viewName">View identificator for opening.</param>
@@ -131,25 +140,27 @@ namespace UnityMVVM.DI
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
                 throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
                                                     $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
+            var viewModelsContainer = env.ViewsModelsContainerAdapter;
             viewModelsContainer.Container
-                .Bind<IViewFactory>()
+                .Bind<IViewModelsFactory>()
                 .WithId(viewName)
-                .To<ViewFactory<TView>>()
+                .To<ViewModelsFactory<TView>>()
                 .AsSingle()
                 .WithArgumentsExplicit(new []
                 {
                     new TypeValuePair(typeof(Func<GameObject>), viewPrefabGetter),
                     new TypeValuePair(typeof(IViewPool), viewPool),
                 });
-            viewModelsContainer.Container.Resolve<IViewToViewModelMutableMapper>().Map<TView, TViewModelImpl>();
+            env.Mapper.Map<TView, TViewModelImpl>();
         }
 
         /// <summary>
-        /// Installs <see cref="IViewFactory"/> for specified View-ViewModel pair.
+        /// Installs <see cref="IViewModelsFactory"/> for specified View-ViewModel pair.
         /// </summary>
         /// <param name="container">MVVM container to configure.</param>
         /// <typeparam name="TView">The type of a view</typeparam>
@@ -160,12 +171,12 @@ namespace UnityMVVM.DI
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
                 throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
                                                     $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
-     
-            viewModelsContainer.Container.Resolve<IViewToViewModelMutableMapper>().Map<TView, TViewModelImpl>();
+            }
+            env.Mapper.Map<TView, TViewModelImpl>();
         }
 
         /// <summary>
@@ -179,11 +190,12 @@ namespace UnityMVVM.DI
         /// </exception>
         public static void ProvideAccessForViewLayer<T>(this DiContainer container)
         {
-            var viewsContainer = container.TryResolve<IViewsContainerAdapter>();
-            if (viewsContainer == null)
-                throw new InvalidOperationException("Provided container does not contain container for the view layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            viewsContainer.Container.Bind<T>().FromMethod(_ => container.Resolve<T>());
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
+            env.ViewsContainerAdapter.Container.Bind<T>().FromMethod(_ => container.Resolve<T>());
         }
 
         /// <summary>
@@ -198,11 +210,12 @@ namespace UnityMVVM.DI
         /// </exception>
         public static void ProvideAccessForViewLayer<TModelAccessInterface, TCommonAccessInterface>(this DiContainer container)
         {
-            var viewsContainer = container.TryResolve<IViewsContainerAdapter>();
-            if (viewsContainer == null)
-                throw new InvalidOperationException("Provided container does not contain container for the view layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            viewsContainer.Container.Bind<TCommonAccessInterface>()
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
+            env.ViewsContainerAdapter.Container.Bind<TCommonAccessInterface>()
                 .FromMethod(_ =>
                 {
                     if (container.Resolve<TModelAccessInterface>() is TCommonAccessInterface common)
@@ -224,11 +237,12 @@ namespace UnityMVVM.DI
         /// </exception>
         public static void ProvideAccessForViewModelLayer<T>(this DiContainer container)
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
-                throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            viewModelsContainer.Container.Bind<T>().FromMethod(_ => container.Resolve<T>());
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
+            env.ViewsModelsContainerAdapter.Container.Bind<T>().FromMethod(_ => container.Resolve<T>());
         }
 
         /// <summary>
@@ -243,11 +257,12 @@ namespace UnityMVVM.DI
         /// </exception>
         public static void ProvideAccessForViewModelLayer<TModelAccessInterface, TCommonAccessInterface>(this DiContainer container)
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
-                throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            viewModelsContainer.Container.Bind<TCommonAccessInterface>()
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
+            env.ViewsModelsContainerAdapter.Container.Bind<TCommonAccessInterface>()
                 .FromMethod(_ =>
                 {
                     if (container.Resolve<TModelAccessInterface>() is TCommonAccessInterface common)
@@ -290,11 +305,11 @@ namespace UnityMVVM.DI
         public static void FastBind<TImpl>(this DiContainer container, IReadOnlyCollection<Type> modelAccessInterfaces,
             IReadOnlyCollection<Type> commonAccessInterfaces)
         {
-            
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
-                throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
-                                                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
             var bindTypes = modelAccessInterfaces.Concat(commonAccessInterfaces).ToList();
             if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
             {
@@ -307,7 +322,7 @@ namespace UnityMVVM.DI
             {
                 commonAccessInterfaces = modelAccessInterfaces;
             }
-            viewModelsContainer.Container.Bind(commonAccessInterfaces)
+            env.ViewsModelsContainerAdapter.Container.Bind(commonAccessInterfaces)
                 .FromMethod<TImpl>(_ => (TImpl)container.Resolve(modelAccessInterfaces.First())).AsSingle();
         }
 
@@ -349,10 +364,11 @@ namespace UnityMVVM.DI
             IReadOnlyCollection<Type> commonAccessInterfaces,
             GameObject? prefab = null)
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
-                throw new InvalidOperationException($"Provided container does not contain container for the view layer. " +
-                                                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
             var bindTypes = modelAccessInterfaces.Concat(commonAccessInterfaces).ToList();
             if (typeof(TImpl).Interfaces().Contains(typeof(IInitializable)))
             {
@@ -374,7 +390,7 @@ namespace UnityMVVM.DI
             {
                 commonAccessInterfaces = modelAccessInterfaces;
             }
-            viewModelsContainer.Container.Bind(commonAccessInterfaces)
+            env.ViewsModelsContainerAdapter.Container.Bind(commonAccessInterfaces)
                 .FromMethod<TImpl>(_ => (TImpl)container.Resolve(modelAccessInterfaces.First())).AsSingle();
         }
 
@@ -454,11 +470,12 @@ namespace UnityMVVM.DI
         /// <param name="container">The MVVM container.</param>
         public static DiContainer GetViewModelsContainer(this DiContainer container)
         {
-            var viewModelsContainer = container.TryResolve<IViewsModelsContainerAdapter>();
-            if (viewModelsContainer == null)
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
                 throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
-            return viewModelsContainer.Container;
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
+            return env.ViewsModelsContainerAdapter.Container;
         }
 
         /// <summary>
@@ -467,11 +484,12 @@ namespace UnityMVVM.DI
         /// <param name="container">The MVVM container.</param>
         public static DiContainer GetViewsContainer(this DiContainer container)
         {
-            var viewsContainer = container.TryResolve<IViewsContainerAdapter>();
-            if (viewsContainer == null)
-                throw new InvalidOperationException("Provided container does not contain container for the view layer. " +
-                    $"Use {nameof(UseAsMvvmContainer)} to configure container.");
-            return viewsContainer.Container;
+            if (!ContainerEnvironments.TryGetValue(container, out var env))
+            {
+                throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+            }
+            return env.ViewsContainerAdapter.Container;
         }
     }
 }

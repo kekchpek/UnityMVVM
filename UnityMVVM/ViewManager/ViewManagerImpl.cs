@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityMVVM.DI;
 using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
@@ -30,7 +31,10 @@ namespace UnityMVVM.ViewManager
         /// </summary>
         /// <param name="layers">Layers to place views.</param>
         /// <param name="viewsContainerAdapter">Adapter for views DI container.</param>
-        public ViewManagerImpl(IEnumerable<IViewLayer> layers, IViewsModelsContainerAdapter viewsContainerAdapter)
+        [Preserve]
+        public ViewManagerImpl(
+            IEnumerable<IViewLayer> layers, 
+            IViewsModelsContainerAdapter viewsContainerAdapter)
         {
             _layers = layers.ToArray();
             _viewsContainer = viewsContainerAdapter;
