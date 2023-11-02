@@ -1,10 +1,8 @@
-﻿using CCG.Core.Camera;
-using CCG.Core.Input;
+using CCG.Core.Camera;
+using CCG.Core.Installers;
 using CCG.Core.Screen;
-using CCG.Core.UI;
 using CCG.Models.Hand.Model;
 using CCG.Models.Hand.Service;
-using CCG.Models.ImageModel;
 using CCG.MVVM.Card.Model;
 using CCG.MVVM.Card.View;
 using CCG.MVVM.Card.ViewModel;
@@ -14,9 +12,11 @@ using CCG.MVVM.LoadingPopup;
 using CCG.MVVM.MainMenu;
 using CCG.MVVM.MainScreen.View;
 using CCG.MVVM.MainScreen.ViewModel;
+using CCG.MVVM.MainScreen3d;
 using CCG.MVVM.PlayButton;
 using CCG.MVVM.StatsChanger;
-using CCG.Services.ImageLoaderService;
+using CCG.Services.Game;
+using CCG.Services.Startup;
 using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.ViewModelCore;
@@ -24,54 +24,45 @@ using Zenject;
 
 namespace CCG.Core
 {
-    public class CoreInstaller : MonoInstaller
+    public class CoreInstaller : Installer
     {
-        [SerializeField] private Transform _3dRoot;
-        [SerializeField] private Transform _uiRoot;
-        [SerializeField] private Transform _popupRoot;
-        [SerializeField] private InputController _inputControllerPrefab;
-
-        [SerializeField] private GameObject _handControllerPrefab;
-        [SerializeField] private GameObject _cardPrefab;
-        [SerializeField] private GameObject _mainMenu3dPrefab;
-        [SerializeField] private GameObject _mainMenuUiPrefab;
-        [SerializeField] private GameObject _loadingPopupPrefab;
-        [SerializeField] private GameObject _coolPopupPrefab;
-        
         public override void InstallBindings()
         {
-            Container.UseAsMvvmContainer(new []
-            {
-                (Main: ViewLayerIds.Main3d, _3dRoot),
-                (Main: ViewLayerIds.MainUI, _uiRoot),
-                (Main: ViewLayerIds.Popup, _popupRoot)
-            });
-
-            Container.FastBind<IHandMutableModel, IHandModel, HandModel>();
-            Container.FastBindMono<IHandService, HandService>();
-            Container.FastBind<ICameraMutableModel, ICameraModel, CameraModel>();
-            Container.FastBind<ICameraService, CameraService>();
-            Container.FastBind<IUiMutableModel, IUiModel, UiModel>();
-            Container.FastBind<ImageModel>(new []{typeof(IImageService), typeof(IImageModel)});
-            Container.FastBind<IImageLoaderService, ImageLoaderService>();
-            Container.FastBind<ICardFactory, CardFactory>();
-            Container.FastBind<IUiService, UiService>();
-            
-            Container.GetViewModelsContainer().Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
-            Container.GetViewModelsContainer().Bind<IInputController>().FromComponentInNewPrefab(_inputControllerPrefab).AsSingle();
-            
             Container.InstallPoolableView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen,
                 () => Resources.Load<GameObject>("Prefabs/Views/MainScreenView"));
+            Container.InstallView<MainScreen3dView, IViewModel, ViewModel>(ViewNames.MainScreen3d,
+                () => Resources.Load<GameObject>("Prefabs/Views/MainScreen3dView"));
             Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>();
             Container.InstallView<PlayButtonView, IPlayButtonViewModel, PlayButtonViewModel>();
-            Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(ViewNames.HandController, _handControllerPrefab);
-            Container.InstallPoolableView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, _cardPrefab);
-            Container.InstallView<MainMenuView3d, IMainMenuViewModel3d, MainMenuViewModel3d>(ViewNames.MainMenu3d, _mainMenu3dPrefab);
-            Container.InstallView<MainMenuViewUi, IMainMenuViewModelUi, MainMenuViewModelUi>(ViewNames.MainMenuUi, _mainMenuUiPrefab);
-            Container.InstallView<LoadingPopupView, IViewModel, ViewModel>(ViewNames.LoadingPopup, _loadingPopupPrefab);
-            Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.CoolPopup, _coolPopupPrefab);
+            Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(ViewNames.HandController, 
+                () => Resources.Load<GameObject>("Prefabs/Views/HandController"));
+            Container.InstallPoolableView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, 
+                () => Resources.Load<GameObject>("Prefabs/Views/CardView"));
+            Container.InstallView<MainMenuView3d, IMainMenuViewModel3d, MainMenuViewModel3d>(ViewNames.MainMenu3d, 
+                () => Resources.Load<GameObject>("Prefabs/Views/MainMenu3d/MainMenu3dScene"));
+            Container.InstallView<MainMenuViewUi, IMainMenuViewModelUi, MainMenuViewModelUi>(ViewNames.MainMenuUi, 
+                () => Resources.Load<GameObject>("Prefabs/Views/MainMenuUi/MainMenuUi"));
+            Container.InstallView<LoadingPopupView, IViewModel, ViewModel>(ViewNames.LoadingPopup, 
+                () => Resources.Load<GameObject>("Prefabs/Views/LoadingPopup"));
+            Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.CoolPopup, 
+                () => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
             
-            Container.ProvideAccessForViewLayer<ICameraService>();
+            Container.Install<ImageSystemInstaller>();
+            
+            Container.FastBind<IStartupService, StartupService>();
+            
+            Container.GetViewsContainer()
+                .Bind(typeof(ICameraMutableModel), typeof(ICameraModel))
+                .To<CameraModel>().AsSingle();
+            Container.GetViewsContainer()
+                .Bind<ICameraService>().To<CameraService>().AsSingle();
+            Container.GetViewsContainer().Bind<IScreenAdapter>().To<ScreenAdapter>().AsSingle();
+            
+            Container.FastBind<IGameService, GameService>();
+            
+            Container.FastBind<IHandMutableModel, IHandModel, HandModel>();
+            Container.FastBindMono<IHandService, HandService>();
+            Container.FastBind<ICardFactory, CardFactory>();
         }
     }
 }

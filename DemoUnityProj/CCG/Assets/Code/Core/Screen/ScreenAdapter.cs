@@ -5,13 +5,12 @@ namespace CCG.Core.Screen
 {
     public class ScreenAdapter : IScreenAdapter
     {
-
-
         private const float RatioX = 1600f;
         private const float RatioY = 900f;
         private const float Ratio = RatioX / RatioY;
         
         private readonly ICameraModel _cameraModel;
+        
         public float ScreenWidth => UnityEngine.Screen.width;
         public float ScreenHeight => UnityEngine.Screen.height;
         
@@ -50,7 +49,18 @@ namespace CCG.Core.Screen
         
         public Vector3 ScreenPointToWorld(Vector3 screenPoint)
         {
-            return _cameraModel.CurrenCamera.Value.ScreenToWorldPoint(screenPoint);
+            return _cameraModel.CurrentCamera.Value.ScreenToWorldPoint(screenPoint);
+        }
+
+        public Vector3 ViewPortPointToWorld(Vector3 viewPortPoint)
+        {
+            return ScreenPointToWorld(ViewPortPointToScreen(viewPortPoint));
+        }
+
+        public Vector2 ViewPortPointToScreen(Vector2 viewPortPoint)
+        {
+            viewPortPoint.Scale(new Vector3(ScreenWidth, ScreenHeight, 1f));
+            return viewPortPoint;
         }
 
         public Vector3 ScreenActiveAreaToWorld(Vector3 activeAreaPoint)
@@ -65,7 +75,7 @@ namespace CCG.Core.Screen
             {
                 activeAreaPoint.y += (ScreenHeight - ScreenActiveAreaHeightPx) / 2f;
             }
-            return _cameraModel.CurrenCamera.Value.ScreenToWorldPoint(activeAreaPoint);
+            return _cameraModel.CurrentCamera.Value.ScreenToWorldPoint(activeAreaPoint);
         }
     }
 }

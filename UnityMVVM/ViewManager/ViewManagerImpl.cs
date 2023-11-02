@@ -124,7 +124,7 @@ namespace UnityMVVM.ViewManager
                     if (openedViewModel!= null)
                         openedViewName = _createdViewsNames[openedViewModel];
                     await _layers[i].Clear();
-                    if (openedViewName != null) 
+                    if (openedViewName != null)
                         ViewClosedImplicitly?.Invoke((_layers[i].Id, openedViewName));
                     
                     // open required view

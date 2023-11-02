@@ -1,4 +1,5 @@
 ﻿using CCG.Config;
+using CCG.Core.Screen;
 using CCG.MVVM.Card.ViewModel;
 using DG.Tweening;
 using TMPro;
@@ -7,12 +8,17 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityMVVM;
 using UnityMVVM.Pool;
+using Zenject;
 
 namespace CCG.MVVM.Card.View
 {
     [RequireComponent(typeof(RectTransform))]
-    public class CardView : ViewBehaviour<ICardViewModel>, IPointerDownHandler, ICardView, IPoolableView
+    public class CardView : ViewBehaviour<ICardViewModel>, IPointerDownHandler, ICardView, IPoolableView, IPointerUpHandler, IPointerMoveHandler
     {
+
+        private IScreenAdapter _screenAdapter;
+
+        private Transform _transform;
 
         [SerializeField] private float _moveSpeed;
         [SerializeField] private float _rotationSpeed;
@@ -39,6 +45,19 @@ namespace CCG.MVVM.Card.View
 
         private bool _isSelected;
         private bool _isOverBoard;
+
+        private bool _isDragging;
+
+        [Inject]
+        public void Construct(IScreenAdapter screenAdapter)
+        {
+            _screenAdapter = screenAdapter;
+        }
+
+        private void Awake()
+        {
+            _transform = transform;
+        }
         
         public void OnTakenFromPool()
         {
@@ -63,24 +82,33 @@ namespace CCG.MVVM.Card.View
             SmartBind(ViewModel.Icon, SetIcon);
             SmartBind(ViewModel.IsSelected, SetIsSelected);
             SmartBind(ViewModel.IsOverBoard, SetIsOverBoard);
-            SmartBind(ViewModel.Rotation, SetRotation);
-            SmartBind(ViewModel.Position, SetPosition);
+            SmartBind(ViewModel.RotationInHand, SetRotation);
+            SmartBind(ViewModel.PositionInHand, SetPosition);
  
-            transform.localScale *= ConfigData.CardScale;
+            _transform.localScale = Vector3.one * ConfigData.CardScale;
         }
+        
+        
 
         private void SetPosition(Vector2 position)
         {
-            _positionTween?.Kill();
-            _positionTween = transform.DOMove(ViewModel!.Position.Value,
-                (position - (Vector2)transform.position).magnitude / _moveSpeed);
+            if (!_isDragging)
+            {
+                _positionTween?.Kill();
+                var screenPos = (Vector3)_screenAdapter.ViewPortPointToScreen(new Vector3(position.x, position.y, 1f));
+                _positionTween = _transform.DOMove(screenPos,
+                    (screenPos - _transform.position).magnitude / _moveSpeed);
+            }
         }
 
         private void SetRotation(float rotation)
         {
-            _rotationTween?.Kill();
-            _rotationTween = transform.DORotate(new Vector3(0f, 0f, ViewModel!.Rotation.Value),
-                Mathf.Abs(transform.rotation.z - ViewModel.Rotation.Value) / _rotationSpeed);
+            if (!_isDragging)
+            {
+                _rotationTween?.Kill();
+                _rotationTween = _transform.DORotate(new Vector3(0f, 0f, ViewModel!.RotationInHand.Value),
+                    Mathf.Abs(_transform.rotation.z - ViewModel.RotationInHand.Value) / _rotationSpeed);
+            }
         }
 
         private void SetHealth(int health)
@@ -184,7 +212,26 @@ namespace CCG.MVVM.Card.View
 
         public void OnPointerDown(PointerEventData eventData)
         {
+            _isDragging = true;
+            _transform.position = eventData.position;
+            _transform.rotation = Quaternion.identity;
             ViewModel!.OnMouseClickDown();
+        }
+
+        public void OnPointerMove(PointerEventData eventData)
+        {
+            if (_isDragging)
+            {
+                _transform.position = eventData.position;
+            }
+        }
+
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            _isDragging = false;
+            SetPosition(ViewModel!.PositionInHand.Value);
+            SetRotation(ViewModel!.RotationInHand.Value);
+            ViewModel!.OnMouseClickUp();
         }
 
         protected override void OnViewModelClear()
@@ -201,7 +248,7 @@ namespace CCG.MVVM.Card.View
         {
             var go = gameObject;
             go.SetActive(false);
-            transform.SetParent(null);
+            _transform.SetParent(null);
             DontDestroyOnLoad(go);
         }
     }

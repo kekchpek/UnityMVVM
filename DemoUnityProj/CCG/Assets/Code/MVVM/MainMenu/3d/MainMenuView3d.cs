@@ -16,6 +16,7 @@ namespace CCG.MVVM.MainMenu
         private ICameraService _cameraService;
 
         private IControllablePromise _exitPromise;
+        private static readonly int ExitTrigger = Animator.StringToHash("Exit");
 
         [Inject]
         public void Construct(ICameraService cameraService)
@@ -37,7 +38,7 @@ namespace CCG.MVVM.MainMenu
         // required for animation
         private void Animation_StateChanged()
         {
-            ViewModel.OnStateChangeCompleted();
+            ViewModel!.OnStateChangeCompleted();
         }
         
         private void Animation_Exit()
@@ -74,7 +75,7 @@ namespace CCG.MVVM.MainMenu
 
         protected override IPromise Close()
         {
-            _animator.SetTrigger("Exit");
+            _animator.SetTrigger(ExitTrigger);
             _exitPromise = new ControllablePromise();
             return _exitPromise;
         }

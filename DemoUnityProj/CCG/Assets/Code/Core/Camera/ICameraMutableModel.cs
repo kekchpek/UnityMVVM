@@ -1,4 +1,4 @@
-﻿namespace CCG.Core.Camera
+namespace CCG.Core.Camera
 {
     public interface ICameraMutableModel : ICameraModel
     {

@@ -8,6 +8,7 @@ using UnityMVVM.ViewModelCore.ViewModelsFactory;
 using System;
 using System.Linq;
 using ModestTree;
+using UnityMVVM.DI.Config;
 using UnityMVVM.DI.Environment;
 using UnityMVVM.DI.Mapper;
 using UnityMVVM.Pool;
@@ -29,19 +30,37 @@ namespace UnityMVVM.DI
         /// </summary>
         /// <param name="container">The container to configure.</param>
         /// <param name="layersData">Data about presentation layers.</param>
-        public static void UseAsMvvmContainer(this DiContainer container, (string layerId, Transform layerContainer)[] layersData)
+        /// <param name="config">Configuration for MVVM container.</param>
+        public static void UseAsMvvmContainer(
+            this DiContainer container,
+            (string layerId, Transform layerContainer)[] layersData,
+            MvvmContainerConfiguration config = default)
         {
             if (ContainerEnvironments.ContainsKey(container))
             {
                 throw new Exception("The container is already used as MVVM container");
             }
-            var viewModelsContainer = new DiContainer();
-            var viewsContainer = new DiContainer();
             var layers = new IViewLayer[layersData.Length];
             for (int i = 0; i < layersData.Length; i++)
             {
                 layers[i] = new ViewLayerImpl(layersData[i].layerId, layersData[i].layerContainer);
             }
+            container.UseAsMvvmContainer(layers, config);
+        }
+
+        /// <summary>
+        /// Configure container for MVVM pattern usage.
+        /// </summary>
+        /// <param name="container">The container to configure.</param>
+        /// <param name="layers">View layers.</param>
+        /// <param name="config">Configuration for MVVM container.</param>
+        public static void UseAsMvvmContainer(
+            this DiContainer container,
+            IEnumerable<IViewLayer> layers,
+            MvvmContainerConfiguration config)
+        {
+            var viewModelsContainer = new DiContainer();
+            var viewsContainer = new DiContainer();
             var viewsContainerAdapter = new ViewsContainerAdapter(viewsContainer);
             var viewModelsContainerAdapter = new ViewModelsContainerAdapter(viewModelsContainer);
             var mapper = new ViewToViewModelMapper();
@@ -54,7 +73,15 @@ namespace UnityMVVM.DI
             container.Bind<IViewsModelsContainerAdapter>().FromInstance(viewModelsContainerAdapter);
             container.FastBind<IViewManager, ViewManagerImpl>();
 
-            viewModelsContainer.Bind<IViewFactory>().To<ViewFactory>().AsSingle();
+            if (config.ViewFactory == null)
+            {
+                viewModelsContainer.Bind<IViewFactory>().To<ViewFactory>().AsSingle();
+            }
+            else
+            {
+                viewModelsContainer.Bind<IViewFactory>().FromInstance(config.ViewFactory);
+            }
+            
             viewModelsContainer.Bind<IViewToViewModelMapper>().FromInstance(mapper);
             viewModelsContainer.Bind<IViewsContainerAdapter>().FromInstance(viewsContainerAdapter).AsSingle();
         }
@@ -186,7 +213,7 @@ namespace UnityMVVM.DI
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void ProvideAccessForViewLayer<T>(this DiContainer container)
         {
@@ -206,7 +233,7 @@ namespace UnityMVVM.DI
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer method to configure container.
         /// </exception>
         public static void ProvideAccessForViewLayer<TModelAccessInterface, TCommonAccessInterface>(this DiContainer container)
         {
@@ -233,7 +260,7 @@ namespace UnityMVVM.DI
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void ProvideAccessForViewModelLayer<T>(this DiContainer container)
         {
@@ -253,7 +280,7 @@ namespace UnityMVVM.DI
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void ProvideAccessForViewModelLayer<TModelAccessInterface, TCommonAccessInterface>(this DiContainer container)
         {
@@ -282,7 +309,7 @@ namespace UnityMVVM.DI
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBind<TModelAccessInterface, TCommonAccessInterface, TImpl>(this DiContainer container)
         where TImpl : TCommonAccessInterface, TModelAccessInterface
@@ -300,7 +327,7 @@ namespace UnityMVVM.DI
         /// <typeparam name="TImpl">The dependency implementation.</typeparam>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBind<TImpl>(this DiContainer container, IReadOnlyCollection<Type> modelAccessInterfaces,
             IReadOnlyCollection<Type> commonAccessInterfaces)
@@ -336,7 +363,7 @@ namespace UnityMVVM.DI
         /// <param name="prefab">The dependency prefab.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBindMono<TModelAccessInterface, TCommonAccessInterface, TImpl>(this DiContainer container,
             GameObject? prefab = null)
@@ -357,7 +384,7 @@ namespace UnityMVVM.DI
         /// <typeparam name="TImpl">The implementation of the dependency</typeparam>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBindMono<TImpl>(this DiContainer container,
             IReadOnlyCollection<Type> modelAccessInterfaces,
@@ -402,7 +429,7 @@ namespace UnityMVVM.DI
         /// <param name="container">MVVM container to configure.</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBind<TCommonAccessInterface, TImpl>(this DiContainer container)
         where TImpl : TCommonAccessInterface
@@ -418,7 +445,7 @@ namespace UnityMVVM.DI
         /// <typeparam name="TImpl">The implementation of the dependency</typeparam>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBind<TImpl>(this DiContainer container,
             IReadOnlyCollection<Type> commonAccessInterfaces)
@@ -435,7 +462,7 @@ namespace UnityMVVM.DI
         /// <param name="prefab">The dependency prefab</param>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBindMono<TCommonAccessInterface, TImpl>(this DiContainer container, GameObject? prefab = null)
             where TImpl : MonoBehaviour, TCommonAccessInterface
@@ -452,7 +479,7 @@ namespace UnityMVVM.DI
         /// <typeparam name="TImpl">The implementation of the dependency.</typeparam>
         /// <exception cref="InvalidOperationException">
         /// Being thrown if it is not MVVM container.
-        /// Use <see cref="UseAsMvvmContainer"/> to configure container.
+        /// Use UseAsMvvmContainer to configure container.
         /// </exception>
         public static void FastBindMono<TImpl>(this DiContainer container,
             IReadOnlyCollection<Type> commonAccessInterfaces,

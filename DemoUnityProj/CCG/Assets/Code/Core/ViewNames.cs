@@ -2,6 +2,7 @@
 {
     public static class ViewNames
     {
+        public const string MainScreen3d = nameof(MainScreen3d);
         public static string MainMenu3d => "MainMenu3d";
         public static string MainMenuUi => "MainMenuUi";
         public static string MainScreen => "MainScreen";

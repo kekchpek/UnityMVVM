@@ -22,11 +22,12 @@ namespace CCG.MVVM.Card.ViewModel
         
         IBindable<bool> IsOverBoard { get; }
         
-        IBindable<float> Rotation { get; }
+        IBindable<float> RotationInHand { get; }
         
-        IBindable<Vector2> Position { get; }
+        IBindable<Vector2> PositionInHand { get; }
 
         void OnMouseClickDown();
+        void OnMouseClickUp();
 
         void OnCardEnterBoard();
 

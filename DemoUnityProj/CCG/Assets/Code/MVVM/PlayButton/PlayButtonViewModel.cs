@@ -1,4 +1,5 @@
 using CCG.Core;
+using CCG.Services.Game;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewModelCore;
 
@@ -6,17 +7,16 @@ namespace CCG.MVVM.PlayButton
 {
     public class PlayButtonViewModel : ViewModel, IPlayButtonViewModel
     {
-        private readonly IViewManager _viewManager;
+        private readonly IGameService _gameService;
 
-        public PlayButtonViewModel(IViewManager viewManager)
+        public PlayButtonViewModel(IGameService gameService)
         {
-            _viewManager = viewManager;
+            _gameService = gameService;
         }
         
         public async void OnClicked()
         {
-            await _viewManager.Close(ViewLayerIds.Main3d);
-            await OpenView(ViewLayerIds.MainUI, ViewNames.MainScreen);
+            await _gameService.StartGame();
         }
     }
 }

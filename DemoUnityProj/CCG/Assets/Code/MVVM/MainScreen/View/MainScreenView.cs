@@ -9,7 +9,7 @@ namespace CCG.MVVM.MainScreen.View
     public class MainScreenView : ViewBehaviour<IMainScreenViewModel>, IPoolableView
     {
         [SerializeField] private Button _mainMenuButton;
-
+        
         [SerializeField] private Transform _cardsContainer;
 
         protected override void OnViewModelSet()

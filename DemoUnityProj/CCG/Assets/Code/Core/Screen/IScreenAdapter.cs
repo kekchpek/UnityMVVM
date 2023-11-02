@@ -13,6 +13,8 @@ namespace CCG.Core.Screen
         float ScreenActiveAreaWidthPx { get; }
         float ScreenActiveAreaHeightPx { get; }
         Vector3 ScreenPointToWorld(Vector3 screenPoint);
+        Vector3 ViewPortPointToWorld(Vector3 viewPortPoint);
+        Vector2 ViewPortPointToScreen(Vector2 viewPortPoint);
         Vector3 ScreenActiveAreaToWorld(Vector3 activeAreaPoint);
     }
 }

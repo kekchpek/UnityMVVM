@@ -35,10 +35,7 @@ namespace CCG.MVVM.CoolPopup
         
         public void OnCloseBtn()
         {
-            if (_viewManager.GetViewName(ViewLayerIds.Popup) == ViewNames.CoolPopup)
-            {
-                _viewManager.GetView(ViewLayerIds.Popup)!.Close();
-            }
+            Close();
         }
 
         public void SetClosingAnimationActive(bool isActive)

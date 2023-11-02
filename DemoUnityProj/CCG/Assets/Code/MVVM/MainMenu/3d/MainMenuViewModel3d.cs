@@ -1,15 +1,13 @@
 ﻿using System;
 using AsyncReactAwait.Bindable;
 using AsyncReactAwait.Promises;
-using CCG.Core;
 using CCG.Core.Camera;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewModelCore;
-using Zenject;
 
 namespace CCG.MVVM.MainMenu
 {
-    public class MainMenuViewModel3d : ViewModel, IMainMenuViewModel3d, IMainMenu3dController, IInitializable
+    public class MainMenuViewModel3d : ViewModel, IMainMenuViewModel3d, IMainMenu3dController
     {
         private readonly IViewManager _viewManager;
         private readonly ICameraService _cameraService;
@@ -23,11 +21,6 @@ namespace CCG.MVVM.MainMenu
         public MainMenuViewModel3d(IViewManager viewManager)
         {
             _viewManager = viewManager;
-        }
-
-        public async void Initialize()
-        {
-            await _viewManager.Open(ViewLayerIds.MainUI, ViewNames.MainMenuUi, new MainMenuPayloadUi(this));
         }
 
         public void OnStateChangeCompleted()
