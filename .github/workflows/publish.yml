@@ -74,27 +74,4 @@ jobs:
       with:
        name: Build
        path: build
-
-name: testDev
-
-on:
-  push:
-    branches: [ develop ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    environment: CommonEnv
-    
-    env:
-      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-
-    steps:
-    - name: NotRun
-      if: github.ref == 'refs/heads/master'
-      run: |
-       echo "Not run"
-    - name: Run
-      run: |
-       echo "Run"
         
