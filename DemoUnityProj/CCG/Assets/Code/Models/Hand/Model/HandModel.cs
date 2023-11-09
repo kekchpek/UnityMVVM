@@ -31,24 +31,26 @@ namespace CCG.Models.Hand.Model
 
             _cards.Add(card);
             _cardsCount.Value = _cards.Count;
-            void OnCardPlayed()
-            {
-                card.Played -= OnCardPlayed;
-                card.Destroyed -= OnCardDestroyed;
-                RemoveCard(card);
-                card.Destroy();
-                Debug.Log("CardPlayed!");
-            }
-            void OnCardDestroyed()
-            {
-                card.Played -= OnCardPlayed;
-                card.Destroyed -= OnCardDestroyed;
-                RemoveCard(card);
-            }
             card.Played += OnCardPlayed;
             card.Destroyed += OnCardDestroyed;
             UpdateCardsIndices();
             CardAdded?.Invoke(card);
+        }
+        
+        private void OnCardPlayed(ICardModel card)
+        {
+            card.Played -= OnCardPlayed;
+            card.Destroyed -= OnCardDestroyed;
+            RemoveCard((ICardMutableModel)card);
+            card.Destroy();
+            Debug.Log("CardPlayed!");
+        }
+        
+        private void OnCardDestroyed(ICardModel card)
+        {
+            card.Played -= OnCardPlayed;
+            card.Destroyed -= OnCardDestroyed;
+            RemoveCard((ICardMutableModel)card);
         }
 
         private void RemoveCard(ICardMutableModel card)

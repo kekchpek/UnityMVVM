@@ -27,7 +27,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         public TView Instantiate<TView>(
             GameObject viewPrefab, 
             Transform transform,
-            IViewPool? viewPool) 
+            IViewPool? viewPool)
             where TView : IViewInitializer
         {
             TView view;

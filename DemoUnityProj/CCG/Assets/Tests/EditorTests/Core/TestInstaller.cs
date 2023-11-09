@@ -1,5 +1,6 @@
 using CCG.Core;
 using CCG.Services.ImageLoaderService;
+using NSubstitute;
 using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.DI.Config;
@@ -19,10 +20,12 @@ namespace CCG.Tests.Editor.Core
                 },
                 new MvvmContainerConfiguration
                 {
-                    ViewFactory = new TestViewFactory(),
+                    ViewFactory = new TestViewFactory()
                 });
             Container.Install<CoreInstaller>();
-            Container.Rebind<IImageLoaderService>().FromInstance(AutoSub.For<IImageLoaderService>());
+            
+            // Rebind low level dependencies
+            Container.Rebind<IImageLoaderService>().FromInstance(Substitute.For<IImageLoaderService>());
         }
 
         private static Transform CreateLayerMock()

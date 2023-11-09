@@ -51,7 +51,7 @@ namespace UnityMVVM.ViewManager.ViewLayer
             _currentViewModel.Destroyed += OnViewModelDestroyed;
         }
 
-        private void OnViewModelDestroyed()
+        private void OnViewModelDestroyed(IViewModel _)
         {
             if (_currentViewModel == null) return;
             _currentViewModel.Destroyed -= OnViewModelDestroyed;

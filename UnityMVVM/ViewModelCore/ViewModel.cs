@@ -1,9 +1,12 @@
 ﻿using AsyncReactAwait.Promises;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
 using Zenject;
+
 // ReSharper disable MemberCanBePrivate.Global
 
 namespace UnityMVVM.ViewModelCore
@@ -12,10 +15,12 @@ namespace UnityMVVM.ViewModelCore
     /// <summary>
     /// Base class for view model.
     /// </summary>
-    public class ViewModel : IViewModelInternal
+    public class ViewModel : IViewModel
     {
         private IViewManager _viewManager = null!;
         private IViewLayer _layer = null!;
+
+        private readonly HashSet<IViewModel> _subviews = UnityEngine.Pool.HashSetPool<IViewModel>.Get();
 
         private IViewModel? _parent;
 
@@ -27,10 +32,10 @@ namespace UnityMVVM.ViewModelCore
         public IViewLayer Layer => _layer;
 
         /// <inheritdoc cref="IViewModel.Destroyed"/>
-        public event Action? Destroyed;
+        public event Action<IViewModel>? Destroyed;
 
         /// <inheritdoc cref="IViewModel.CloseStarted"/>
-        public event Action? CloseStarted;
+        public event Action<IViewModel>? CloseStarted;
 
 
         /// <summary>
@@ -48,8 +53,16 @@ namespace UnityMVVM.ViewModelCore
             _parent = parent;
             if (_parent != null)
             {
-                _parent.Destroyed += Destroy;
+                _parent.Destroyed += OnParentDestroyed;
             }
+        }
+
+        /// <summary>
+        /// Invoked by MVVM core when view is opened.
+        /// </summary>
+        void IViewModel.OnOpened()
+        {
+            OnOpenedInternal();
         }
 
         /// <inheritdoc cref="CreateSubView(string, IPayload)"/>
@@ -112,21 +125,51 @@ namespace UnityMVVM.ViewModelCore
             await _viewManager.Open(viewLayerId, viewName, payload);
         }
 
-        /// <inheritdoc cref="IViewModel.Destroy"/>
-        public void Destroy()
+        /// <inheritdoc />
+        public T? GetSubview<T>() where T : IViewModel
         {
-            if (_destroyed)
-            {
-                Debug.LogException(new InvalidOperationException("Trying destroy already destroyed view model."));
-            }
-            OnDestroyInternal();
-            _destroyed = true;
-            if (_parent != null)
-            {
-                _parent.Destroyed -= Destroy;
-            }
-            Destroyed?.Invoke();
-            _closePromise?.Success();
+            return (T?)_subviews.FirstOrDefault(x => x is T);
+        }
+
+        /// <inheritdoc />
+        public T[] GetSubviews<T>() where T : IViewModel
+        {
+            return _subviews
+                .Where(x => x is T)
+                .Cast<T>()
+                .ToArray();
+        }
+
+        /// <summary>
+        /// Protected method to handle close call.
+        /// </summary>
+        protected virtual void OnCloseStartedInternal()
+        {
+            // Do noting.
+            // Supposed to be overriden.
+        }
+        
+        /// <summary>
+        /// Protected method to handle view opened.
+        /// </summary>
+        protected virtual void OnOpenedInternal()
+        {
+            // Do noting.
+            // Supposed to be overriden.
+        }
+
+        void IViewModel.AddSubview(IViewModel subview)
+        {
+            subview.Destroyed += OnSubviewDestroyed;
+            _subviews.Add(subview);
+        }
+
+        private void OnSubviewDestroyed(IViewModel subview)
+        {
+            if (!_subviews.Contains(subview))
+                Debug.LogError("Subview destruction handler is called for not a subview.");
+            subview.Destroyed -= OnSubviewDestroyed;
+            _subviews.Remove(subview);
         }
 
         /// <inheritdoc cref="IViewModel.Close"/>
@@ -138,9 +181,14 @@ namespace UnityMVVM.ViewModelCore
             }
             _closePromise = new ControllablePromise();
             OnCloseStartedInternal();
-            CloseStarted?.Invoke();
+            CloseStarted?.Invoke(this);
             return _closePromise;
 
+        }
+
+        private void OnParentDestroyed(IViewModel _)
+        {
+            Destroy();
         }
 
         /// <summary>
@@ -148,31 +196,30 @@ namespace UnityMVVM.ViewModelCore
         /// </summary>
         protected virtual void OnDestroyInternal()
         {
-
+            // Do noting.
+            // Supposed to be overriden.
         }
 
-        /// <summary>
-        /// Protected method to handle close call.
-        /// </summary>
-        protected virtual void OnCloseStartedInternal()
+        /// <inheritdoc cref="IViewModel.Destroy"/>
+        public void Destroy()
         {
-
-        }
-        
-        /// <summary>
-        /// Protected method to handle view opened.
-        /// </summary>
-        protected virtual void OnOpenedInternal()
-        {
-
-        }
-
-        /// <summary>
-        /// Invoked by MVVM core when view is opened.
-        /// </summary>
-        public void OnOpened()
-        {
-            OnOpenedInternal();
+            if (_destroyed)
+            {
+                Debug.LogException(new InvalidOperationException("Trying destroy already destroyed view model."));
+            }
+            OnDestroyInternal();
+            _destroyed = true;
+            if (_parent != null)
+            {
+                _parent.Destroyed -= OnParentDestroyed;
+            }
+            foreach (var subview in _subviews)
+            {
+                subview.Destroyed -= OnSubviewDestroyed;
+            }
+            _subviews.Clear();
+            Destroyed?.Invoke(this);
+            _closePromise?.Success();
         }
     }
 }

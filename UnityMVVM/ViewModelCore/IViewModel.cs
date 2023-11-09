@@ -14,22 +14,43 @@ namespace UnityMVVM.ViewModelCore
         /// <summary>
         /// Fired when view model receive start close call.
         /// </summary>
-        event Action CloseStarted;
+        event Action<IViewModel> CloseStarted;
 
         /// <summary>
         /// Fired on view model destroyed.
         /// </summary>
-        event Action Destroyed;
+        event Action<IViewModel> Destroyed;
 
         /// <summary>
         /// Layer, on which view was opened.
         /// </summary>
         public IViewLayer Layer { get; }
+        
+        internal void AddSubview(IViewModel child);
+        
+        internal void OnOpened();
+        
+        /// <summary>
+        /// Obtains subview of specified type.
+        /// If there is no subview of specified type, returns null.
+        /// If there are several subviews with this type, returns the first found.
+        /// </summary>
+        /// <typeparam name="T">The type of a subview.</typeparam>
+        /// <returns>Returns subview of specified type or null.</returns>
+        T? GetSubview<T>() where T : IViewModel;
+        
+        /// <summary>
+        /// Obtains all subviews of specified type.
+        /// If there is no subviews of specified type, returns an empty array.
+        /// </summary>
+        /// <typeparam name="T">The type of a subviews.</typeparam>
+        /// <returns>Returns array of subviews of specified type or an empty array.</returns>
+        T[] GetSubviews<T>() where T : IViewModel;
 
         /// <summary>
         /// Fire <see cref="CloseStarted"/> event and internal view model close handling.
         /// </summary>
-        /// <returns>Promise, that indicates close proccess.</returns>
+        /// <returns>Promise, that indicates close process.</returns>
         IPromise Close();
 
         /// <summary>

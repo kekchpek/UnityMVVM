@@ -4,7 +4,6 @@ using System.Linq;
 using ModestTree;
 using UnityEngine;
 using UnityEngine.Scripting;
-using UnityMVVM.DI;
 using UnityMVVM.DI.Mapper;
 using UnityMVVM.Pool;
 using UnityMVVM.ViewManager.ViewLayer;
@@ -48,12 +47,11 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         }
 
         /// <inheritdoc cref="IViewModelsFactory.Create(IViewLayer, IViewModel, Transform, IPayload)"/>
-        public IViewModelInternal Create(IViewLayer viewLayer,
+        public IViewModel Create(IViewLayer viewLayer,
             IViewModel? parent,
             Transform transform,
             IPayload? payload = null)
         {
-            // TODO this should be moved to other entity
             TView view = _viewFactory.Instantiate<TView>(_viewPrefabGetter.Invoke(), transform, _viewPool);
 
             if (view is not Component c)
@@ -69,7 +67,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
 
         }
 
-        private IViewModelInternal CreateViewModels(
+        private IViewModel CreateViewModels(
             Transform initialObj,
             IViewLayer layer, 
             IViewModel? initialParent, 
@@ -78,7 +76,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         {
             Queue<(Transform obj, IViewModel? parent)> creationQueue = new Queue<(Transform obj, IViewModel? parent)>();
             creationQueue.Enqueue((initialObj, initialParent));
-            IViewModelInternal? rootViewModel = null;
+            IViewModel? rootViewModel = null;
             while (creationQueue.Count > 0)
             {
                 var data = creationQueue.Dequeue();
@@ -98,16 +96,18 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                         implicitParams.Add(payload);
                     }
                     implicitParams.Add(layer);
-                    var viewModel = _instantiator.Instantiate(viewModelType, implicitParams);
+                    var viewModel = (IViewModel)_instantiator.Instantiate(viewModelType, implicitParams);
+                    // ReSharper disable once SuspiciousTypeConversion.Global
                     if (viewModel is IInitializable initializable)
                     {
                         initializable.Initialize();
                     }
+                    data.parent?.AddSubview(viewModel);
                     
-                    _viewFactory.Initialize((IViewInitializer)view, (IViewModel)viewModel, isPoolableView);
+                    _viewFactory.Initialize((IViewInitializer)view, viewModel, isPoolableView);
                     
-                    rootViewModel ??= (IViewModelInternal)viewModel;
-                    parent = (IViewModelInternal)viewModel;
+                    rootViewModel ??= viewModel;
+                    parent = viewModel;
                 }
                 foreach (Transform child in data.obj)
                 {

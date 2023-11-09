@@ -31,8 +31,8 @@ namespace CCG.MVVM.Card.Model
 
         public IBindable<int> IndexInHand => _indexInHand;
 
-        public event Action Played;
-        public event Action Destroyed;
+        public event Action<ICardModel> Played;
+        public event Action<ICardModel> Destroyed;
 
         public CardModel(int health, int attack, int mana,
             string description, string title, Texture2D icon)
@@ -47,7 +47,7 @@ namespace CCG.MVVM.Card.Model
         
         public void Play()
         {
-            Played?.Invoke();
+            Played?.Invoke(this);
         }
 
         public void SetHealth(int health)
@@ -87,7 +87,7 @@ namespace CCG.MVVM.Card.Model
 
         public void Destroy()
         {
-            Destroyed?.Invoke();
+            Destroyed?.Invoke(this);
         }
     }
 }

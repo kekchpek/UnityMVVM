@@ -4,6 +4,7 @@ using CCG.Models.Hand.Service;
 using CCG.Models.ImageModel;
 using CCG.MVVM.Card.Model;
 using CCG.MVVM.Card.ViewModel;
+using CCG.Services.Game;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using Zenject;
@@ -17,21 +18,28 @@ namespace CCG.MVVM.MainScreen.ViewModel
         private readonly IHandService _handService;
         private readonly IHandModel _handModel;
         private readonly IViewManager _viewManager;
+        private readonly IGameService _gameService;
 
         private Transform _cardsContainer;
 
         public MainScreenViewModel(IImageService imageService, IHandService handService,
-            IHandModel handModel, IViewManager viewManager)
+            IHandModel handModel, IViewManager viewManager,
+            IGameService gameService)
         {
             _imageService = imageService;
             _handService = handService;
             _handModel = handModel;
             _viewManager = viewManager;
+            _gameService = gameService;
         }
         
         public void Initialize()
         {
             _handModel.CardAdded += OnCardAdded;
+            foreach (var card in _handModel.GetCards())
+            {
+                OnCardAdded(card);
+            }
             OpenView(ViewLayerIds.Popup, ViewNames.LoadingPopup);
             IntiGame();
         }
@@ -54,13 +62,13 @@ namespace CCG.MVVM.MainScreen.ViewModel
             }).OnFail(e =>
             {
                 Debug.LogError(e.Message);
-                OpenView(ViewLayerIds.Main3d, ViewNames.MainMenu3d);
+                _gameService.OpenMainMenu().OnFail(Debug.LogException);
             });
         }
 
-        public void OnMainMenuButtonClicked()
+        public async void OnMainMenuButtonClicked()
         {
-            OpenView(ViewLayerIds.Main3d, ViewNames.MainMenu3d);
+            await _gameService.OpenMainMenu();
         }
 
         public void SetCardsContainer(Transform container)

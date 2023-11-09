@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Diagnostics.CodeAnalysis;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityMVVM.ViewManager.ViewLayer;
 
 namespace UnityMVVM.ViewModelCore.ViewModelsFactory
@@ -19,7 +17,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         /// <param name="parentTransform">The transform to instantiate the view to.</param>
         /// <param name="payload">View model payload.</param>
         /// <returns>Returns created view model to conrol the view.</returns>
-        IViewModelInternal Create(IViewLayer viewLayer, 
+        IViewModel Create(IViewLayer viewLayer, 
             IViewModel? parent,
             Transform parentTransform,
             IPayload? payload = null);

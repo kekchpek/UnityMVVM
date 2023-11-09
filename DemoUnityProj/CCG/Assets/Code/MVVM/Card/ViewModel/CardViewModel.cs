@@ -1,5 +1,4 @@
 ﻿using AsyncReactAwait.Bindable;
-using CCG.Config;
 using CCG.Models.Hand.Model;
 using CCG.MVVM.Card.Model;
 using UnityEngine;
@@ -8,8 +7,6 @@ namespace CCG.MVVM.Card.ViewModel
 {
     public class CardViewModel : UnityMVVM.ViewModelCore.ViewModel, ICardViewModel
     {
-        
-        private const float HndArcMaxAngle = 120;
         
         private readonly ICardModel _card;
         private readonly IHandModel _handModel;
@@ -22,8 +19,6 @@ namespace CCG.MVVM.Card.ViewModel
         
         private Vector2 _positionInHand;
         private float _rotationInHand;
-        
-        private float HandArcWidth => 0.1f * _handModel.MaxCardsCount * ConfigData.CardScale;
         
         public IBindable<Vector2> PositionInHand => _position;
         public IBindable<float> RotationInHand => _rotation;
@@ -43,7 +38,7 @@ namespace CCG.MVVM.Card.ViewModel
         {
             _card = payload.Card;
             _handModel = handModel;
-            _card.Destroyed += Destroy;
+            _card.Destroyed += OnCardDestroyed;
             _card.IndexInHand.Bind(UpdateHandPosition);
             _handModel.CardsCount.Bind(UpdateHandPosition);
             _handModel.IsArchPattern.Bind(UpdateHandPosition);
@@ -51,23 +46,20 @@ namespace CCG.MVVM.Card.ViewModel
 
         private void UpdateHandPosition()
         {
-            var cardsCount = _handModel.GetCards().Length;
-            var screenCenter = 0.5f;
             if (_handModel.IsArchPattern.Value)
             {
-                var rotationStep = HndArcMaxAngle / _handModel.MaxCardsCount;
-                var rotation = 0 - rotationStep * (0.5f * (cardsCount - 1) - _card.IndexInHand.Value);
-                var y = 0.1f * ConfigData.CardScale * Mathf.Cos(rotation * Mathf.PI / 180f);
-                var x = screenCenter + HandArcWidth / 2f * Mathf.Sin(rotation * Mathf.PI / 180f);
-                SetPositionAndRotationInHand(
-                    new Vector2(x, y), -rotation);
+                var data = CardMath.GetArchTransform(
+                    _card.IndexInHand.Value, 
+                    _handModel.CardsCount.Value, 
+                    _handModel.MaxCardsCount);
+                SetPositionAndRotationInHand(data.position, data.angle);
             }
             else
             {
-                var positionStepX = 0.07f * ConfigData.CardScale;
-                var positionX = screenCenter - positionStepX * ((cardsCount - 1) / 2f - _card.IndexInHand.Value);
-                SetPositionAndRotationInHand(
-                    new Vector2(positionX, 0.1f * ConfigData.CardScale), 0f);
+                var data = CardMath.GetRegularTransform(
+                    _card.IndexInHand.Value,
+                    _handModel.CardsCount.Value);
+                SetPositionAndRotationInHand(data.position, data.angle);
             }
         }
 
@@ -106,9 +98,14 @@ namespace CCG.MVVM.Card.ViewModel
             }
         }
 
+        private void OnCardDestroyed(ICardModel _)
+        {
+            Destroy();
+        }
+
         protected override void OnDestroyInternal()
         {
-            _card.Destroyed -= Destroy;
+            _card.Destroyed -= OnCardDestroyed;
             _card.IndexInHand.Unbind(UpdateHandPosition);
             _handModel.IsArchPattern.Unbind(UpdateHandPosition);
             base.OnDestroyInternal();

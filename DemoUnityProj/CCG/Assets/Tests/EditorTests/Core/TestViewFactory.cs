@@ -16,11 +16,12 @@ namespace CCG.Tests.Editor.Core
         public void Initialize(IViewInitializer viewInitializer, IViewModel viewModel, bool isPoolableView)
         {
             viewModel.CloseStarted += ViewModelClosing;
-            void ViewModelClosing()
-            {
-                viewModel.CloseStarted -= ViewModelClosing;
-                viewModel.Destroy();
-            }
+        }
+        
+        private static void ViewModelClosing(IViewModel viewModel)
+        {
+            viewModel.CloseStarted -= ViewModelClosing;
+            viewModel.Destroy();
         }
     }
 }

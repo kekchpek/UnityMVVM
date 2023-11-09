@@ -7,7 +7,6 @@ namespace CCG.MVVM.CoolPopup
 {
     public class CoolPopupView : ViewBehaviour<ICoolPopupViewModel>
     {
-
         [SerializeField] private Button _closeBtn;
         [SerializeField] private Button _openOtherBth;
         [SerializeField] private Button _openOtherWithErrorBth;
@@ -22,16 +21,16 @@ namespace CCG.MVVM.CoolPopup
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
-            _closeBtn.onClick.AddListener(() => ViewModel.OnCloseBtn());
-            _openOtherBth.onClick.AddListener(() => ViewModel.OnOpenCoolPopupBtn());
-            _openOtherWithErrorBth.onClick.AddListener(() => ViewModel.OnOpenCoolPopupWithErrorBtn());
-            ViewModel.SetClosingAnimationActive(_animationToggle.isOn);
+            _closeBtn.onClick.AddListener(() => ViewModel!.OnCloseBtn());
+            _openOtherBth.onClick.AddListener(() => ViewModel!.OnOpenCoolPopupBtn());
+            _openOtherWithErrorBth.onClick.AddListener(() => ViewModel!.OnOpenCoolPopupWithErrorBtn());
+            _animationToggle.isOn = ViewModel!.IsClosingAnimationActive;
             _animationToggle.onValueChanged.AddListener(v => ViewModel.SetClosingAnimationActive(v));
         }
 
         protected override IPromise Close()
         {
-            if (!ViewModel.IsClosingAnimationActive)
+            if (!ViewModel!.IsClosingAnimationActive)
             {
                 var p = new ControllablePromise();
                 p.Success();

@@ -101,12 +101,12 @@ namespace UnityMVVM
             return promise;
         }
 
-        private void OnCloseStarted()
+        private void OnCloseStarted(IViewModel _)
         {
             Close().OnSuccess(() => ViewModel?.Destroy());
         }
 
-        private void OnViewModelDestroyed()
+        private void OnViewModelDestroyed(IViewModel _)
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
             if (this is IPoolableView poolableView)

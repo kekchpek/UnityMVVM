@@ -43,9 +43,9 @@ namespace CCG.MVVM.MainMenu
             });
         }
 
-        public void OnCoolPopupBtn()
+        public async void OnCoolPopupBtn()
         {
-            OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false));
+            await OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false));
         }
     }
 }

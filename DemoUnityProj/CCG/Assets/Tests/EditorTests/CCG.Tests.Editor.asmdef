@@ -17,7 +17,8 @@
         "AsyncReactAwait.dll",
         "NSubstitute.dll",
         "AutoFixture.dll",
-        "AutoFixture.AutoNSubstitute.dll"
+        "AutoFixture.AutoNSubstitute.dll",
+        ""
     ],
     "autoReferenced": true,
     "defineConstraints": [

@@ -147,16 +147,17 @@ namespace UnityMVVM.ViewManager
             
             var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, layer.Container, payload);
             _createdViewsNames.Add(viewModel, viewName);
-            void OnViewModelDestroyed()
-            {
-                viewModel.Destroyed -= OnViewModelDestroyed;
-                _createdViewsNames.Remove(viewModel);
-            }
             viewModel.Destroyed += OnViewModelDestroyed;
             layer.Set(viewModel);
             viewModel.OnOpened();
             ViewOpened?.Invoke((layer.Id, viewName, payload));
             return viewModel;
+        }
+
+        private void OnViewModelDestroyed(IViewModel viewModel)
+        {
+            viewModel.Destroyed -= OnViewModelDestroyed;
+            _createdViewsNames.Remove(viewModel);
         }
     }
 }

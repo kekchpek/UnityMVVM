@@ -6,6 +6,9 @@ namespace CCG.MVVM.Card.Model
 {
     public interface ICardModel
     {
+        public event Action<ICardModel> Played;
+        public event Action<ICardModel> Destroyed;
+        
         IBindable<int> Health { get; }
         
         IBindable<int> Attack { get; }
@@ -19,9 +22,6 @@ namespace CCG.MVVM.Card.Model
         IBindable<Texture2D> Icon { get; }
         
         IBindable<int> IndexInHand { get; }
-        
-        public event Action Played;
-        public event Action Destroyed;
 
         void Play();
 

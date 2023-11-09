@@ -9,15 +9,15 @@ namespace CCG.MVVM.CoolPopup
     public class CoolPopupViewModel : ViewModel, ICoolPopupViewModel
     {
         private readonly IViewManager _viewManager;
-        public bool IsClosingAnimationActive { get; private set; }
+        public bool IsClosingAnimationActive { get; private set; } = true;
 
         public CoolPopupViewModel(
             ICoolPopupPayload payload,
             IViewManager viewManager)
         {
-            if (payload != null && payload.ThrowError)
+            if (payload is { ThrowError: true })
             {
-                throw new Exception("Test exception!!");
+                throw new CoolPopupException("Test exception!!");
             }
 
             _viewManager = viewManager;

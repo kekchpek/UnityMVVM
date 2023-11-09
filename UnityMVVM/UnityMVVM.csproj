@@ -35,6 +35,9 @@
     <Reference Include="UnityEngine">
       <HintPath>Libs\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>Libs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
     <Reference Include="Zenject">
       <HintPath>Libs\Zenject.dll</HintPath>
     </Reference>

@@ -13,7 +13,7 @@ namespace CCG.Models.ImageModel
         private readonly IImageLoaderService _imageLoaderService;
 
         private int _pendingImagesCount;
-        private IControllablePromise _initPromise;
+        private IControllablePromise _loadImagesPromise;
 
         private readonly IDictionary<string, Texture2D> _images = new Dictionary<string, Texture2D>();
 
@@ -30,7 +30,7 @@ namespace CCG.Models.ImageModel
         public IPromise LoadImages()
         {
             _pendingImagesCount = Config.ConfigData.ImageInitBuffer;
-            _initPromise = new ControllablePromise();
+            _loadImagesPromise = new ControllablePromise();
             for (var i = 0; i < Config.ConfigData.ImageInitBuffer; i++)
             {
                 _imageLoaderService.LoadRandomImage()
@@ -42,7 +42,7 @@ namespace CCG.Models.ImageModel
                     .OnFail(FailInitialization);
             }
 
-            return _initPromise;
+            return _loadImagesPromise;
         }
         
         public Texture2D GetImage(string imageId)
@@ -64,18 +64,18 @@ namespace CCG.Models.ImageModel
         {
             if (--_pendingImagesCount == 0)
             {
-                _initPromise.Success();
+                _loadImagesPromise.Success();
             }
         }
 
         private void FailInitialization(Exception e)
         {
-            if (_initPromise != null)
+            if (_loadImagesPromise != null)
             {
                 _pendingImagesCount = default;
                 _images.Clear();
-                _initPromise.Fail(new InvalidOperationException("Initialization failed!", e));
-                _initPromise = null;
+                _loadImagesPromise.Fail(new InvalidOperationException("Initialization failed!", e));
+                _loadImagesPromise = null;
             }
         }
     }
