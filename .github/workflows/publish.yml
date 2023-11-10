@@ -69,6 +69,11 @@ jobs:
         name: Release ${{ env.newVersion }}
         artifacts: "UnityMVVM/build/*.nupkg, UnityAuxiliaryTools.zip"
         token: ${{ secrets.PAT_TOKEN }}
+    - name: Tag non-release
+      if: github.ref == 'refs/heads/develop'
+      run: |
+        git tag ${{ env.newVersion }}
+        git push --tags
     - name: Expose as artifact
       uses: actions/upload-artifact@v3.1.3
       with:
