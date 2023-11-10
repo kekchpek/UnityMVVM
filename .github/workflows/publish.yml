@@ -49,7 +49,7 @@ jobs:
     - name: Build
       run: |
         sed -i "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" UnityMVVM/UnityMVVM.csproj
-        dotnet build UnityMVVM.sln --no-dependencies --property:PublishDir=build
+        dotnet build UnityMVVM.sln --no-dependencies --property:PublishDir={$GITHUB_WORKSPACE}/build
     - name: Publish package to GitHub
       if: github.ref == 'refs/heads/master'
       run: |
