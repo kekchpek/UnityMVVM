@@ -49,7 +49,7 @@ jobs:
     - name: Build
       run: |
         sed -i "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" UnityMVVM/UnityMVVM.csproj
-        dotnet build UnityMVVM.sln --no-dependencies --property:PublishDir={$GITHUB_WORKSPACE}/build
+        dotnet build UnityMVVM.sln --no-dependencies
     - name: Publish package to GitHub
       if: github.ref == 'refs/heads/master'
       run: |
@@ -60,7 +60,7 @@ jobs:
       run: |
        dotnet nuget push build/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
     - name: Zip build
-      run: zip UnityMVVM.zip build/UnityMVVM.dll build/UnityMVVM.xml
+      run: zip UnityMVVM.zip UnityMVVM/bin/Debug/netstandard2.1/UnityMVVM.dll UnityMVVM/bin/Debug/netstandard2.1/UnityMVVM.xml
     - name: Create Release
       if: github.ref == 'refs/heads/master'
       uses: ncipollo/release-action@v1
