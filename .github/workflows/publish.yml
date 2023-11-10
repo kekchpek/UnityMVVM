@@ -60,14 +60,14 @@ jobs:
       run: |
        dotnet nuget push build/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
     - name: Zip build
-      run: zip UnityMVVM.zip build/UnityMVVM.dll build/UnityMVVM.xml
+      run: zip UnityMVVM.zip UnityMVVM/build/UnityMVVM.dll UnityMVVM/build/UnityMVVM.xml
     - name: Create Release
       if: github.ref == 'refs/heads/master'
       uses: ncipollo/release-action@v1
       with:
         tag: ${{ env.newVersion }}
         name: Release ${{ env.newVersion }}
-        artifacts: "build/*.nupkg, UnityAuxiliaryTools.zip"
+        artifacts: "UnityMVVM/build/*.nupkg, UnityAuxiliaryTools.zip"
         token: ${{ secrets.PAT_TOKEN }}
     - name: Expose as artifact
       uses: actions/upload-artifact@v3.1.3
