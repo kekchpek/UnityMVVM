@@ -1,4 +1,4 @@
-name: Acquire activation file
+name: activation
 on:
   workflow_dispatch: {}
 jobs:
