@@ -69,8 +69,18 @@ jobs:
         name: Release ${{ env.newVersion }}
         artifacts: "UnityMVVM/build/*.nupkg, UnityAuxiliaryTools.zip"
         token: ${{ secrets.PAT_TOKEN }}
+    - name: Build for demo project
+      run: ./BuildForDemo.command
+    - name: Demo project tests
+      uses: game-ci/unity-test-runner@v3
+      env:
+        UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+        UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      with:
+      projectPath: DemoUnityProj/CCG
+      githubToken: ${{ secrets.GITHUB_TOKEN }}
     - name: Tag non-release
-      if: github.ref == 'refs/heads/develop'
+      if: github.ref != 'refs/heads/master'
       run: |
         git tag ${{ env.newVersion }}
         git push --tags
