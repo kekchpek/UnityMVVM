@@ -54,11 +54,11 @@ jobs:
       if: github.ref == 'refs/heads/master'
       run: |
        dotnet nuget add source --username kekchpek --password ${{ secrets.PAT_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kekchpek/index.json"
-       dotnet nuget push build/*.nupkg --skip-duplicate --api-key ${{secrets.PAT_TOKEN}} --source github
+       dotnet nuget push UnityMVVM/build/*.nupkg --skip-duplicate --api-key ${{secrets.PAT_TOKEN}} --source github
     - name: Publish package to Nuget
       if: github.ref == 'refs/heads/master'
       run: |
-       dotnet nuget push build/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+       dotnet nuget push UnityMVVM/build/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
     - name: Zip build
       run: zip UnityMVVM.zip src/UnityMVVM/build/UnityMVVM.dll src/UnityMVVM/build/UnityMVVM.xml
     - name: Create Release
