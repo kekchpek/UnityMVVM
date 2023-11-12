@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d9ecdb66-7acf-4f75-a58e-0e5e6a3abda1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.UnityMVVM/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DemoUnityProj/CCG/Packages/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DemoUnityProj/CCG/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/src/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/publish.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/publish.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UnityMVVM/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/.idea.UnityMVVM/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UnityMVVM/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/.idea.UnityMVVM/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UnityMVVM/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/.idea.UnityMVVM/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.UnityMVVM/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/.idea/.idea.UnityMVVM/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BuildForDemo.bat" beforeDir="false" afterPath="$PROJECT_DIR$/BuildForDemo.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/src/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests/Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/TestsHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tests/TestsHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM.sln" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM.sln.DotSettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/AssemblyParameters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/AssemblyParameters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/Config/MvvmContainerConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/Config/MvvmContainerConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/DiContainerExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/DiContainerExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/Environment/ContainerEnvironment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/Environment/ContainerEnvironment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/Environment/IContainerEnvironment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/Environment/IContainerEnvironment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/IViewsContainerAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/IViewsContainerAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/IViewsModelsContainerAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/IViewsModelsContainerAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/Mapper/IViewToViewModelMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/Mapper/IViewToViewModelMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/Mapper/IViewToViewModelMutableMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/Mapper/IViewToViewModelMutableMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/Mapper/ViewToViewModelMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/Mapper/ViewToViewModelMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/ViewModelsContainerAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/ViewModelsContainerAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/DI/ViewsContainerAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/DI/ViewsContainerAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/IViewBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/IViewBehaviour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/IViewInitializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/IViewInitializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/UnityEngine.CoreModule.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/UnityEngine.CoreModule.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/UnityEngine.CoreModule.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/UnityEngine.CoreModule.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/UnityEngine.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/UnityEngine.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/UnityEngine.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/UnityEngine.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject-ReflectionBaking.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject-ReflectionBaking.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject-Signals.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject-Signals.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject-usage.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject-usage.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.Mdb.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.Mdb.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.Pdb.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.Pdb.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.Rocks.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.Rocks.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject.ReflectionBaking.Mono.Cecil.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Libs/Zenject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Libs/Zenject.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Pool/IPoolableView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Pool/IPoolableView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Pool/IViewPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Pool/IViewPool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/Pool/ViewPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/Pool/ViewPool.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/UnityMVVM.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/UnityMVVM.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewBehaviour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewManager/IViewManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewManager/IViewManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewManager/ViewLayer/IViewLayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewManager/ViewLayer/IViewLayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewManager/ViewLayer/ViewLayerImpl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewManager/ViewLayer/ViewLayerImpl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewManager/ViewManagerExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewManager/ViewManagerExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewManager/ViewManagerImpl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewManager/ViewManagerImpl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewModelCore/IPayload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewModelCore/IPayload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewModelCore/IViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewModelCore/IViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewModelCore/ViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewModelCore/ViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewModelCore/ViewModelsFactory/IViewFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewModelCore/ViewModelsFactory/IViewFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewModelCore/ViewModelsFactory/IViewModelsFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewModelCore/ViewModelsFactory/IViewModelsFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewModelCore/ViewModelsFactory/ViewFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewModelCore/ViewModelsFactory/ViewFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UnityMVVM/ViewModelCore/ViewModelsFactory/ViewModelsFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/UnityMVVM/ViewModelCore/ViewModelsFactory/ViewModelsFactory.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4568cc34db4f46aa92f7a5f09e03e3738c00/8c/a4614b48/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6a9007df24904c27bc0d5500898fff63172a00/40/84371d59/GameObject.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7079471162a8455d8509373eb27b1b716000/07/f74e0f5a/IBindable`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/1a/aaa36542/DiContainer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/32/b30befd1/CachedProvider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/53/303ae2b9/TransientProvider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/67/2d2c4dbc/ValidationMarker.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/9b/155a054e/IInstantiator.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/a4/f22cbcb1/DictionaryPool`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/b0/4b9968ed/CachedOpenTypeProvider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/7cf03bff95084c6889c26a46c6b8a4b56c000/f6/45d24f63/FromBinder.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+</project>

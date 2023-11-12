@@ -48,8 +48,8 @@ jobs:
         fi
     - name: Build
       run: |
-        sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" UnityMVVM/UnityMVVM.csproj
-        dotnet build UnityMVVM.sln --no-dependencies --property:OutputPath=build
+        sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" src/UnityMVVM/UnityMVVM.csproj
+        dotnet build src/UnityMVVM.sln --no-dependencies --property:OutputPath=build
     - name: Publish package to GitHub
       if: github.ref == 'refs/heads/master'
       run: |
@@ -67,7 +67,7 @@ jobs:
       with:
         tag: ${{ env.newVersion }}
         name: Release ${{ env.newVersion }}
-        artifacts: "UnityMVVM/build/*.nupkg, UnityAuxiliaryTools.zip"
+        artifacts: "build/*.nupkg, UnityMVVM.zip"
         token: ${{ secrets.PAT_TOKEN }}
     - name: Build for demo project
       run: ./BuildForDemo.command

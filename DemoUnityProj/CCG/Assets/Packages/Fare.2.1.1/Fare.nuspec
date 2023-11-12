@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Fare</id>
+    <version>2.1.1</version>
+    <title>Fare - Finite Automata and Regular Expressions</title>
+    <authors>Nikos Baxevanis</authors>
+    <owners>Nikos Baxevanis</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/moodmosaic/Fare/blob/master/LICENCE</licenseUrl>
+    <projectUrl>https://github.com/moodmosaic/Fare</projectUrl>
+    <description>.NET port of dk.brics.automaton - Project Fare is an effort to bring a DFA/NFA (finite-state automata) implementation from Java to .NET. There are quite a few implementations available in other languages today. This project aims to fill the gap in .NET.</description>
+    <copyright>Copyright © Nikos Baxevanis 2016</copyright>
+    <tags>Regex Test NFA DFA Automaton</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework3.5" />
+      <group targetFramework=".NETStandard1.1">
+        <dependency id="NETStandard.Library" version="1.6.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
