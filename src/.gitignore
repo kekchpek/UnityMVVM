@@ -399,6 +399,7 @@ FodyWeavers.xsd
 
 # Build
 build/*
+UnityMVVM/build/*
 
 # OSX
 *.DS_Store
