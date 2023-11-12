@@ -53,7 +53,6 @@ jobs:
     - name: Publish package to GitHub
       if: github.ref == 'refs/heads/master'
       run: |
-       dotnet nuget add source --username kekchpek --password ${{ secrets.PAT_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kekchpek/index.json"
        dotnet nuget push UnityMVVM/build/*.nupkg --skip-duplicate --api-key ${{secrets.PAT_TOKEN}} --source github
     - name: Publish package to Nuget
       if: github.ref == 'refs/heads/master'
