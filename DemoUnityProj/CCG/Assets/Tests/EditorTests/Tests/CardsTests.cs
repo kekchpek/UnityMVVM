@@ -13,12 +13,6 @@ namespace CCG.Tests.Editor
 {
     public class CardsTests
     {
-
-        [Test]
-        public void Fail()
-        {
-            Assert.Fail();
-        }
         
         [Test]
         public void GameStart_NoSelectedCards()
