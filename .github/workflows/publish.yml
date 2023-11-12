@@ -21,7 +21,7 @@ jobs:
       with:
         dotnet-version: '7.0.x'
     - name: Restore .Net
-      run: dotnet restore
+      run: dotnet restore scr
     - name: Run tests
       run: dotnet test --verbosity normal
     - name: Configure version
