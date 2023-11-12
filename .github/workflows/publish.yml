@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     environment: CommonEnv
     
     env:
@@ -72,13 +72,8 @@ jobs:
     - name: Build for demo project
       run: ./BuildForDemo.command
     - name: Demo project tests
-      uses: game-ci/unity-test-runner@v3
-      env:
-        UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-        UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      with:
-        projectPath: DemoUnityProj/CCG
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        /Applications/Unity/Hub/Editor/2021.3.18f1/Unity.app/Contents/MacOS/Unity -runTests -batchmode -projectPath DemoUnityProj/CCG -testResults relults.xml -testPlatform Android
     - name: Tag non-release
       if: github.ref != 'refs/heads/master'
       run: |
