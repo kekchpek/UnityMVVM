@@ -73,7 +73,7 @@ jobs:
       run: ./BuildForDemo.command
     - name: Demo project tests
       run: |
-        /Applications/Unity/Hub/Editor/2021.3.18f1/Unity.app/Contents/MacOS/Unity -runTests -batchmode -projectPath DemoUnityProj/CCG -testResults relults.xml -testPlatform EditMode
+        /Applications/Unity/Hub/Editor/2022.3.8f1/Unity.app/Contents/MacOS/Unity -runTests -batchmode -projectPath DemoUnityProj/CCG -testResults relults.xml -testPlatform EditMode
     - name: Tag non-release
       if: github.ref != 'refs/heads/master'
       run: |
