@@ -48,7 +48,7 @@ jobs:
         fi
     - name: Build
       run: |
-        sed -i "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" UnityMVVM/UnityMVVM.csproj
+        sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" UnityMVVM/UnityMVVM.csproj
         dotnet build UnityMVVM.sln --no-dependencies --property:OutputPath=build
     - name: Publish package to GitHub
       if: github.ref == 'refs/heads/master'
