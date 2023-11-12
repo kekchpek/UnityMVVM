@@ -9,7 +9,7 @@
 	<Description>MVVM pattern implemented for Unity3d game engine.</Description>
 	<PackageProjectUrl>https://github.com/kekchpek/UnityMVVM</PackageProjectUrl>
 	<RepositoryUrl>https://github.com/kekchpek/UnityMVVM</RepositoryUrl>
-	<PackageLicenseFile>../LICENSE</PackageLicenseFile>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	<LangVersion>9</LangVersion>
