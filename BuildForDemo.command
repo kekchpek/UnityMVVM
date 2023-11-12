@@ -1,2 +1,2 @@
-dotnet build UnityMVVM.sln --no-dependencies --output build
-cp build/UnityMVVM.dll DemoUnityProj/CCG/Assets/Libs/UnityMVVM.dll
+dotnet build src/UnityMVVM.sln --no-dependencies --property:OutputPath=build
+cp UnityMVVM/build/UnityMVVM.dll DemoUnityProj/CCG/Assets/Libs/UnityMVVM.dll
