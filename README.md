@@ -3,8 +3,33 @@ The MVVM pattern core implemented for Unity3d.
 
 It is implemented over Zenject plugin. You have to add Zenject to your project to use it. (https://github.com/modesttree/Zenject)
 
-## Quick start
+## Concept
+<details>
+<summary>Concept</summary>
 
+UnityMVVM is based on widely known MVVM pattern of application structure. It is layeredd architecture pattern, where all objects are supposed to be a part of a specific logical layer. UnityMVVM by default supports three layers - View(Interaction), ViewModel and Model.
+
+<p align="center">
+<img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/14d5ae95-75bf-4038-9893-02a02c61d6e0"/>
+</p>
+
+- View(Interaction) layer contains Unity3d objects, that are responsible for content displaying. These objects also could handle interactions with user like buttons clicks and interactions with UnityAPI like `OnCollisionEnter`, `OnTriggerEnter` methods and Unity3d physics handling. This layer is not supposed to store any data about its state or buisnes logic. **View layer objects are childs of `ViewBehaviour` class.**
+- ViewModel layer contains the data about View objects state. It responsible for handling input from View layer and contain logic of hanling Model layer entities state changing. **ViewModel layer objects are childs of `ViewModel` class.**
+- Model layer contains buiseness logic, interaction with persistent storage, network or domain model. Model layer objects could have any type.
+
+The specific thing about UnityMVVM approach is that every View object has only one ViewModel object. So every entity(units, windows, popups and whatever you want) are a View-ViewModel pair. ViewModel could have dependency on any number of model layer entities.
+
+<p align="center">
+<img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/ab00b2d5-fd5a-4bee-a237-cc7dd5ea0c81"/>
+</p>
+
+
+</details>
+
+## Quick start
+<details>
+<summary>Quick start</summary>
+  
 This topic slightly shows how to create and open view. All example code could be found in demo project -https://github.com/kekchpek/UnityMVVM/tree/master/DemoUnityProj/QuickStartUnityMVVM
 
 Firstly, we should create a view and its view-model to open anything. Lets create simple View-ViewModel pair.
@@ -130,3 +155,5 @@ After installing such installer in some context you can add `StartupBehaviour` b
         }
     }
 ```
+
+</details>
