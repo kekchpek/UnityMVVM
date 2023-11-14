@@ -400,6 +400,7 @@ FodyWeavers.xsd
 # Build
 build/*
 UnityMVVM/build/*
+Tests/build/*
 
 # OSX
 *.DS_Store
