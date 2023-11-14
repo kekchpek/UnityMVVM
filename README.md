@@ -70,6 +70,8 @@ So our scheme now looks like this:
 <img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/1dacf75e-97d5-49b8-8a91-b160b5f0744c"/>
 </p>
 
+In addition, I would like to say that ViewModel- and View-only dependencies is not a good practice in terms of UnityMVVM approach, so be careful and do not overuse Views and ViewModels containers.
+
 </details>
 
 ## Quick start
