@@ -1,0 +1,600 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AsyncReactAwait</name>
+    </assembly>
+    <members>
+        <member name="T:AsyncReactAwait.Bindable.Awaiter.IBindableAwaiter`1">
+            <summary>
+            The awaiter for specific bindable value.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:AsyncReactAwait.Bindable.Awaiter.IBindableAwaiter`1.IsCompleted">
+            <summary>
+            Indicates that bindable value was changed.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Awaiter.IBindableAwaiter`1.GetAwaiter">
+            <summary>
+            Gets awaiter itself.
+            </summary>
+            <returns>The awaiter itself.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Awaiter.IBindableAwaiter`1.ConfigureAwaiter(System.Boolean)">
+            <summary>
+            Creates configured awaiter for the promise.
+            </summary>
+            <param name="captureContext">Should awaited execution be exececuted on captured context.</param>
+            <returns>The promise awaiter container.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Awaiter.IBindableAwaiter`1.GetResult">
+            <summary>
+            Gets the result of awaited process.
+            </summary>
+            <returns>The result of awaited process.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Bindable.BindableExtensiosn.BindableExtensions">
+            <summary>
+            Extensions for bindable values.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensiosn.BindableExtensions.WillBeEqual``1(AsyncReactAwait.Bindable.IBindable{``0},``0)">
+            <summary>
+            Awaits the bindable value becomes specific value.
+            </summary>
+            <typeparam name="T">The type of bindable value.</typeparam>
+            <param name="bindable">The bindable value.</param>
+            <param name="value">The value to await.</param>
+            <returns>The awaiter for specified value.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Bindable.IBindable`1">
+            <summary>
+            Value, changes of which could be handled with binded handlers.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:AsyncReactAwait.Bindable.IBindable`1.Value">
+            <summary>
+            Current value.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable`1.WillBe(System.Func{`0,System.Boolean},System.Boolean)">
+            <summary>
+            Awaits for specific value.
+            </summary>
+            <param name="predicate">The specific value awaiter.</param>
+            <param name="checkCurrentValue">False if you don't want to check current value</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)">
+            <summary>
+            Bind a handler for value changing.
+            </summary>
+            <param name="handler">Value changing handler.</param>
+            <param name="callImmediately">Calls handler instantly when it is set.</param>
+            <exception cref="T:System.ArgumentNullException">Handler is null.</exception>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action,System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0,`0})">
+            <summary>
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
+            </summary>
+            <param name="handler"><inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/> It handles previous and new value.</param>
+            <exception cref="T:System.ArgumentNullException"><inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/></exception>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})">
+            <summary>
+            Unbinds the value changing handler.
+            </summary>
+            <param name="handler">Value changing handler.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action)">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0,`0})">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
+        </member>
+        <member name="T:AsyncReactAwait.Bindable.IMutable`1">
+            <summary>
+            Class for representing changable bindable value.
+            </summary>
+            <typeparam name="T">Bindable value type.</typeparam>
+        </member>
+        <member name="P:AsyncReactAwait.Bindable.IMutable`1.Value">
+            <inheritdoc cref="P:AsyncReactAwait.Bindable.IBindable`1.Value"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IMutable`1.Set(`0)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="value">New value.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IMutable`1.ForceSet(`0)">
+            <summary>
+            Sets the value to new value event if they are equal.
+            </summary>
+            <param name="value">New value.</param>
+        </member>
+        <member name="T:AsyncReactAwait.Bindable.Mutable`1">
+            <inheritdoc cref="T:AsyncReactAwait.Bindable.IMutable`1"/>
+        </member>
+        <member name="P:AsyncReactAwait.Bindable.Mutable`1.Value">
+            <inheritdoc cref="P:AsyncReactAwait.Bindable.IMutable`1.Value"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.#ctor(`0)">
+            <summary>
+            Default constructor to create changable mutable value.
+            </summary>
+            <param name="initialValue">Initial value.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Set(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.ForceSet(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{`0},System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action,System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action,System.Boolean)"/>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{`0,`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{`0})">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action)">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{`0,`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.WillBe(System.Func{`0,System.Boolean},System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.WillBe(System.Func{`0,System.Boolean},System.Boolean)"/>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.Awaiter.IBasePromiseAwaiter`1">
+            <summary>
+            Base API for promise awaiter.
+            </summary>
+        </member>
+        <member name="P:AsyncReactAwait.Promises.Awaiter.IBasePromiseAwaiter`1.IsCompleted">
+            <summary>
+            Indicates that promise is completed.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.Awaiter.IBasePromiseAwaiter`1.GetAwaiter">
+            <summary>
+            Gets awaiter itself.
+            </summary>
+            <returns>The awaiter itself.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.Awaiter.IBasePromiseAwaiter`1.ConfigureAwaiter(System.Boolean)">
+            <summary>
+            Creates configured awaiter for the promise.
+            </summary>
+            <param name="captureContext">Should awaited execution be exececuted on captured context.</param>
+            <returns>The promise awaiter container.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.Awaiter.IPromiseAwaiter">
+            <summary>
+            An awaiter for promises with result.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.Awaiter.IPromiseAwaiter.GetResult">
+            <summary>
+            Gets the promise result. Throw exception if promise is failed.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.Awaiter.IPromiseAwaiter`1">
+            <summary>
+            An awaiter for promises with result.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.Awaiter.IPromiseAwaiter`1.GetResult">
+            <summary>
+            Gets the promise result. Throw exception if promise is failed.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.BaseControllablePromise">
+            <inheritdoc cref="T:AsyncReactAwait.Promises.IBaseControllablePromise"/>
+        </member>
+        <member name="P:AsyncReactAwait.Promises.BaseControllablePromise.FailException">
+            <summary>
+            An exception that cause promise fail. 
+            </summary>
+        </member>
+        <member name="P:AsyncReactAwait.Promises.BaseControllablePromise.IsCompleted">
+            <inheritdoc cref="P:AsyncReactAwait.Promises.IBasePromise.IsCompleted"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.BaseControllablePromise.OnFail(System.Action{System.Exception})">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IBasePromise.OnFail(System.Action{System.Exception})"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.BaseControllablePromise.Finally(System.Action)">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IBasePromise.Finally(System.Action)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.BaseControllablePromise.Fail(System.Exception)">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IBaseControllablePromise.Fail(System.Exception)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.BaseControllablePromise.DoFinally">
+            <summary>
+            Should be called when the promise is completed.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.ControllablePromise">
+            <inheritdoc cref="T:AsyncReactAwait.Promises.IControllablePromise"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise.Success">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IControllablePromise.Success"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise.OnSuccess(System.Action)">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise.OnSuccess(System.Action)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise.GetAwaiter">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise.GetAwaiter"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise.ConfigureAwait(System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise.ConfigureAwait(System.Boolean)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise.ThrowIfFailed">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise.ThrowIfFailed"/>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.ControllablePromise`1">
+            <inheritdoc cref="T:AsyncReactAwait.Promises.IControllablePromise`1"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise`1.Success(`0)">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IControllablePromise`1.Success(`0)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise`1.OnSuccess(System.Action{`0})">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise`1.OnSuccess(System.Action{`0})"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise`1.TryGetResult(`0@)">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise`1.TryGetResult(`0@)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise`1.GetAwaiter">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise`1.GetAwaiter"/>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.ControllablePromise`1.ConfigureAwait(System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise`1.ConfigureAwait(System.Boolean)"/>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.IBaseControllablePromise">
+            <summary>
+            The interface to control promise completion.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IBaseControllablePromise.Fail(System.Exception)">
+            <summary>
+            Mark promise as failed.
+            </summary>
+            <param name="error">The exception, that is a reason of a failing</param>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.IBasePromise">
+            <summary>
+            This is a base result independent callbacks for promises.
+            </summary>
+        </member>
+        <member name="P:AsyncReactAwait.Promises.IBasePromise.IsCompleted">
+            <summary>
+            Returns true if promise is completed.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IBasePromise.OnFail(System.Action{System.Exception})">
+            <summary>
+            Callback will be executed after the promise will fail.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IBasePromise.Finally(System.Action)">
+            <summary>
+            Callback will be executed after the promise will success of fail.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.IControllablePromise">
+            <summary>
+            An interface to control promise success completition.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IControllablePromise.Success">
+            <summary>
+            Mark promise as succeed.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.IControllablePromise`1">
+            <summary>
+            An interface to control promise success completition.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IControllablePromise`1.Success(`0)">
+            <summary>
+            Mark promise as succeed.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.IPromise`1">
+            <summary>
+            An async operation with ability to proceed the result.
+            </summary>
+            <typeparam name="T">The type of the result</typeparam>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise`1.ConfigureAwait(System.Boolean)">
+            <summary>
+            Creates configured awaiter for the promise.
+            </summary>
+            <param name="continueOnCapturedContext">Should awaited execution be exececuted on captured context.</param>
+            <returns>The promise awaiter container</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise`1.GetAwaiter">
+            <summary>
+            Gets an awaiter for promise async execution.
+            </summary>
+            <returns>The promise awaiter</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise`1.OnSuccess(System.Action{`0})">
+            <summary>
+            Callback will be executed after the promise will success.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise`1.TryGetResult(`0@)">
+            <summary>
+            Obtaining a result if promise is completed.
+            </summary>
+            <param name="result">The result of the promise.</param>
+            <returns>Returns true if result can be obtained. False - otherwise.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.IPromise">
+            <summary>
+            An async operation with ability to proceed the result.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise.ConfigureAwait(System.Boolean)">
+            <summary>
+            Creates configured awaiter for the promise.
+            </summary>
+            <param name="captureContext">Should awaited execution be exececuted on captured context.</param>
+            <returns>The promise awaiter container.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise.GetAwaiter">
+            <summary>
+            Gets an awaiter for promise async execution.
+            </summary>
+            <returns>The promise awaiter</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise.OnSuccess(System.Action)">
+            <summary>
+            Callback will be executed after the promise will success.
+            </summary>
+            <param name="callback">A callback to execute</param>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.IPromise.ThrowIfFailed">
+            <summary>
+            Throws an exception if promise is failed.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.PromiseTool">
+            <summary>
+            Auxiliary tools for promises.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.PromiseTool.AwaitAll(AsyncReactAwait.Promises.IPromise[])">
+            <summary>
+            Awaits all passed promises.
+            </summary>
+            <param name="promises">Promises to await.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.PromiseTool.AwaitAny(AsyncReactAwait.Promises.IPromise[])">
+            <summary>
+            Awaits any of passed promise.
+            </summary>
+            <param name="promises">Promises to await.</param>
+            <returns>The promise indicates the awaiting.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.PromiseTool.GetSuccessful">
+            <summary>
+            Gets a predefined successful promise.
+            </summary>
+            <returns>Predefined successful promise.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.PromiseTool.GetSuccessful``1(``0)">
+            <summary>
+            Creates a successful promise for specified results.
+            </summary>
+            <param name="result">The result of a promise.</param>
+            <typeparam name="T">The type of a promise result.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.PromiseTool.GetFailed(System.Exception)">
+            <summary>
+            Creates a failed promise with specified error.
+            </summary>
+            <param name="exception">The exception to set to promise.</param>
+            <returns>A failed promise.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.PromiseTool.GetFailed``1(System.Exception)">
+            <summary>
+            Creates a failed promise with specified error.
+            </summary>
+            <param name="exception">The exception to set to promise.</param>
+            <typeparam name="T">The type of promise result.</typeparam>
+            <returns>A failed promise.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.Awaiter.IBaseTriggerAwaiter`1">
+            <summary>
+            Base inteface for awaiter for trigger.
+            </summary>
+        </member>
+        <member name="P:AsyncReactAwait.Trigger.Awaiter.IBaseTriggerAwaiter`1.IsCompleted">
+            <summary>
+            Was trigger activated after awaiting started.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.Awaiter.IBaseTriggerAwaiter`1.GetAwaiter">
+            <summary>
+            Returns awaiter itself. Required to be used with 'await' keyword.
+            </summary>
+            <returns>The awaiter itself.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.Awaiter.IBaseTriggerAwaiter`1.ConfigureAwaiter(System.Boolean)">
+            <summary>
+            Gets a container for configured trigger awaiter.
+            </summary>
+            <param name="captureContext">Should execution be executed with captured context.</param>
+            <returns>The container for configured trigger awaiter.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.Awaiter.ITriggerAwaiter">
+            <summary>
+            Interface for awaiter for trigger.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.Awaiter.ITriggerAwaiter.GetResult">
+            <summary>
+            Do nothing. Required for await/async compatibility.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.Awaiter.ITriggerAwaiter`1">
+            <summary>
+            Interface for awaiter for trigger.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.Awaiter.ITriggerAwaiter`1.GetResult">
+            <summary>
+            Returns trigger activation payload.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.Extensions.TriggerExtensions">
+            <summary>
+            Extensions for triggers.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.Extensions.TriggerExtensions.WillBeEqual``1(AsyncReactAwait.Trigger.ITriggerHandler{``0},``0)">
+            <summary>
+            Awaits until bindable value becomes some specific value.
+            </summary>
+            <param name="trigger">The trigger to extend.</param>
+            <param name="value">The value to await.</param>
+            <returns>The awater for specified value.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.IRegularTrigger">
+            <summary>
+            The trigger.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.IRegularTrigger`1">
+            <summary>
+            The value-trigger.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.ITrigger">
+            <summary>
+            The ingerface for trigger activation.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.ITrigger.Trigger">
+            <summary>
+            Activates the trigger.
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.ITrigger`1">
+            <summary>
+            The ingerface for value-trigger activation.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.ITrigger`1.Trigger(`0)">
+            <summary>
+            Activates the trigger and passes some value to it.
+            </summary>
+            <param name="obj"></param>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.ITriggerHandler">
+            <summary>
+             The interface for handling trigger activation.
+            </summary>
+        </member>
+        <member name="E:AsyncReactAwait.Trigger.ITriggerHandler.Triggered">
+            <summary>
+            Fired on trigger actiovation.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.ITriggerHandler.GetAwaiter">
+            <summary>
+            Gets an awaiter for trigger activation.
+            </summary>
+            <returns>The trigger awaiter.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.ITriggerHandler.ConfigureAwaiter(System.Boolean)">
+            <summary>
+            Gets a container for configured trigger awaiter.
+            </summary>
+            <param name="captureContext">Should execution be executed with captured context.</param>
+            <returns>The container for configured trigger awaiter.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.ITriggerHandler`1">
+            <summary>
+            The interface for handling value-trigger activation.
+            </summary>
+        </member>
+        <member name="E:AsyncReactAwait.Trigger.ITriggerHandler`1.Triggered">
+            <summary>
+            Fired on value-trigger actiovation.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.ITriggerHandler`1.GetAwaiter">
+            <summary>
+            Gets an awaiter for value-trigger activation.
+            </summary>
+            <returns>The value-trigger awaiter.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.ITriggerHandler`1.WillBe(System.Func{`0,System.Boolean})">
+            <summary>
+            Awaits until bindable value becomes some specific value.
+            </summary>
+            <param name="predicate">The predicate to determine required value.</param>
+            <returns>The awater for specified value.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.ITriggerHandler`1.ConfigureAwaiter(System.Boolean)">
+            <summary>
+            Gets a container for configured value-trigger awaiter.
+            </summary>
+            <param name="captureContext">Should execution be executed with captured context.</param>
+            <returns>The container for configured value-trigger awaiter.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.RegularTrigger">
+            <inheritdoc cref="T:AsyncReactAwait.Trigger.IRegularTrigger"/>
+        </member>
+        <member name="E:AsyncReactAwait.Trigger.RegularTrigger.Triggered">
+            <inheritdoc cref="E:AsyncReactAwait.Trigger.ITriggerHandler.Triggered"/>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.RegularTrigger.ConfigureAwaiter(System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Trigger.ITriggerHandler.ConfigureAwaiter(System.Boolean)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.RegularTrigger.GetAwaiter">
+            <inheritdoc cref="M:AsyncReactAwait.Trigger.ITriggerHandler.GetAwaiter"/>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.RegularTrigger.Trigger">
+            <inheritdoc cref="M:AsyncReactAwait.Trigger.ITrigger.Trigger"/>
+        </member>
+        <member name="T:AsyncReactAwait.Trigger.RegularTrigger`1">
+            <inheritdoc cref="T:AsyncReactAwait.Trigger.IRegularTrigger`1"/>
+        </member>
+        <member name="E:AsyncReactAwait.Trigger.RegularTrigger`1.Triggered">
+            <inheritdoc cref="E:AsyncReactAwait.Trigger.ITriggerHandler`1.Triggered"/>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.RegularTrigger`1.Trigger(`0)">
+            <inheritdoc cref="M:AsyncReactAwait.Trigger.ITrigger`1.Trigger(`0)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.RegularTrigger`1.GetAwaiter">
+            <inheritdoc cref="M:AsyncReactAwait.Trigger.ITriggerHandler`1.GetAwaiter"/>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.RegularTrigger`1.ConfigureAwaiter(System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Trigger.ITriggerHandler`1.ConfigureAwaiter(System.Boolean)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Trigger.RegularTrigger`1.WillBe(System.Func{`0,System.Boolean})">
+            <inheritdoc cref="M:AsyncReactAwait.Trigger.ITriggerHandler`1.WillBe(System.Func{`0,System.Boolean})"/>
+        </member>
+    </members>
+</doc>
