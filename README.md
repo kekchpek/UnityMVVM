@@ -7,6 +7,8 @@ It is implemented over Zenject plugin. You have to add Zenject to your project t
 <details>
 <summary>Concept</summary>
 
+<p></p>
+  
 UnityMVVM is based on widely known MVVM pattern of application structure. It is layeredd architecture pattern, where all objects are supposed to be a part of a specific logical layer. UnityMVVM by default supports three layers - View(Interaction), ViewModel and Model.
 
 <p align="center">
@@ -23,12 +25,58 @@ The specific thing about UnityMVVM approach is that every View object has only o
 <img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/ab00b2d5-fd5a-4bee-a237-cc7dd5ea0c81"/>
 </p>
 
+You can install View-ViewModel pair to the DI container with `InstallView` method. 
+```csharp
+Container.InstallView<MyViewBehaviour, IMyViewModel, MyViewModel>("MyView", _myViewPrefab); // Check Quick Start topic for details.
+```
+
+There is a `FastBind` method(and its overloads), that allows you to bind singletones and separate Model and ViewModel access interfaces. Like this:
+```csharp
+Container.FastBind<ICommonAccessInterface, OtherImplementation>(); // Common interface for model and view model layers.
+Container.FastBind<IModelInterface, IViewModelInterface, Implementation>(); // Separated access.
+```
+
+Also you can add Model layer entities with regular DI container API. But entities, that are added this way will not be accessible from the ViewModel layer. To make ViewModel layer able to use these entities use `ProvideAccessForViewModelLayer<T>()` method. Like this:
+```csharp
+Container.Bind<ISomeInterface>().To<Implementation>().AsSingle();
+Container.ProvideAccessForViewModelLayer<ISomeInterface>();
+```
+
+Views and ViewModels also can have own layer-specific dependencies. To install them you can directly access View and ViewModel child containers with methods: `GetViewsContainer()` and `GetViewModelsContainer()`.
+
+When you open or create a view, you can provide some data to created ViewModel with payloads. To receive the payload into ViewModel, just add it to its constructor. Like this:
+```csharp
+_viewManager.Open(
+    "Ui", // Layer to open a view on.
+    "MyView", // The name of view to open.
+    new SomePayload(/* payload args */)
+);
+
+...
+
+public class MyViewModel : ViewModel, IMyViewModel {
+
+    public MyViewModel(ISomePayload payload) {
+        // do something with payload
+    }
+
+}
+
+```
+
+So our scheme now looks like this:
+
+<p align="center">
+<img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/1dacf75e-97d5-49b8-8a91-b160b5f0744c"/>
+</p>
 
 </details>
 
 ## Quick start
 <details>
 <summary>Quick start</summary>
+
+<p></p>
   
 This topic slightly shows how to create and open view. All example code could be found in demo project -https://github.com/kekchpek/UnityMVVM/tree/master/DemoUnityProj/QuickStartUnityMVVM
 
