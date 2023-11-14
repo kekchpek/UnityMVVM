@@ -9,17 +9,17 @@ It is implemented over Zenject plugin. You have to add Zenject to your project t
 
 <p></p>
   
-UnityMVVM is based on widely known MVVM pattern of application structure. It is layeredd architecture pattern, where all objects are supposed to be a part of a specific logical layer. UnityMVVM by default supports three layers - View(Interaction), ViewModel and Model.
+UnityMVVM is based on widely known MVVM pattern of application structure. It follows a layered architecture pattern, where all objects are supposed to be a part of a specific logical layer. UnityMVVM by default supports three layers - View(Interaction), ViewModel and Model.
 
 <p align="center">
 <img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/14d5ae95-75bf-4038-9893-02a02c61d6e0"/>
 </p>
 
-- View(Interaction) layer contains Unity3d objects, that are responsible for content displaying. These objects also could handle interactions with user like buttons clicks and interactions with UnityAPI like `OnCollisionEnter`, `OnTriggerEnter` methods and Unity3d physics handling. This layer is not supposed to store any data about its state or buisnes logic. **View layer objects are childs of `ViewBehaviour` class.**
-- ViewModel layer contains the data about View objects state. It responsible for handling input from View layer and contain logic of hanling Model layer entities state changing. **ViewModel layer objects are childs of `ViewModel` class.**
-- Model layer contains buiseness logic, interaction with persistent storage, network or domain model. Model layer objects could have any type.
+- View(Interaction) layer contains Unity3d objects, that are responsible for content displaying. These objects also could handle interactions with user like buttons clicks and interactions with UnityAPI like `OnCollisionEnter`, `OnTriggerEnter` methods and Unity3d physics handling. This layer is not intended to store any data about its state or business logic. **View layer objects are childrens of `ViewBehaviour` class.**
+- ViewModel layer contains the data about View objects state. It is responsible for handling input from View layer and contain logic of handling Model layer entities state changing. **ViewModel layer objects are childrens of `ViewModel` class.**
+- Model layer contains business logic, interaction with persistent storage, network or domain model. Model layer objects could have any type.
 
-The specific thing about UnityMVVM approach is that every View object has only one ViewModel object. So every entity(units, windows, popups and whatever you want) are a View-ViewModel pair. ViewModel could have dependency on any number of model layer entities.
+The specific thing about UnityMVVM approach is that each View object has only one corresponding ViewModel object. So every entity(units, windows, popups and whatever you want) are a View-ViewModel pair. ViewModel could have dependency on any number of model layer entities.
 
 <p align="center">
 <img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/ab00b2d5-fd5a-4bee-a237-cc7dd5ea0c81"/>
@@ -30,13 +30,13 @@ You can install View-ViewModel pair to the DI container with `InstallView` metho
 Container.InstallView<MyViewBehaviour, IMyViewModel, MyViewModel>("MyView", _myViewPrefab); // Check Quick Start topic for details.
 ```
 
-There is a `FastBind` method(and its overloads), that allows you to bind singletones and separate Model and ViewModel access interfaces. Like this:
+There is a `FastBind` method(and its overloads), that allows you to bind singletons and separate Model and ViewModel access interfaces. Like this:
 ```csharp
 Container.FastBind<ICommonAccessInterface, OtherImplementation>(); // Common interface for model and view model layers.
 Container.FastBind<IModelInterface, IViewModelInterface, Implementation>(); // Separated access.
 ```
 
-Also you can add Model layer entities with regular DI container API. But entities, that are added this way will not be accessible from the ViewModel layer. To make ViewModel layer able to use these entities use `ProvideAccessForViewModelLayer<T>()` method. Like this:
+Also, you can add Model layer entities with regular DI container API. But entities, that are added this way will not be accessible from the ViewModel layer. To make ViewModel layer able to use these entities use `ProvideAccessForViewModelLayer<T>()` method. Like this:
 ```csharp
 Container.Bind<ISomeInterface>().To<Implementation>().AsSingle();
 Container.ProvideAccessForViewModelLayer<ISomeInterface>();
@@ -78,7 +78,7 @@ So our scheme now looks like this:
 
 <p></p>
   
-This topic slightly shows how to create and open view. All example code could be found in demo project -https://github.com/kekchpek/UnityMVVM/tree/master/DemoUnityProj/QuickStartUnityMVVM
+This section provides a brief overview of how to create and open view. All example code could be found in demo project -https://github.com/kekchpek/UnityMVVM/tree/master/DemoUnityProj/QuickStartUnityMVVM
 
 Firstly, we should create a view and its view-model to open anything. Lets create simple View-ViewModel pair.
 
