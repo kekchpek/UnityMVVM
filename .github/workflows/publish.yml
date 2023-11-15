@@ -22,13 +22,6 @@ jobs:
         dotnet-version: '7.0.x'
     - name: Restore .Net
       run: dotnet restore src
-    - name: Run tests
-      run: dotnet test src --verbosity normal
-    - name: Build for demo project
-      run: ./BuildForDemo.command
-    - name: Demo project tests
-      run: |
-        /Applications/Unity/Hub/Editor/2022.3.8f1/Unity.app/Contents/MacOS/Unity -runTests -batchmode -projectPath DemoUnityProj/CCG -testResults relults.xml -testPlatform EditMode
     - name: Configure version
       run: |
         git fetch --unshallow
@@ -51,10 +44,16 @@ jobs:
           echo "newVersion=$newVersion"
           echo "newVersion=$newVersion" >> $GITHUB_ENV
         fi
-    - name: Build
-      run: |
         sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" src/UnityMVVM/UnityMVVM.csproj
-        dotnet build src/UnityMVVM.sln --no-dependencies --property:OutputPath=build
+    - name: Run tests
+      run: dotnet test src --verbosity normal
+    - name: Build for demo project
+      run: ./BuildForDemo.command
+    - name: Demo project tests
+      run: |
+        /Applications/Unity/Hub/Editor/2022.3.8f1/Unity.app/Contents/MacOS/Unity -runTests -batchmode -projectPath DemoUnityProj/CCG -testResults relults.xml -testPlatform EditMode
+    - name: Build
+      run: dotnet build src/UnityMVVM.sln --no-dependencies --property:OutputPath=build
     - name: Publish package to GitHub
       if: github.ref == 'refs/heads/master'
       run: |
