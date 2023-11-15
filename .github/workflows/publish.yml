@@ -44,7 +44,7 @@ jobs:
           echo "newVersion=$newVersion"
           echo "newVersion=$newVersion" >> $GITHUB_ENV
         fi
-        sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1${{env.newVersion}}\3/" src/UnityMVVM/UnityMVVM.csproj
+        sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1$env.newVersion\3/" src/UnityMVVM/UnityMVVM.csproj
     - name: Run tests
       run: dotnet test src --verbosity normal
     - name: Build for demo project
