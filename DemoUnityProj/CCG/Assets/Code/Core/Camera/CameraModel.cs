@@ -1,4 +1,5 @@
 using AsyncReactAwait.Bindable;
+using AsyncReactAwait.Bindable.BindableExtensions;
 
 namespace CCG.Core.Camera
 {

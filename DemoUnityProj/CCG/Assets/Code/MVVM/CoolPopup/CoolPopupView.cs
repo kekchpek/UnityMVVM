@@ -8,6 +8,7 @@ namespace CCG.MVVM.CoolPopup
     public class CoolPopupView : ViewBehaviour<ICoolPopupViewModel>
     {
         [SerializeField] private Button _closeBtn;
+        [SerializeField] private Button _openPopupButton;
         [SerializeField] private Button _openOtherBth;
         [SerializeField] private Button _openOtherWithErrorBth;
         [SerializeField] private Toggle _animationToggle;

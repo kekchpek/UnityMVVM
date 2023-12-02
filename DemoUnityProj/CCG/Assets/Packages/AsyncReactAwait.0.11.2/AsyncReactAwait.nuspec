@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>AsyncReactAwait</id>
-    <version>0.8.29</version>
+    <version>0.11.2</version>
     <authors>kek_chpek</authors>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="file">LICENSE.md</license>
     <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <readme>README.md</readme>
     <projectUrl>https://github.com/kekchpek/AsyncReactAwait</projectUrl>
     <description>The tools for building reactive async code.</description>
-    <repository url="https://github.com/kekchpek/AsyncReactAwait" />
+    <repository type="git" url="https://github.com/kekchpek/AsyncReactAwait" commit="20ff7ff4e55e033152ec2690ac6c0dd19a6c8d38" />
     <dependencies>
       <group targetFramework=".NETStandard2.1" />
     </dependencies>

@@ -11,12 +11,20 @@ namespace CCG.MVVM.MainScreen.View
         [SerializeField] private Button _mainMenuButton;
         
         [SerializeField] private Transform _cardsContainer;
+        
+        [SerializeField] private Button _popupBtn;
 
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
             ViewModel!.SetCardsContainer(_cardsContainer);
             _mainMenuButton.onClick.AddListener(() => ViewModel.OnMainMenuButtonClicked());
+            _popupBtn.onClick.AddListener(OnPopupBtn);
+        }
+
+        private void OnPopupBtn()
+        {
+            ViewModel!.OnPopupButtonClicked();
         }
 
         protected override void OnViewModelClear()
@@ -35,6 +43,8 @@ namespace CCG.MVVM.MainScreen.View
             transform.SetParent(null);
             var go = gameObject;
             go.SetActive(false);
+            _mainMenuButton.onClick.RemoveAllListeners();
+            _popupBtn.onClick.RemoveListener(OnPopupBtn);
             DontDestroyOnLoad(go);
         }
     }

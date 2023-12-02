@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AsyncReactAwait.Bindable;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityMVVM.DI;
@@ -23,8 +24,13 @@ namespace UnityMVVM.ViewManager
 
         private string? _openingLayer;
 
+        private readonly IMutable<string?> _highestBusyLayer = new Mutable<string?>();
+
         public event Action<(string layerId, string viewName, IPayload? viewPayload)>? ViewOpened;
         public event Action<(string layerId, string viewName)>? ViewClosedImplicitly;
+
+        /// <inheritdoc />
+        public IBindable<string?> HighestBusyLayer => _highestBusyLayer;
 
         /// <summary>
         /// Default constructor.
@@ -38,8 +44,30 @@ namespace UnityMVVM.ViewManager
         {
             _layers = layers.ToArray();
             _viewsContainer = viewsContainerAdapter;
+            foreach (var viewLayer in _layers)
+            {
+                viewLayer.CurrentView.Bind(OnLayerViewChanged);
+            }
         }
 
+        private void OnLayerViewChanged()
+        {
+            UpdateHighestViewLayer();
+        }
+
+        private void UpdateHighestViewLayer()
+        {
+            string? highestLayerId = null;
+            foreach (var l in _layers)
+            {
+                if (l.CurrentView.Value != null)
+                {
+                    highestLayerId = l.Id;
+                }
+            }
+
+            _highestBusyLayer.Value = highestLayerId;
+        }
 
         public async IPromise OpenExact(string viewLayerId, string viewName, IPayload? payload = null)
         {
@@ -90,9 +118,15 @@ namespace UnityMVVM.ViewManager
         }
 
         /// <inheritdoc />
+        public IViewLayer GetLayer(string viewLayerId)
+        {
+            return _layers.First(x => x.Id == viewLayerId);
+        }
+
+        /// <inheritdoc />
         public IViewModel? GetView(string viewLayerId)
         {
-            return _layers.First(x => x.Id == viewLayerId).GetCurrentView();
+            return _layers.First(x => x.Id == viewLayerId).CurrentView.Value;
         }
 
         public string[] GetLayerIds()
@@ -119,7 +153,7 @@ namespace UnityMVVM.ViewManager
                 for (int i = _layers.Length - 1; i >= 0; i--)
                 {
                     // close opened view
-                    var openedViewModel = _layers[i].GetCurrentView();
+                    var openedViewModel = _layers[i].CurrentView.Value;
                     string? openedViewName = null;
                     if (openedViewModel!= null)
                         openedViewName = _createdViewsNames[openedViewModel];
@@ -144,7 +178,6 @@ namespace UnityMVVM.ViewManager
 
         private IViewModel CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
         {
-            
             var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, layer.Container, payload);
             _createdViewsNames.Add(viewModel, viewName);
             viewModel.Destroyed += OnViewModelDestroyed;

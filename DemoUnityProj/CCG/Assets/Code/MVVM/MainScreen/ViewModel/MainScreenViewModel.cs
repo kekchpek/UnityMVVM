@@ -4,6 +4,7 @@ using CCG.Models.Hand.Service;
 using CCG.Models.ImageModel;
 using CCG.MVVM.Card.Model;
 using CCG.MVVM.Card.ViewModel;
+using CCG.MVVM.CoolPopup.Payload;
 using CCG.Services.Game;
 using UnityEngine;
 using UnityMVVM.ViewManager;
@@ -64,6 +65,12 @@ namespace CCG.MVVM.MainScreen.ViewModel
                 Debug.LogError(e.Message);
                 _gameService.OpenMainMenu().OnFail(Debug.LogException);
             });
+        }
+
+        public void OnPopupButtonClicked()
+        {
+            _viewManager.Open(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false))
+                .OnFail(Debug.LogException);
         }
 
         public async void OnMainMenuButtonClicked()

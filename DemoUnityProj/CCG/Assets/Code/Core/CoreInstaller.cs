@@ -15,8 +15,10 @@ using CCG.MVVM.MainScreen.ViewModel;
 using CCG.MVVM.MainScreen3d;
 using CCG.MVVM.PlayButton;
 using CCG.MVVM.StatsChanger;
+using CCG.MVVM.TimeCounter;
 using CCG.Services.Game;
 using CCG.Services.Startup;
+using SurvivedWarrior.MVVM.Models.Time;
 using UnityEngine;
 using UnityMVVM.DI;
 using UnityMVVM.ViewModelCore;
@@ -46,10 +48,13 @@ namespace CCG.Core
                 () => Resources.Load<GameObject>("Prefabs/Views/LoadingPopup"));
             Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.CoolPopup, 
                 () => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
+            Container.InstallView<TimeCounterView, ITimeCounterViewModel, TimeCounterViewModel>();
             
             Container.Install<ImageSystemInstaller>();
             
             Container.FastBind<IStartupService, StartupService>();
+            
+            Container.FastBindMono<ITimeManager, TimeManager>();
             
             Container.GetViewsContainer()
                 .Bind(typeof(ICameraMutableModel), typeof(ICameraModel))

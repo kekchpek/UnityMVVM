@@ -1,4 +1,5 @@
-﻿using AsyncReactAwait.Promises;
+﻿using AsyncReactAwait.Bindable;
+using AsyncReactAwait.Promises;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
@@ -22,6 +23,11 @@ namespace UnityMVVM.ViewManager.ViewLayer
         Transform Container { get; }
 
         /// <summary>
+        /// Current layer view model.
+        /// </summary>
+        IBindable<IViewModel?> CurrentView { get; }
+
+        /// <summary>
         /// Close root view model.
         /// </summary>
         /// <returns>A promise that indicates the close proccess.</returns>
@@ -33,13 +39,7 @@ namespace UnityMVVM.ViewManager.ViewLayer
         void ClearInstantly();
 
         /// <summary>
-        /// Gets current layer view model.
-        /// </summary>
-        /// <returns>Current layer view model</returns>
-        IViewModel? GetCurrentView();
-
-        /// <summary>
-        /// Set root view model. Destroy previous if it exists.
+        /// Set root view model.
         /// </summary>
         /// <param name="viewModel">View model to be set.</param>
         void Set(IViewModel viewModel);
