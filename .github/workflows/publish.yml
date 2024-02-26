@@ -86,7 +86,7 @@ jobs:
       run: |
         lastTag=$(git describe --tags --abbrev=0)
         currentTag=$(git tag --contains)
-        if [ "$lastTag" = "$currentTag" ]
+        if [ "$lastTag" != "$currentTag" ]
         then
           git tag ${{ env.newVersion }}
           git push --tags
