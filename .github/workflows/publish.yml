@@ -26,23 +26,32 @@ jobs:
       run: |
         git fetch --unshallow
         lastTag=$(git describe --tags --abbrev=0)
+        currentTag=$(git tag --contains)
         lastTagMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <<<"$lastTag")
         currentVersion=$(cat VERSION)
         currentMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <VERSION)
-        if [ "$lastTagMainVersion" = "$currentMainVersion" ]
+        if [ "$lastTag" = "$currentTag" ]
         then
-          echo "Version the same."
-          lastTagBuildVersion=$(sed -n 's/^[0-9]*\.[0-9]*\.\([0-9]*\).*/\1/p' <<<"$lastTag")
-          newBuildVersion=$((lastTagBuildVersion+1))
-          newVersion="$lastTagMainVersion"."$newBuildVersion"
+          echo "Build from tagged commit"
+          newVersion=$lastTag
           echo "newVersion=$newVersion"
           echo "newVersion=$newVersion" >> $GITHUB_ENV
         else
-          echo "New version!"
-          newVersion="$currentMainVersion".1
-          VersionPrefix=$newVersion
-          echo "newVersion=$newVersion"
-          echo "newVersion=$newVersion" >> $GITHUB_ENV
+          if [ "$lastTagMainVersion" = "$currentMainVersion" ]
+          then
+            echo "Version the same."
+            lastTagBuildVersion=$(sed -n 's/^[0-9]*\.[0-9]*\.\([0-9]*\).*/\1/p' <<<"$lastTag")
+            newBuildVersion=$((lastTagBuildVersion+1))
+            newVersion="$lastTagMainVersion"."$newBuildVersion"
+            echo "newVersion=$newVersion"
+            echo "newVersion=$newVersion" >> $GITHUB_ENV
+          else
+            echo "New version!"
+            newVersion="$currentMainVersion".1
+            VersionPrefix=$newVersion
+            echo "newVersion=$newVersion"
+            echo "newVersion=$newVersion" >> $GITHUB_ENV
+          fi
         fi
         sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1$newVersion\3/" src/UnityMVVM/UnityMVVM.csproj
     - name: Run tests
@@ -75,8 +84,14 @@ jobs:
     - name: Tag non-release
       if: github.ref != 'refs/heads/master'
       run: |
-        git tag ${{ env.newVersion }}
-        git push --tags
+        lastTag=$(git describe --tags --abbrev=0)
+        currentTag=$(git tag --contains)
+        if [ "$lastTag" != "$currentTag" ]
+        then
+          echo "New tag ${{ env.newVersion }}"
+          git tag ${{ env.newVersion }}
+          git push --tags
+        fi
     - name: Expose as artifact
       uses: actions/upload-artifact@v3.1.3
       with:

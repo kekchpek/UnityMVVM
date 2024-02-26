@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using AsyncReactAwait.Promises;
+using CCG.Core;
+using CCG.MVVM.MainMenu;
+using CCG.MVVM.PlayButton;
 using CCG.Services.Startup;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -56,6 +59,11 @@ namespace CCG.Tests.Editor.Core
         public IPromise Start()
         {
             return _appContainer.Resolve<IStartupService>().Startup();
+        }
+
+        public void ClickPlayButton()
+        {
+            GetViewModel<IMainMenuViewModelUi>(ViewLayerIds.MainUI).GetSubview<IPlayButtonViewModel>().OnClicked();
         }
 
         public T GetViewModel<T>(string viewLayer) where T : IViewModel

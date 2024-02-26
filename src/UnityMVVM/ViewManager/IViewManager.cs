@@ -1,6 +1,8 @@
 ﻿using System;
+using AsyncReactAwait.Bindable;
 using AsyncReactAwait.Promises;
 using UnityEngine;
+using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
 
 namespace UnityMVVM.ViewManager
@@ -21,7 +23,12 @@ namespace UnityMVVM.ViewManager
         /// Fires on any view opened.
         /// </summary>
         event Action<(string layerId, string viewName)> ViewClosedImplicitly;
-        
+
+        /// <summary>
+        /// Returns the highest layer, that have an opened view on.
+        /// </summary>
+        IBindable<string?> HighestBusyLayer { get; }
+
         /// <summary>
         /// Returns all view layer ids.
         /// </summary>
@@ -73,6 +80,13 @@ namespace UnityMVVM.ViewManager
         /// <param name="viewLayerId">The id of layer to get a view name.</param>
         /// <returns>The view name</returns>
         public string? GetViewName(string viewLayerId);
+        
+        /// <summary>
+        /// Gets a layer with specified ID.
+        /// </summary>
+        /// <param name="viewLayerId">The id of layer to get.</param>
+        /// <returns>The view layer.</returns>
+        public IViewLayer GetLayer(string viewLayerId);
 
         /// <summary>
         /// Gets the view model of the view on the specified layer.
