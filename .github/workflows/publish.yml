@@ -88,6 +88,7 @@ jobs:
         currentTag=$(git tag --contains)
         if [ "$lastTag" != "$currentTag" ]
         then
+          echo "New tag ${{ env.newVersion }}"
           git tag ${{ env.newVersion }}
           git push --tags
         fi
