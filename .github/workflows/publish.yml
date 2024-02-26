@@ -26,7 +26,7 @@ jobs:
       run: |
         git fetch --unshallow
         lastTag=$(git describe --tags --abbrev=0)
-        currentTag=$(git tag --contains)
+        currentTag=$(git tag --contains)  
         lastTagMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <<<"$lastTag")
         currentVersion=$(cat VERSION)
         currentMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <VERSION)
@@ -85,7 +85,7 @@ jobs:
       if: github.ref != 'refs/heads/master'
       run: |
         lastTag=$(git describe --tags --abbrev=0)
-        currentTag=$(git tag --contains)
+        currentTag=$(git tag --contains)  
         if [ "$lastTag" != "$currentTag" ]
         then
           git tag ${{ env.newVersion }}
