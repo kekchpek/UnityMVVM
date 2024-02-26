@@ -48,6 +48,8 @@ namespace CCG.Core
                 () => Resources.Load<GameObject>("Prefabs/Views/LoadingPopup"));
             Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.CoolPopup, 
                 () => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
+            Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.SameCoolPopupButWithOtherName, 
+                () => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
             Container.InstallView<TimeCounterView, ITimeCounterViewModel, TimeCounterViewModel>();
             
             Container.Install<ImageSystemInstaller>();

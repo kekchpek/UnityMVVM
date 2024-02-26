@@ -177,7 +177,7 @@ namespace UnityMVVM.DI
                 .Bind<IViewModelsFactory>()
                 .WithId(viewName)
                 .To<ViewModelsFactory<TView>>()
-                .AsSingle()
+                .AsTransient()
                 .WithArgumentsExplicit(new []
                 {
                     new TypeValuePair(typeof(Func<GameObject>), viewPrefabGetter),

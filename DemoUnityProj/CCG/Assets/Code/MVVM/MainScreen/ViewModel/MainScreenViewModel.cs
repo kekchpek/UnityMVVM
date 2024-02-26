@@ -69,7 +69,7 @@ namespace CCG.MVVM.MainScreen.ViewModel
 
         public void OnPopupButtonClicked()
         {
-            _viewManager.Open(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false))
+            _viewManager.Open(ViewLayerIds.Popup, ViewNames.SameCoolPopupButWithOtherName, new CoolPopupPayload(false))
                 .OnFail(Debug.LogException);
         }
 

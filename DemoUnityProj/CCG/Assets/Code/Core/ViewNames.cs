@@ -10,5 +10,6 @@
         public static string HandController => "HandController";
         public static string LoadingPopup => "LoadingPopup";
         public static string CoolPopup => "CoolPopup";
+        public static string SameCoolPopupButWithOtherName => "CoolPopup2";
     }
 }
