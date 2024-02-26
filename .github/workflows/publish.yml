@@ -88,8 +88,8 @@ jobs:
         currentTag=$(git tag --contains)  
         if [ "$lastTag" != "$currentTag" ]
         then
-        git tag ${{ env.newVersion }}
-        git push --tags
+          git tag ${{ env.newVersion }}
+          git push --tags
         fi
     - name: Expose as artifact
       uses: actions/upload-artifact@v3.1.3
