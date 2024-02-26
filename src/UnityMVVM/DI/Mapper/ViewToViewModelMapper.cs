@@ -29,11 +29,25 @@ namespace UnityMVVM.DI.Mapper
             {
                 return _viewToViewModelMap[viewType];
             }
-            throw new Exception($"Can not find corresponing view model type for {viewType.Name}");
+            throw new Exception($"Can not find corresponding view model type for {viewType.Name}");
         }
 
         private void MapInternal(Type viewType, Type viewModelType, bool validate)
         {
+            if (_viewToViewModelMap.TryGetValue(viewType, out var mappedType))
+            {
+                if (mappedType == viewModelType)
+                {
+                    // this view type had already been mapped to this view model.
+                    return;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"Unable to map view type {viewType.Name} to view model type {viewModelType.Name}. " +
+                        $"This view type is already mapped to {mappedType.Name}.");
+                }
+            }
             if (validate)
             {
                 if (!viewType.GetParentTypes().ContainsItem(typeof(MonoBehaviour)))
