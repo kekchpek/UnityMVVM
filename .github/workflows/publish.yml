@@ -26,13 +26,12 @@ jobs:
       run: |
         git fetch --unshallow
         lastTag=$(git describe --tags --abbrev=0)
-        currentTag=$(git tag --contains)  
         lastTagMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <<<"$lastTag")
         currentVersion=$(cat VERSION)
         currentMainVersion=$(sed -n 's/^\([0-9]*\.[0-9]*\).*/\1/p' <VERSION)
-        if [ "$lastTag" = "$currentTag" ]
+        currentTag=$(git describe --tags --abbrev=0)
+        if [ "$lastTagMainVersion" = "$currentMainVersion" ]
         then
-          echo "Build from tagged commit"
           newVersion=$lastTag
           echo "newVersion=$newVersion"
           echo "newVersion=$newVersion" >> $GITHUB_ENV
@@ -84,13 +83,8 @@ jobs:
     - name: Tag non-release
       if: github.ref != 'refs/heads/master'
       run: |
-        lastTag=$(git describe --tags --abbrev=0)
-        currentTag=$(git tag --contains)  
-        if [ "$lastTag" != "$currentTag" ]
-        then
         git tag ${{ env.newVersion }}
         git push --tags
-        fi
     - name: Expose as artifact
       uses: actions/upload-artifact@v3.1.3
       with:
