@@ -130,6 +130,16 @@ namespace UnityMVVM
                 }
             }
         }
+        
+        /// <summary>
+        /// Called on Unity native representation of this object is being destroyed.
+        /// </summary>
+        protected virtual void OnDestroy()
+        {
+            var vm = ViewModel;
+            SetViewModelInternal(null);
+            vm?.Destroy();
+        }
 
         /// <summary>
         /// Binds the handler to a bindable object and automatically unbind it on view model cleared.
