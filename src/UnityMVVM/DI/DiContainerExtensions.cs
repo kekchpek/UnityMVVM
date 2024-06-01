@@ -342,6 +342,10 @@ namespace UnityMVVM.DI
             {
                 bindTypes.Add(typeof(IInitializable));
             }
+            if (typeof(TImpl).Interfaces().Contains(typeof(IDisposable)))
+            {
+                bindTypes.Add(typeof(IDisposable));
+            }
             container.Bind(bindTypes)
                 .To<TImpl>().AsSingle();
 
