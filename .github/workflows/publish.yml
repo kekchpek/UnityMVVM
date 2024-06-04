@@ -31,7 +31,7 @@ jobs:
         echo $CURRENT_TAG_VERSION
         if [ -z "$CURRENT_TAG_VERSION" ]
         then
-        git remote set-url origin https://$RUNNER_USERNAME:$PAT_TOKEN@${REPO_URL:8}.git
+        git remote set-url origin https://$RUNNER_USERNAME:$PAT_TOKEN@${REPO_URL:6}.git
         CURRENT_TAG_VERSION=$(python3 getVersion.py ./VERSION $UMVVM_BUILD_DATA_PATH/buildVersionV1.txt)
         git tag $CURRENT_TAG_VERSION
         git push origin --tags
