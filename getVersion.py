@@ -5,7 +5,7 @@ buildDataPath = sys.argv[2];
 bundleParameter = "bundleVersion: ";
 
 with open(unityProjectSettingsPath) as file:
-    projectVersion = file[0]
+    projectVersion = file.readline();
 
 projectVersion = projectVersion.split('.')
 
