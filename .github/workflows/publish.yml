@@ -37,6 +37,8 @@ jobs:
         git push origin --tags
         fi
         sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1$CURRENT_TAG_VERSION\3/" src/UnityMVVM/UnityMVVM.csproj
+        echo "newVersion=$newVersion"
+        echo "newVersion=$newVersion" >> $GITHUB_ENV
     - name: Run tests
       run: dotnet test src --verbosity normal
     - name: Build for demo project
