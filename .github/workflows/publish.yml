@@ -51,8 +51,6 @@ jobs:
     - name: Publish package to GitHub
       if: github.ref == 'refs/heads/master'
       run: |
-       GIT_NUGET_URL=https://nuget.pkg.github.com/$RUNNER_USERNAME/index.json
-       dotnet nuget add source --username $RUNNER_USERNAME --password $PAT_TOKEN --store-password-in-clear-text --name github $GIT_NUGET_URL
        dotnet nuget push src/UnityMVVM/build/*.nupkg --skip-duplicate --api-key ${{secrets.PAT_TOKEN}} --source github
     - name: Publish package to Nuget
       if: github.ref == 'refs/heads/master'
