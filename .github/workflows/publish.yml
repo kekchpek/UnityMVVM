@@ -37,8 +37,8 @@ jobs:
         git push origin --tags
         fi
         sed -i '' -e "s/\(<Version>\)\(.*\)\(<\/Version>\)/\1$CURRENT_TAG_VERSION\3/" src/UnityMVVM/UnityMVVM.csproj
-        echo "newVersion=$newVersion"
-        echo "newVersion=$newVersion" >> $GITHUB_ENV
+        echo "newVersion=$CURRENT_TAG_VERSION"
+        echo "newVersion=$CURRENT_TAG_VERSION" >> $GITHUB_ENV
     - name: Run tests
       run: dotnet test src --verbosity normal
     - name: Build for demo project
@@ -62,8 +62,8 @@ jobs:
       if: github.ref == 'refs/heads/master'
       uses: ncipollo/release-action@v1
       with:
-        tag: $CURRENT_TAG_VERSION
-        name: $CURRENT_TAG_VERSION
+        tag: ${{ env.newVersion }}
+        name: Release ${{ env.newVersion }}
         artifacts: "src/UnityMVVM/build/*.nupkg, UnityMVVM.zip"
         token: ${{ secrets.PAT_TOKEN }}
     - name: Tag non-release
@@ -73,8 +73,8 @@ jobs:
         currentTag=$(git tag --contains)
         if [ "$lastTag" != "$currentTag" ]
         then
-          echo "New tag $CURRENT_TAG_VERSION"
-          git tag $CURRENT_TAG_VERSION
+          echo "New tag ${{ env.newVersion }}"
+          git tag ${{ env.newVersion }}
           git push --tags
         fi
     - name: Expose as artifact
