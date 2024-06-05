@@ -63,7 +63,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         tag: $CURRENT_TAG_VERSION
-        name: "Release $CURRENT_TAG_VERSION"
+        name: $CURRENT_TAG_VERSION
         artifacts: "src/UnityMVVM/build/*.nupkg, UnityMVVM.zip"
         token: ${{ secrets.PAT_TOKEN }}
     - name: Tag non-release
