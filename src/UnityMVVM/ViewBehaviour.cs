@@ -180,7 +180,7 @@ namespace UnityMVVM
         }
 
         /// <summary>
-        /// Called just before the view model and the view destroyed.
+        /// Called just before the view model destroyed.
         /// </summary>
         protected virtual void OnViewModelClear()
         {

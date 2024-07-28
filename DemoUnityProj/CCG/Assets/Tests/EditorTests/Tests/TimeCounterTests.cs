@@ -1,9 +1,7 @@
 using System;
 using AsyncReactAwait.Bindable;
 using CCG.Core;
-using CCG.MVVM.MainMenu;
 using CCG.MVVM.MainScreen.ViewModel;
-using CCG.MVVM.PlayButton;
 using CCG.MVVM.TimeCounter;
 using CCG.Tests.Editor.Core;
 using NSubstitute;

@@ -34,12 +34,71 @@
             </summary>
             <returns>The result of awaited process.</returns>
         </member>
-        <member name="T:AsyncReactAwait.Bindable.BindableExtensiosn.BindableExtensions">
+        <member name="T:AsyncReactAwait.Bindable.Bindable">
+            <summary>
+            Tools for bindable and mutable objects
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Bindable.Aggregate``3(AsyncReactAwait.Bindable.IBindable{``0},AsyncReactAwait.Bindable.IBindable{``1},System.Func{``0,``1,``2})">
+            <summary>
+            Aggregate two bindable values
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Bindable.Aggregate``4(AsyncReactAwait.Bindable.IBindable{``0},AsyncReactAwait.Bindable.IBindable{``1},AsyncReactAwait.Bindable.IBindable{``2},System.Func{``0,``1,``2,``3})">
+            <summary>
+            Aggregate three bindable values
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Bindable.Aggregate``5(AsyncReactAwait.Bindable.IBindable{``0},AsyncReactAwait.Bindable.IBindable{``1},AsyncReactAwait.Bindable.IBindable{``2},AsyncReactAwait.Bindable.IBindable{``3},System.Func{``0,``1,``2,``3,``4})">
+            <summary>
+            Aggregate four bindable values
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Bindable.Aggregate``2(System.Collections.Generic.IEnumerable{AsyncReactAwait.Bindable.IBindable{``0}},System.Func{``0[],``1})">
+            <summary>
+            Aggregate any count of bindable values of same type
+            </summary>
+        </member>
+        <member name="T:AsyncReactAwait.Bindable.BindableAggregator`1">
+            <summary>
+            An aggregator for bindable values.
+            </summary>
+            <typeparam name="TRes">The aggregated value type.</typeparam>
+        </member>
+        <member name="P:AsyncReactAwait.Bindable.BindableAggregator`1.Value">
+            <inheritdoc cref="P:AsyncReactAwait.Bindable.IBindable`1.Value"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableAggregator`1.#ctor(System.Collections.Generic.IEnumerable{AsyncReactAwait.Bindable.IBindableRaw},System.Func{System.Object[],`0})">
+            <summary>
+            Constructor for bindable values aggregator.
+            </summary>
+            <param name="bindableRaws"></param>
+            <param name="aggregator"></param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableAggregator`1.Bind(System.Action{`0},System.Boolean)">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableAggregator`1.Bind(System.Action,System.Boolean)">
+            <inheritdoc cref="!:IBindable&lt;T&gt;.Bind(Action, bool)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableAggregator`1.Bind(System.Action{`0,`0})">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0,`0})"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableAggregator`1.Unbind(System.Action{`0})">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableAggregator`1.Unbind(System.Action)">
+            <inheritdoc cref="!:IBindable&lt;T&gt;.Unbind(Action)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableAggregator`1.Unbind(System.Action{`0,`0})">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0,`0})"/>
+        </member>
+        <member name="T:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions">
             <summary>
             Extensions for bindable values.
             </summary>
         </member>
-        <member name="M:AsyncReactAwait.Bindable.BindableExtensiosn.BindableExtensions.WillBeEqual``1(AsyncReactAwait.Bindable.IBindable{``0},``0)">
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions.WillBeEqual``1(AsyncReactAwait.Bindable.IBindable{``0},``0)">
             <summary>
             Awaits the bindable value becomes specific value.
             </summary>
@@ -48,9 +107,83 @@
             <param name="value">The value to await.</param>
             <returns>The awaiter for specified value.</returns>
         </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions.WillBe``1(AsyncReactAwait.Bindable.IBindable{``0},System.Func{``0,System.Boolean},System.Boolean)">
+            <summary>
+            Awaits for specific value.
+            </summary>
+            <param name="bindable">The bindable value to operate with.</param>
+            <param name="predicate">The specific value awaiter.</param>
+            <param name="checkCurrentValue">False if you don't want to check current value</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions.ConvertTo``2(AsyncReactAwait.Bindable.IBindable{``1},System.Func{``1,``0})">
+            <summary>
+            Converts bindable value to some other value, that depends on source bindable.
+            </summary>
+            <param name="bindable">The bindable to convert.</param>
+            <param name="predicate">The predicate to apply to bindable value.</param>
+            <typeparam name="T">The type of converted bindable value.</typeparam>
+            <typeparam name="TSource">The source bindable value type.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions.Set``1(AsyncReactAwait.Bindable.IMutable{``0},``0)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="mutable">Mutable to extend.</param>
+            <param name="value">New value.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions.Proxy``2(AsyncReactAwait.Bindable.IMutable{``0},AsyncReactAwait.Bindable.IBindable{``1},System.Func{``1,``0})">
+            <summary>
+            Proxies a value and it's changes from certain bindable object.
+            Setting a value explicitly breaks proxying.
+            </summary>
+            <param name="proxy">The proxying object.</param>
+            <param name="valueSource">The object to proxy.</param>
+            <param name="converter">The converter from proxy type.</param>
+            <typeparam name="TSource">The proxy type.</typeparam>
+            <typeparam name="T">The proxying type.</typeparam>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions.Get``1(AsyncReactAwait.Bindable.IBindable{``0},``0)">
+            <summary>
+            Gets the value.
+            </summary>
+            <param name="bindable">Bindable to extend.</param>
+            <param name="value">New value.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.BindableExtensions.BindableExtensions.AggregateWith``3(AsyncReactAwait.Bindable.IBindable{``0},AsyncReactAwait.Bindable.IBindable{``1},System.Func{``0,``1,``2})">
+            <summary>
+            Aggregates bindable with other bindable value
+            </summary>
+            <param name="bindable1">The first bindable to aggregate.</param>
+            <param name="bindable2">The second bindable to aggregate.</param>
+            <param name="aggregator">An aggregation function.</param>
+            <typeparam name="T1">A type of the first bindable value.</typeparam>
+            <typeparam name="T2">A type of the second bindable value.</typeparam>
+            <typeparam name="TRes">The type of the result of the aggregation.</typeparam>
+            <returns>An aggregated bindable.</returns>
+        </member>
+        <member name="T:AsyncReactAwait.Bindable.IBindable">
+            <summary>
+            Non-generic bindable value. 
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable.Bind(System.Action,System.Boolean)">
+            <summary>
+            Bind a handler for value changing.
+            </summary>
+            <param name="handler">Value changing handler.</param>
+            <param name="callImmediately">Calls handler instantly when it is set.</param>
+            <exception cref="T:System.ArgumentNullException">Handler is null.</exception>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindable.Unbind(System.Action)">
+            <summary>
+            Unbinds the value changing handler.
+            </summary>
+            <param name="handler">Value changing handler.</param>
+        </member>
         <member name="T:AsyncReactAwait.Bindable.IBindable`1">
             <summary>
-            Value, changes of which could be handled with binded handlers.
+            Value, changes of which could be handled with bound handlers.
             </summary>
             <typeparam name="T"></typeparam>
         </member>
@@ -59,23 +192,8 @@
             Current value.
             </summary>
         </member>
-        <member name="M:AsyncReactAwait.Bindable.IBindable`1.WillBe(System.Func{`0,System.Boolean},System.Boolean)">
-            <summary>
-            Awaits for specific value.
-            </summary>
-            <param name="predicate">The specific value awaiter.</param>
-            <param name="checkCurrentValue">False if you don't want to check current value</param>
-        </member>
         <member name="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)">
-            <summary>
-            Bind a handler for value changing.
-            </summary>
-            <param name="handler">Value changing handler.</param>
-            <param name="callImmediately">Calls handler instantly when it is set.</param>
-            <exception cref="T:System.ArgumentNullException">Handler is null.</exception>
-        </member>
-        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action,System.Boolean)">
-            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable.Bind(System.Action,System.Boolean)"/>
         </member>
         <member name="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0,`0})">
             <summary>
@@ -85,35 +203,75 @@
             <exception cref="T:System.ArgumentNullException"><inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/></exception>
         </member>
         <member name="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})">
-            <summary>
-            Unbinds the value changing handler.
-            </summary>
-            <param name="handler">Value changing handler.</param>
-        </member>
-        <member name="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action)">
-            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable.Unbind(System.Action)"/>
         </member>
         <member name="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0,`0})">
             <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
         </member>
+        <member name="T:AsyncReactAwait.Bindable.IBindableRaw">
+            <summary>
+            Non-generic bindable value. 
+            </summary>
+        </member>
+        <member name="P:AsyncReactAwait.Bindable.IBindableRaw.Value">
+            <summary>
+            Current value.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindableRaw.Bind(System.Action{System.Object},System.Boolean)">
+            <summary>
+            Bind a handler for value changing.
+            </summary>
+            <param name="handler">The handler for value changing.</param>
+            <param name="callImmediately">Apply handler for current value.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindableRaw.Bind(System.Action{System.Object,System.Object})">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindableRaw.Bind(System.Action{System.Object},System.Boolean)"/>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindableRaw.Unbind(System.Action{System.Object})">
+            <summary>
+            Unbinds a handler for value changing.
+            </summary>
+            <param name="handler">The handler for value changing.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IBindableRaw.Unbind(System.Action{System.Object,System.Object})">
+            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindableRaw.Unbind(System.Action{System.Object})"/>
+        </member>
         <member name="T:AsyncReactAwait.Bindable.IMutable`1">
             <summary>
-            Class for representing changable bindable value.
+            Class for representing changeable bindable value.
             </summary>
             <typeparam name="T">Bindable value type.</typeparam>
         </member>
+        <member name="E:AsyncReactAwait.Bindable.IMutable`1.OnAnySubscription">
+            <summary>
+            Fired on any listener is bound for this value.
+            </summary>
+        </member>
+        <member name="E:AsyncReactAwait.Bindable.IMutable`1.OnSubscriptionsCleared">
+            <summary>
+            Fired on any listener is unbound from this value, and no other listeners left.
+            </summary>
+        </member>
         <member name="P:AsyncReactAwait.Bindable.IMutable`1.Value">
             <inheritdoc cref="P:AsyncReactAwait.Bindable.IBindable`1.Value"/>
+            Automatically resets proxying value.
         </member>
-        <member name="M:AsyncReactAwait.Bindable.IMutable`1.Set(`0)">
+        <member name="M:AsyncReactAwait.Bindable.IMutable`1.Proxy(AsyncReactAwait.Bindable.IBindable{`0})">
             <summary>
-            Sets the value.
+            Proxies a value and it's changes from certain bindable object.
+            Setting a value explicitly breaks proxying.
             </summary>
-            <param name="value">New value.</param>
+            <param name="valueSource">The object to proxy.</param>
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.IMutable`1.StopProxying">
+            <summary>
+            Breaks proxying other bindable. If it was.
+            </summary>
         </member>
         <member name="M:AsyncReactAwait.Bindable.IMutable`1.ForceSet(`0)">
             <summary>
-            Sets the value to new value event if they are equal.
+            Sets the value to new value even if they are equal.
             </summary>
             <param name="value">New value.</param>
         </member>
@@ -125,14 +283,23 @@
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.#ctor(`0)">
             <summary>
-            Default constructor to create changable mutable value.
+            Default constructor to create mutable value.
             </summary>
             <param name="initialValue">Initial value.</param>
         </member>
-        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Set(`0)">
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Proxy(AsyncReactAwait.Bindable.IBindable{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.StopProxying">
             <inheritdoc />
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.ForceSet(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{System.Object},System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{System.Object,System.Object})">
             <inheritdoc />
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{`0},System.Boolean)">
@@ -140,23 +307,26 @@
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action,System.Boolean)">
-            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action,System.Boolean)"/>
+            <inheritdoc cref="!:IBindable&lt;T&gt;.Bind(Action, bool)"/>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{`0,`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{System.Object})">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{System.Object,System.Object})">
             <inheritdoc />
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{`0})">
             <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action{`0})"/>
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action)">
-            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Unbind(System.Action)"/>
+            <inheritdoc cref="!:IBindable&lt;T&gt;.Unbind(Action)"/>
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{`0,`0})">
             <inheritdoc />
-        </member>
-        <member name="M:AsyncReactAwait.Bindable.Mutable`1.WillBe(System.Func{`0,System.Boolean},System.Boolean)">
-            <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.WillBe(System.Func{`0,System.Boolean},System.Boolean)"/>
         </member>
         <member name="T:AsyncReactAwait.Promises.Awaiter.IBasePromiseAwaiter`1">
             <summary>
@@ -261,6 +431,38 @@
         </member>
         <member name="M:AsyncReactAwait.Promises.ControllablePromise`1.ConfigureAwait(System.Boolean)">
             <inheritdoc cref="M:AsyncReactAwait.Promises.IPromise`1.ConfigureAwait(System.Boolean)"/>
+        </member>
+        <member name="T:AsyncReactAwait.Promises.Extensions.PromiseExtensions">
+            <summary>
+            Extensions for promises.
+            </summary>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.Extensions.PromiseExtensions.Wrap``1(AsyncReactAwait.Promises.IPromise{``0})">
+            <summary>
+            Wraps a value promise inside the non-generic one.
+            </summary>
+            <param name="promise">The promise to wrap.</param>
+            <typeparam name="T">The return type of wrapped promise.</typeparam>
+            <returns>The non-generic promise.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.Extensions.PromiseExtensions.Wrap``1(AsyncReactAwait.Promises.IPromise,System.Func{``0})">
+            <summary>
+            Wraps a non-result to a promise and evaluate it with a result.
+            </summary>
+            <param name="promise">The promise to wrap.</param>
+            <param name="resultGetter">The result getter, that will be called, when promise will completed.</param>
+            <typeparam name="T">The return type of wrapped promise.</typeparam>
+            <returns>The promise with a result.</returns>
+        </member>
+        <member name="M:AsyncReactAwait.Promises.Extensions.PromiseExtensions.Convert``2(AsyncReactAwait.Promises.IPromise{``0},System.Func{``0,``1})">
+            <summary>
+            Converts a promise value to other one.
+            </summary>
+            <param name="promise">The promise to convert.</param>
+            <param name="converter">The converter for source promise result.</param>
+            <typeparam name="TSource">The type of a promise result.</typeparam>
+            <typeparam name="TRes">The type of conversion result.</typeparam>
+            <returns></returns>
         </member>
         <member name="T:AsyncReactAwait.Promises.IBaseControllablePromise">
             <summary>

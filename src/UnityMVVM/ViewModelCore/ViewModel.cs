@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
@@ -78,14 +79,14 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
         /// <returns>Created view model.</returns>
-        protected IViewModel CreateSubView(string viewName, IPayload? payload = null)
+        protected async Task<IViewModel> CreateSubView(string viewName, IPayload? payload = null)
         {
-            return CreateSubView(viewName, _layer.Container, payload);
+            return await CreateSubView(viewName, _layer.Container, payload);
         }
 
         /// <inheritdoc cref="CreateSubView(string,UnityMVVM.ViewModelCore.IPayload?)"/>
         /// <param name="container">The container to instantiate view to.</param>
-        protected IViewModel CreateSubView(
+        protected async Task<IViewModel> CreateSubView(
 #pragma warning disable CS1573
             string viewName, 
 #pragma warning restore CS1573
@@ -94,7 +95,7 @@ namespace UnityMVVM.ViewModelCore
             IPayload? payload = null)
 #pragma warning restore CS1573
         {
-            var viewModel = _viewManager.Create(this, viewName, container, payload);
+            var viewModel = await _viewManager.Create(this, viewName, container, payload);
             return viewModel;
         }
         
