@@ -48,7 +48,7 @@ jobs:
       run: ./BuildForUnityProj.command
     - name: Demo project tests
       run: |
-        /Applications/Unity/Hub/Editor/2022.3.8f1/Unity.app/Contents/MacOS/Unity -runTests -batchmode -projectPath DemoUnityProj/CCG -testResults relults.xml -testPlatform EditMode
+        /Applications/Unity/Hub/Editor/2022.3.8f1/Unity.app/Contents/MacOS/Unity -runTests -batchmode -projectPath MvvmUnityProj/CCG -testResults relults.xml -testPlatform EditMode
     - name: Build
       run: dotnet build src/UnityMVVM.sln --no-dependencies --property:OutputPath=build
     - name: Publish package to GitHub
