@@ -1,7 +1,7 @@
 {
   "name": "com.kekchpek.umvvm",
   "displayName": "UnityMvvm",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "description": "The MVVM pattern core implemented for Unity3d",
   "unity": "2022.3",
   "documentationUrl": "https://github.com/kekchpek/UnityMVVM",
