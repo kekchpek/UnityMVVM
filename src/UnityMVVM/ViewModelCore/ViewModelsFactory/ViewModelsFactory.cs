@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ModestTree;
 using UnityEngine;
@@ -53,7 +52,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             Transform transform,
             IPayload? payload = null)
         {
-            TView view = _viewFactory.Instantiate<TView>(await _viewPrefabGetter.Invoke(), transform, _viewPool);
+            var view = _viewFactory.Instantiate<TView>(await _viewPrefabGetter.Invoke(), transform, _viewPool);
 
             if (view is not Component c)
                 throw new Exception("View should be a Component");
@@ -75,15 +74,36 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             IPayload? payload,
             bool isPoolableView)
         {
-            Queue<(Transform obj, IViewModel? parent)> creationQueue = new Queue<(Transform obj, IViewModel? parent)>();
+            
+            // Get hierarchy depth and width to approximately determine amount of memory
+            // required for handling all child objects
+            var hierarchyDepth = 1;
+            var maxWidth = 0;
+            var t = initialObj;
+            int childrenCount;
+            while ((childrenCount = t.childCount) > 0)
+            {
+                maxWidth = Math.Max(childrenCount, maxWidth);
+                t = t.GetChild(0);
+                hierarchyDepth++;
+            }
+            
+            // Create a queue for handling children without recursion
+            var creationQueue = new Queue<(Transform obj, IViewModel? parent)>(hierarchyDepth * maxWidth);
+            
+            // add root object to the queue
             creationQueue.Enqueue((initialObj, initialParent));
             IViewModel? rootViewModel = null;
+
+            // Iterate through entire hierarchy to create view-model for every view component
             while (creationQueue.Count > 0)
             {
+                // Pop object data from queue
                 var data = creationQueue.Dequeue();
                 var parent = data.parent;
-                var view = data.obj.GetComponent<IViewBehaviour>();
-                if (view != null)
+                
+                // Skip if there is no view on the object
+                if (data.obj.TryGetComponent<IViewBehaviour>(out var view))
                 {
                     var viewModelType = _viewToViewModelMapper.GetViewModelForView(view.GetType());
                     var implicitParams = new List<object>(3);
@@ -91,8 +111,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                     {
                         implicitParams.Add(data.parent);
                     }
-                    if (payload != null 
-                        && viewModelType.Constructors().Any(x => x.GetParameters().Any(ctor => ctor.ParameterType.IsInstanceOfType(payload))))
+                    if (payload != null && DoesHavePayload(viewModelType, payload))
                     {
                         implicitParams.Add(payload);
                     }
@@ -105,14 +124,22 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                     }
                     data.parent?.AddSubview(viewModel);
                     
-                    _viewFactory.Initialize((IViewInitializer)view, viewModel, isPoolableView);
+                    if (view is IViewInitializer initializer)
+                        _viewFactory.Initialize(initializer, viewModel, isPoolableView);
+                    else 
+                        throw new InvalidCastException($"All view types should be able to be casted to {nameof(IViewInitializer)}");
                     
+                    // The first create view-modes becomes root view model for this instantiation.
                     rootViewModel ??= viewModel;
+                    
+                    // Rewrite parent for views, that are placed under this view in hierarchy
                     parent = viewModel;
                 }
-                foreach (Transform child in data.obj)
+                
+                // Add children to be handled in next iterations
+                for (var i = 0; i < data.obj.childCount; i++)
                 {
-                    creationQueue.Enqueue((child, parent));
+                    creationQueue.Enqueue((data.obj.GetChild(i), parent));
                 }
             }
             if (rootViewModel == null)
@@ -120,6 +147,22 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                 throw new Exception("No view models were created during view instantiation.");
             }
             return rootViewModel;
+        }
+
+        private static bool DoesHavePayload(Type viewModelType, IPayload payload)
+        {
+            foreach (var ctor in viewModelType.Constructors())
+            {
+                foreach (var parameter in ctor.GetParameters())
+                {
+                    if (parameter.ParameterType.IsInstanceOfType(payload))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

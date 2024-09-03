@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AsyncReactAwait.Bindable;
 using AsyncReactAwait.Promises;
@@ -34,7 +35,7 @@ namespace UnityMVVM.ViewManager
         /// Returns all view layer ids.
         /// </summary>
         /// <returns>All layer ids.</returns>
-        string[] GetLayerIds();
+        IReadOnlyList<string> GetLayerIds();
         
         /// <summary>
         /// Creates viewModel and corresponding view.

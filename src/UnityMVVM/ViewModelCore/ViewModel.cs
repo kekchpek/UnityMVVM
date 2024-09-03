@@ -129,16 +129,23 @@ namespace UnityMVVM.ViewModelCore
         /// <inheritdoc />
         public T? GetSubview<T>() where T : IViewModel
         {
-            return (T?)_subviews.FirstOrDefault(x => x is T);
+            foreach (var subview in _subviews)
+            {
+                if (subview is T outcome)
+                {
+                    return outcome;
+                }
+            }
+
+            return default;
         }
 
         /// <inheritdoc />
-        public T[] GetSubviews<T>() where T : IViewModel
+        public IEnumerable<T> GetSubviews<T>() where T : IViewModel
         {
             return _subviews
                 .Where(x => x is T)
-                .Cast<T>()
-                .ToArray();
+                .Cast<T>();
         }
 
         /// <summary>

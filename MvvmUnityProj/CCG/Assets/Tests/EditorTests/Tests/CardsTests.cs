@@ -49,10 +49,11 @@ namespace CCG.Tests.Editor
             var cards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
                 .GetSubviews<ICardViewModel>();
-            cards[0].OnMouseClickDown();
+            var firstCard = cards.First();
+            firstCard.OnMouseClickDown();
 
             // Assert
-            Assert.IsTrue(cards[0].IsSelected.Value, "Card is not selected after clicking on it.");
+            Assert.IsTrue(firstCard.IsSelected.Value, "Card is not selected after clicking on it.");
         }
         
         [Test]
@@ -71,11 +72,12 @@ namespace CCG.Tests.Editor
             var cards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
                 .GetSubviews<ICardViewModel>();
-            cards[0].OnMouseClickDown();
-            cards[0].OnMouseClickUp();
+            var firstCard = cards.First();
+            firstCard.OnMouseClickDown();
+            firstCard.OnMouseClickUp();
 
             // Assert
-            Assert.IsFalse(cards[0].IsSelected.Value, "Card is still selected after click release on it.");
+            Assert.IsFalse(firstCard.IsSelected.Value, "Card is still selected after click release on it.");
         }
         
         [Test]
@@ -99,14 +101,15 @@ namespace CCG.Tests.Editor
             {
                 isDestroyed = true;
             }
+            var firstCard = cards.First();
 
-            cards[0].Destroyed += CardDestroyed;
-                
-            cards[0].OnMouseClickDown();
-            cards[0].OnCardEnterBoard();
-            cards[0].OnMouseClickUp();
+            firstCard.Destroyed += CardDestroyed;
             
-            cards[0].Destroyed -= CardDestroyed;
+            firstCard.OnMouseClickDown();
+            firstCard.OnCardEnterBoard();
+            firstCard.OnMouseClickUp();
+            
+            firstCard.Destroyed -= CardDestroyed;
 
             // Assert
             Assert.IsTrue(isDestroyed, "Card is not destroyed after playing on the board.");
@@ -141,10 +144,10 @@ namespace CCG.Tests.Editor
             var cards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
                 .GetSubviews<ICardViewModel>();
-
-            cards[0].OnMouseClickDown();
-            cards[0].OnCardEnterBoard();
-            cards[0].OnMouseClickUp();
+            var firstCard = cards.First();
+            firstCard.OnMouseClickDown();
+            firstCard.OnCardEnterBoard();
+            firstCard.OnMouseClickUp();
             
             // Assert
             card.Received().Play();

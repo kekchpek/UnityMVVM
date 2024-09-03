@@ -1,5 +1,6 @@
 ﻿using AsyncReactAwait.Promises;
 using System;
+using System.Collections.Generic;
 using UnityMVVM.ViewManager.ViewLayer;
 
 namespace UnityMVVM.ViewModelCore
@@ -45,7 +46,7 @@ namespace UnityMVVM.ViewModelCore
         /// </summary>
         /// <typeparam name="T">The type of a subviews.</typeparam>
         /// <returns>Returns array of subviews of specified type or an empty array.</returns>
-        T[] GetSubviews<T>() where T : IViewModel;
+        IEnumerable<T> GetSubviews<T>() where T : IViewModel;
 
         /// <summary>
         /// Fire <see cref="CloseStarted"/> event and internal view model close handling.

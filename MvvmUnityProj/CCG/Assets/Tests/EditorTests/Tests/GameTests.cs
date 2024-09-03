@@ -47,7 +47,7 @@ namespace CCG.Tests.Editor
             var cards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
                 .GetSubviews<ICardViewModel>();
-            Assert.IsTrue(cards.Length > 0, "Cards were not created after game started.");
+            Assert.IsTrue(cards.Any(), "Cards were not created after game started.");
         }
         
         [Test]
@@ -65,7 +65,8 @@ namespace CCG.Tests.Editor
             // Store current cards to assert.
             var cards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
-                .GetSubviews<ICardViewModel>();
+                .GetSubviews<ICardViewModel>()
+                .ToArray();
             
             // Add one card.
             var handController = testApp
@@ -76,7 +77,8 @@ namespace CCG.Tests.Editor
             // Assert
             var newCards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
-                .GetSubviews<ICardViewModel>();
+                .GetSubviews<ICardViewModel>()
+                .ToArray();
             Assert.AreEqual(cards.Length + 1, newCards.Length, "Card is not added after click add card button.");
         }
         
@@ -105,7 +107,8 @@ namespace CCG.Tests.Editor
             // Assert
             var newCards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
-                .GetSubviews<ICardViewModel>();
+                .GetSubviews<ICardViewModel>()
+                .ToArray();
             Assert.AreEqual(cardsModel.MaxCardsCount, newCards.Length, "Card is not added after click add card button.");
         }
         
@@ -131,7 +134,8 @@ namespace CCG.Tests.Editor
             var handModel = testApp.GetViewModelDependency<IHandModel>();
             var cards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
-                .GetSubviews<ICardViewModel>();
+                .GetSubviews<ICardViewModel>()
+                .ToArray();
             for (int i = 0; i < handModel.CardsCount.Value; i++)
             {
                 var data = CardMath.GetRegularTransform(
@@ -173,7 +177,8 @@ namespace CCG.Tests.Editor
             var handModel = testApp.GetViewModelDependency<IHandModel>();
             var cards = testApp
                 .GetViewModel<IMainScreenViewModel>(ViewLayerIds.MainUI)
-                .GetSubviews<ICardViewModel>();
+                .GetSubviews<ICardViewModel>()
+                .ToArray();
             for (int i = 0; i < handModel.CardsCount.Value; i++)
             {
                 var data = CardMath.GetArchTransform(

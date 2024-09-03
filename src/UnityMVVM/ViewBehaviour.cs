@@ -40,7 +40,7 @@ namespace UnityMVVM
         /// <inheritdoc />
         public void SetParent(Transform parent)
         {
-            Transform t = transform;
+            var t = transform;
             t.SetParent(parent);
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
@@ -48,7 +48,7 @@ namespace UnityMVVM
         }
 
         /// <inheritdoc />
-        public void SetPartOfPoolableView(bool isPartOfPooledView)
+        void IViewInitializer.SetPartOfPoolableView(bool isPartOfPooledView)
         {
             _isPartOfPooledView = isPartOfPooledView;
         }

@@ -1,7 +1,6 @@
 ﻿using AsyncReactAwait.Promises;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AsyncReactAwait.Bindable;
 using UnityEngine;
@@ -9,6 +8,7 @@ using UnityEngine.Scripting;
 using UnityMVVM.DI;
 using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
+// ReSharper disable All
 
 namespace UnityMVVM.ViewManager
 {
@@ -18,7 +18,8 @@ namespace UnityMVVM.ViewManager
 
         private const string UnknownViewName = "<UNKNOWN>";
 
-        private readonly IViewLayer[] _layers;
+        private readonly IReadOnlyList<IViewLayer> _layers;
+        private readonly IReadOnlyList<string> _layerIds;
         private readonly IViewsModelsContainerAdapter _viewsContainer;
 
         private readonly IDictionary<IViewModel, string> _createdViewsNames = new Dictionary<IViewModel, string>();
@@ -43,7 +44,14 @@ namespace UnityMVVM.ViewManager
             IEnumerable<IViewLayer> layers, 
             IViewsModelsContainerAdapter viewsContainerAdapter)
         {
-            _layers = layers.ToArray();
+            _layers = System.Linq.Enumerable.ToArray(layers);
+            var layerIds = new string[_layers.Count];
+            for (var i = 0; i < _layers.Count; i++)
+            {
+                layerIds[i] = _layers[i].Id;
+            }
+            _layerIds = layerIds;
+
             _viewsContainer = viewsContainerAdapter;
             foreach (var viewLayer in _layers)
             {
@@ -72,11 +80,7 @@ namespace UnityMVVM.ViewManager
 
         public async IPromise OpenExact(string viewLayerId, string viewName, IPayload? payload = null)
         {
-            var layer = _layers.FirstOrDefault(x => x.Id == viewLayerId);
-            if (layer == null)
-            {
-                throw new Exception($"Can not find layer with id = {viewLayerId}");
-            }
+            var layer = GetLayer(viewLayerId);
 
             await layer.Clear();
             await CreateViewOnLayer(viewName, layer, payload);
@@ -85,13 +89,13 @@ namespace UnityMVVM.ViewManager
         /// <inheritdoc cref="IViewManager.CloseExact(string)"/>
         public async IPromise CloseExact(string viewLayerId)
         {
-            await _layers.First(l => l.Id == viewLayerId).Clear();
+            await GetLayer(viewLayerId).Clear();
         }
 
         /// <inheritdoc cref="IViewManager.Close(string)"/>
         public async IPromise Close(string viewLayerId)
         {
-            for (var i = _layers.Length - 1;;i--)
+            for (var i = _layers.Count - 1;;i--)
             {
                 await _layers[i].Clear();
                 if (_layers[i].Id == viewLayerId)
@@ -121,18 +125,24 @@ namespace UnityMVVM.ViewManager
         /// <inheritdoc />
         public IViewLayer GetLayer(string viewLayerId)
         {
-            return _layers.First(x => x.Id == viewLayerId);
+            foreach (var l in _layers)
+            {
+                if (l.Id == viewLayerId)
+                    return l;
+            }
+
+            throw new InvalidOperationException($"Layer with id={viewLayerId} is not found.");
         }
 
         /// <inheritdoc />
         public IViewModel? GetView(string viewLayerId)
         {
-            return _layers.First(x => x.Id == viewLayerId).CurrentView.Value;
+            return GetLayer(viewLayerId).CurrentView.Value;
         }
 
-        public string[] GetLayerIds()
+        public IReadOnlyList<string> GetLayerIds()
         {
-            return _layers.Select(x => x.Id).ToArray();
+            return _layerIds;
         }
 
         public async Task<IViewModel> Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
@@ -151,7 +161,7 @@ namespace UnityMVVM.ViewManager
             _openingLayer = viewLayerId;
             try
             {
-                for (int i = _layers.Length - 1; i >= 0; i--)
+                for (int i = _layers.Count - 1; i >= 0; i--)
                 {
                     // close opened view
                     var openedViewModel = _layers[i].CurrentView.Value;
