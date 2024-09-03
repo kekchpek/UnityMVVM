@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using Zenject;
@@ -15,9 +14,9 @@ namespace UnityMVVM.QuickStart
             _viewManager = viewManager;
         }
         
-        private void Start()
+        private async void Start()
         {
-            _viewManager.Open(
+            await _viewManager.Open(
                 "Ui", // Layer to open a view on.
                 "MyView" // The name of view to open.
             );

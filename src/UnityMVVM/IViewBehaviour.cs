@@ -1,6 +1,9 @@
 ﻿namespace UnityMVVM
 {
-    internal interface IViewBehaviour
+    /// <summary>
+    /// Base interface for views inherited from <see cref="UnityEngine.MonoBehaviour"/>
+    /// </summary>
+    public interface IViewBehaviour
     {
     }
 }

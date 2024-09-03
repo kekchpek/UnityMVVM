@@ -54,6 +54,11 @@
             Aggregate four bindable values
             </summary>
         </member>
+        <member name="M:AsyncReactAwait.Bindable.Bindable.Aggregate``2(System.Collections.Generic.IEnumerable{AsyncReactAwait.Bindable.IBindable{``0}},System.Func{``0[],``1})">
+            <summary>
+            Aggregate any count of bindable values of same type
+            </summary>
+        </member>
         <member name="T:AsyncReactAwait.Bindable.BindableAggregator`1">
             <summary>
             An aggregator for bindable values.
@@ -238,8 +243,19 @@
             </summary>
             <typeparam name="T">Bindable value type.</typeparam>
         </member>
+        <member name="E:AsyncReactAwait.Bindable.IMutable`1.OnAnySubscription">
+            <summary>
+            Fired on any listener is bound for this value.
+            </summary>
+        </member>
+        <member name="E:AsyncReactAwait.Bindable.IMutable`1.OnSubscriptionsCleared">
+            <summary>
+            Fired on any listener is unbound from this value, and no other listeners left.
+            </summary>
+        </member>
         <member name="P:AsyncReactAwait.Bindable.IMutable`1.Value">
             <inheritdoc cref="P:AsyncReactAwait.Bindable.IBindable`1.Value"/>
+            Automatically resets proxying value.
         </member>
         <member name="M:AsyncReactAwait.Bindable.IMutable`1.Proxy(AsyncReactAwait.Bindable.IBindable{`0})">
             <summary>
@@ -255,7 +271,7 @@
         </member>
         <member name="M:AsyncReactAwait.Bindable.IMutable`1.ForceSet(`0)">
             <summary>
-            Sets the value to new value event if they are equal.
+            Sets the value to new value even if they are equal.
             </summary>
             <param name="value">New value.</param>
         </member>
@@ -286,12 +302,6 @@
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{System.Object,System.Object})">
             <inheritdoc />
         </member>
-        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{System.Object})">
-            <inheritdoc />
-        </member>
-        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{System.Object,System.Object})">
-            <inheritdoc />
-        </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{`0},System.Boolean)">
             <inheritdoc cref="M:AsyncReactAwait.Bindable.IBindable`1.Bind(System.Action{`0},System.Boolean)"/>
             <exception cref="T:System.ArgumentNullException"></exception>
@@ -301,6 +311,12 @@
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Bind(System.Action{`0,`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{System.Object})">
+            <inheritdoc />
+        </member>
+        <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{System.Object,System.Object})">
             <inheritdoc />
         </member>
         <member name="M:AsyncReactAwait.Bindable.Mutable`1.Unbind(System.Action{`0})">

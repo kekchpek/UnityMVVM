@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityMVVM.ViewModelCore.ViewModelsFactory;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ModestTree;
 using UnityMVVM.DI.Config;
 using UnityMVVM.DI.Environment;
@@ -117,7 +118,25 @@ namespace UnityMVVM.DI
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
         {
-            InstallViewInternal<TView, TViewModel, TViewModelImpl>(container, viewName, viewPrefabGetter, null);
+            if (viewPrefabGetter == null) throw new ArgumentNullException(nameof(viewPrefabGetter));
+            InstallViewInternal<TView, TViewModel, TViewModelImpl>(container, viewName, () => Task.FromResult(viewPrefabGetter()), null);
+        }
+        
+        /// <summary>
+        /// Installs <see cref="IViewModelsFactory"/> for specified View-ViewModel pair.
+        /// </summary>
+        /// <param name="container">MVVM container to configure.</param>
+        /// <param name="viewName">View identificator for opening.</param>
+        /// <param name="asyncViewPrefabGetter">The async method to obtain view prefab. View should contains <typeparamref name="TView"/> component inside.</param>
+        /// <typeparam name="TView">The type of a view</typeparam>
+        /// <typeparam name="TViewModel">The type of a view model.</typeparam>
+        /// <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
+        public static void InstallView<TView, TViewModel, TViewModelImpl>(this DiContainer container, string viewName, Func<Task<GameObject>> asyncViewPrefabGetter)
+            where TView : ViewBehaviour<TViewModel>
+            where TViewModel : class, IViewModel
+            where TViewModelImpl : class, TViewModel
+        {
+            InstallViewInternal<TView, TViewModel, TViewModelImpl>(container, viewName, asyncViewPrefabGetter, null);
         }
 
         /// <inheritdoc cref="InstallView{TView,TViewModel,TViewModelImpl}(Zenject.DiContainer,string,Func{UnityEngine.GameObject})"/>
@@ -134,10 +153,32 @@ namespace UnityMVVM.DI
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
         {
+            if (viewPrefabGetter == null) throw new ArgumentNullException(nameof(viewPrefabGetter));
             InstallViewInternal<TView, TViewModel, TViewModelImpl>(
                 container, 
                 viewName,
-                viewPrefabGetter,
+                () => Task.FromResult(viewPrefabGetter()),
+                viewPool ?? new ViewPool<TView>());
+        }
+        
+        /// <inheritdoc cref="InstallView{TView,TViewModel,TViewModelImpl}(Zenject.DiContainer,string,Func{System.Threading.Tasks.Task{UnityEngine.GameObject}})"/>
+        /// <param name="viewPool">The pool for views. Uses default <see cref="ViewPool{T}"/> object if null specified.</param>
+        public static void InstallPoolableView
+            <TView, TViewModel, TViewModelImpl>
+#pragma warning disable CS1573
+            (this DiContainer container,
+                string viewName,
+                Func<Task<GameObject>> asyncViewPrefabGetter,
+#pragma warning restore CS1573
+                IViewPool? viewPool = null)
+            where TView : ViewBehaviour<TViewModel>, IPoolableView
+            where TViewModel : class, IViewModel
+            where TViewModelImpl : class, TViewModel
+        {
+            InstallViewInternal<TView, TViewModel, TViewModelImpl>(
+                container, 
+                viewName,
+                asyncViewPrefabGetter,
                 viewPool ?? new ViewPool<TView>());
         }
         
@@ -158,11 +199,13 @@ namespace UnityMVVM.DI
             InstallViewInternal<TView, TViewModel, TViewModelImpl>(
                 container, 
                 viewName,
-                () => viewPrefab,
+                () => Task.FromResult(viewPrefab),
                 viewPool ?? new ViewPool<TView>());
         }
 
-        private static void InstallViewInternal<TView, TViewModel, TViewModelImpl>(DiContainer container, string viewName, Func<GameObject> viewPrefabGetter, IViewPool? viewPool)
+        private static void InstallViewInternal<TView, TViewModel, TViewModelImpl>(
+            DiContainer container, string viewName,
+            Func<Task<GameObject>> viewPrefabGetter, IViewPool? viewPool)
             where TView : ViewBehaviour<TViewModel>
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
@@ -180,7 +223,7 @@ namespace UnityMVVM.DI
                 .AsTransient()
                 .WithArgumentsExplicit(new []
                 {
-                    new TypeValuePair(typeof(Func<GameObject>), viewPrefabGetter),
+                    new TypeValuePair(typeof(Func<Task<GameObject>>), viewPrefabGetter),
                     new TypeValuePair(typeof(IViewPool), viewPool),
                 });
             env.Mapper.Map<TView, TViewModelImpl>();

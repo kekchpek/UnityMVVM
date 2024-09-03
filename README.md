@@ -15,8 +15,8 @@ UnityMVVM is based on widely known MVVM pattern of application structure. It fol
 <img align="center" src="https://github.com/kekchpek/UnityMVVM/assets/18449140/14d5ae95-75bf-4038-9893-02a02c61d6e0"/>
 </p>
 
-- View(Interaction) layer contains Unity3d objects, that are responsible for content displaying. These objects also could handle interactions with user like buttons clicks and interactions with UnityAPI like `OnCollisionEnter`, `OnTriggerEnter` methods and Unity3d physics handling. This layer is not intended to store any data about its state or business logic. **View layer objects are childrens of `ViewBehaviour` class.**
-- ViewModel layer contains the data about View objects state. It is responsible for handling input from View layer and contain logic of handling Model layer entities state changing. **ViewModel layer objects are childrens of `ViewModel` class.**
+- View(Interaction) layer contains Unity3d objects, that are responsible for content displaying. These objects also could handle interactions with user like buttons clicks and interactions with UnityAPI like `OnCollisionEnter`, `OnTriggerEnter` methods and Unity3d physics handling. This layer is not intended to store any data about its state or business logic. **View layer objects are inheritors of `ViewBehaviour` class.**
+- ViewModel layer contains the data about View objects state. It is responsible for handling input from View layer and contain logic of handling Model layer entities state changing. **ViewModel layer objects are inheritors of `ViewModel` class.**
 - Model layer contains business logic, interaction with persistent storage, network or domain model. Model layer objects could have any type.
 
 The specific thing about UnityMVVM approach is that each View object has only one corresponding ViewModel object. So every entity(units, windows, popups and whatever you want) are a View-ViewModel pair. ViewModel could have dependency on any number of model layer entities.
@@ -196,9 +196,9 @@ After installing such installer in some context you can add `StartupBehaviour` b
             _viewManager = viewManager;
         }
         
-        private void Start()
+        private async void Start()
         {
-            _viewManager.Open(
+            await _viewManager.Open(
                 "Ui", // Layer to open a view on.
                 "MyView" // The name of view to open.
                 );
