@@ -45,7 +45,7 @@ namespace UnityMVVM.ViewManager
         /// <param name="container">The container to instantiate the view to.</param>
         /// <param name="payload">View model payload.</param>
         /// <returns>Returns created view model.</returns>
-        public Task<IViewModel> Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null);
+        public IViewModel Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null);
 
         /// <summary>
         /// Creates view model and corresponding view. Closes all views on layers above specified.
