@@ -20,7 +20,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         private readonly IInstantiator _instantiator;
         private readonly IViewToViewModelMapper _viewToViewModelMapper;
         private readonly IViewFactory _viewFactory;
-        private readonly Func<Task<GameObject>> _viewPrefabGetter;
+        private readonly Func<GameObject> _viewPrefabGetter;
         private readonly IViewPool? _viewPool;
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         /// <param name="viewPool">The pool for views(if presented)</param>
         [Preserve]
         public ViewModelsFactory( 
-            Func<Task<GameObject>> viewPrefabGetter,
+            Func<GameObject> viewPrefabGetter,
             IInstantiator instantiator,
             IViewToViewModelMapper viewToViewModelMapper, 
             IViewFactory viewFactory,
@@ -47,12 +47,12 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         }
 
         /// <inheritdoc cref="IViewModelsFactory.Create(IViewLayer, IViewModel, Transform, IPayload)"/>
-        public async Task<IViewModel> Create(IViewLayer viewLayer,
+        public IViewModel Create(IViewLayer viewLayer,
             IViewModel? parent,
             Transform transform,
             IPayload? payload = null)
         {
-            var view = _viewFactory.Instantiate<TView>(await _viewPrefabGetter.Invoke(), transform, _viewPool);
+            var view = _viewFactory.Instantiate<TView>(_viewPrefabGetter.Invoke(), transform, _viewPool);
 
             if (view is not Component c)
                 throw new Exception("View should be a Component");
