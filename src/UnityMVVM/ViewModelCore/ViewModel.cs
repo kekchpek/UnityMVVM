@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
@@ -72,33 +71,18 @@ namespace UnityMVVM.ViewModelCore
         {
             return CreateSubView<T>(viewName, _layer.Container, payload);
         }
-
+        
         /// <summary>
         /// Creates a child view and view model.
         /// </summary>
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
         /// <returns>Created view model.</returns>
-        protected async Task<IViewModel> CreateSubView(string viewName, IPayload? payload = null)
+        protected IViewModel CreateSubView(string viewName, IPayload? payload = null)
         {
-            return await CreateSubView(viewName, _layer.Container, payload);
+            return CreateSubView(viewName, _layer.Container, payload);
         }
 
-        /// <inheritdoc cref="CreateSubView(string,UnityMVVM.ViewModelCore.IPayload?)"/>
-        /// <param name="container">The container to instantiate view to.</param>
-        protected async Task<IViewModel> CreateSubView(
-#pragma warning disable CS1573
-            string viewName, 
-#pragma warning restore CS1573
-            Transform container, 
-#pragma warning disable CS1573
-            IPayload? payload = null)
-#pragma warning restore CS1573
-        {
-            var viewModel = await _viewManager.Create(this, viewName, container, payload);
-            return viewModel;
-        }
-        
         /// <inheritdoc cref="CreateSubView{T}(string,UnityMVVM.ViewModelCore.IPayload?)"/>
         /// <param name="container">The container to instantiate view to.</param>
         protected T CreateSubView<T>(
@@ -112,6 +96,21 @@ namespace UnityMVVM.ViewModelCore
             where T : class, IViewModel
         {
             var viewModel = _viewManager.Create<T>(this, viewName, container, payload);
+            return viewModel;
+        }
+
+        /// <inheritdoc cref="CreateSubView{T}(string,UnityMVVM.ViewModelCore.IPayload?)"/>
+        /// <param name="container">The container to instantiate view to.</param>
+        protected IViewModel CreateSubView(
+#pragma warning disable CS1573
+            string viewName, 
+#pragma warning restore CS1573
+            Transform container, 
+#pragma warning disable CS1573
+            IPayload? payload = null) 
+#pragma warning restore CS1573
+        {
+            var viewModel = _viewManager.Create(this, viewName, container, payload);
             return viewModel;
         }
 

@@ -1,7 +1,6 @@
 ﻿using AsyncReactAwait.Promises;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using AsyncReactAwait.Bindable;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -83,7 +82,7 @@ namespace UnityMVVM.ViewManager
             var layer = GetLayer(viewLayerId);
 
             await layer.Clear();
-            await CreateViewOnLayer(viewName, layer, payload);
+            CreateViewOnLayer(viewName, layer, payload);
         }
 
         /// <inheritdoc cref="IViewManager.CloseExact(string)"/>
@@ -145,9 +144,9 @@ namespace UnityMVVM.ViewManager
             return _layerIds;
         }
 
-        public async Task<IViewModel> Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
+        public IViewModel Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
         {
-            return await _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, container, payload);
+            return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, container, payload);
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
@@ -175,7 +174,7 @@ namespace UnityMVVM.ViewManager
                     // open required view
                     if (_layers[i].Id == viewLayerId)
                     {
-                        var viewModel = await CreateViewOnLayer(viewName, _layers[i], payload);
+                        var viewModel = CreateViewOnLayer(viewName, _layers[i], payload);
                         return viewModel;
                     }
                 }
@@ -187,9 +186,9 @@ namespace UnityMVVM.ViewManager
             }
         }
 
-        private async Task<IViewModel> CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
+        private IViewModel CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
         {
-            var viewModel = await _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, layer.Container, payload);
+            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, layer.Container, payload);
             _createdViewsNames.Add(viewModel, viewName);
             viewModel.Destroyed += OnViewModelDestroyed;
             layer.Set(viewModel);
