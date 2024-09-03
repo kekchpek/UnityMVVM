@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace UnityMVVM.Pool
 {
@@ -31,7 +30,7 @@ namespace UnityMVVM.Pool
         /// <inheritdoc />
         public bool TryPop(out IPoolableView? poolableView)
         {
-            if (_poolCollection.Any())
+            if (_poolCollection.Count > 0)
             {
                 var view = _poolCollection.Pop();
                 OnViewTakenFromPool((T)view);
