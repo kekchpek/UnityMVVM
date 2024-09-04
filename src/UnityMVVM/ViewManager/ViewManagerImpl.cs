@@ -1,6 +1,6 @@
-﻿using AsyncReactAwait.Promises;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AsyncReactAwait.Bindable;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -77,7 +77,7 @@ namespace UnityMVVM.ViewManager
             _highestBusyLayer.Value = highestLayerId;
         }
 
-        public async IPromise OpenExact(string viewLayerId, string viewName, IPayload? payload = null)
+        public async ValueTask OpenExact(string viewLayerId, string viewName, IPayload? payload = null)
         {
             var layer = GetLayer(viewLayerId);
 
@@ -86,13 +86,13 @@ namespace UnityMVVM.ViewManager
         }
 
         /// <inheritdoc cref="IViewManager.CloseExact(string)"/>
-        public async IPromise CloseExact(string viewLayerId)
+        public async ValueTask CloseExact(string viewLayerId)
         {
             await GetLayer(viewLayerId).Clear();
         }
 
         /// <inheritdoc cref="IViewManager.Close(string)"/>
-        public async IPromise Close(string viewLayerId)
+        public async ValueTask Close(string viewLayerId)
         {
             for (var i = _layers.Count - 1;;i--)
             {
@@ -150,7 +150,7 @@ namespace UnityMVVM.ViewManager
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
-        public async IPromise<IViewModel?> Open(string viewLayerId, string viewName, IPayload? payload = null)
+        public async ValueTask<IViewModel?> Open(string viewLayerId, string viewName, IPayload? payload = null)
         {
             if (_openingLayer == viewLayerId)
             {

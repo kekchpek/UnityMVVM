@@ -1,5 +1,5 @@
-﻿using AsyncReactAwait.Promises;
-using System;
+﻿using System;
+using System.Threading.Tasks;
 using AsyncReactAwait.Bindable;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
@@ -21,15 +21,13 @@ namespace UnityMVVM.ViewManager.ViewLayer
             Container = container;
         }
 
-        public IPromise Clear()
+        public async ValueTask Clear()
         {
             if (_currentViewModel.Value == null)
             {
-                var promise = new ControllablePromise();
-                promise.Success();
-                return promise;
+                return;
             }
-            return _currentViewModel.Value.Close();
+            await _currentViewModel.Value.Close();
         }
 
         public void ClearInstantly()

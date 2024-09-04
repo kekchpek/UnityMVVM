@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
 using AsyncReactAwait.Bindable;
-using AsyncReactAwait.Promises;
 using UnityEngine;
 using UnityMVVM.Pool;
 using UnityMVVM.ViewModelCore;
@@ -93,17 +93,16 @@ namespace UnityMVVM
         /// <summary>
         /// Method that starts and handle close process.
         /// </summary>
-        /// <returns>Promise, that indicates closing process.</returns>
-        protected virtual IPromise Close()
+        /// <returns>Handle, that indicates closing process.</returns>
+        protected virtual ValueTask Close()
         {
-            var promise = new ControllablePromise();
-            promise.Success();
-            return promise;
+            return default;
         }
 
-        private void OnCloseStarted(IViewModel _)
+        private async void OnCloseStarted(IViewModel _)
         {
-            Close().OnSuccess(() => ViewModel?.Destroy());
+            await Close();
+            ViewModel?.Destroy();
         }
 
         private void OnViewModelDestroyed(IViewModel _)

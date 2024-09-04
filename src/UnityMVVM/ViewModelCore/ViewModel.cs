@@ -1,7 +1,7 @@
-﻿using AsyncReactAwait.Promises;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityMVVM.ViewManager;
 using UnityMVVM.ViewManager.ViewLayer;
@@ -26,7 +26,8 @@ namespace UnityMVVM.ViewModelCore
 
         private bool _destroyed;
 
-        private IControllablePromise? _closePromise;
+        private readonly TaskCompletionSource<bool> _closeTask = new();
+        private bool _isClosing;
 
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
@@ -120,7 +121,8 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewLayerId">Id of the layer to open view on.</param>
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
-        protected async IPromise OpenView(string viewLayerId, string viewName, IPayload? payload = null)
+        /// <returns>A handle, that indicates opening process.</returns>
+        protected async ValueTask OpenView(string viewLayerId, string viewName, IPayload? payload = null)
         {
             await _viewManager.Open(viewLayerId, viewName, payload);
         }
@@ -180,17 +182,16 @@ namespace UnityMVVM.ViewModelCore
         }
 
         /// <inheritdoc cref="IViewModel.Close"/>
-        public IPromise Close()
+        public Task Close()
         {
-            if (_closePromise != null)
+            if (!_isClosing)
             {
-                return _closePromise;
+                _isClosing = true;
+                OnCloseStartedInternal();
+                CloseStarted?.Invoke(this);
             }
-            _closePromise = new ControllablePromise();
-            OnCloseStartedInternal();
-            CloseStarted?.Invoke(this);
-            return _closePromise;
 
+            return _closeTask.Task;
         }
 
         private void OnParentDestroyed(IViewModel _)
@@ -225,8 +226,10 @@ namespace UnityMVVM.ViewModelCore
                 subview.Destroyed -= OnSubviewDestroyed;
             }
             _subviews.Clear();
+            UnityEngine.Pool.HashSetPool<IViewModel>.Release(_subviews);
             Destroyed?.Invoke(this);
-            _closePromise?.Success();
+            if (_isClosing)
+                _closeTask.SetResult(true);
         }
     }
 }

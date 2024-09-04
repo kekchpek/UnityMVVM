@@ -1,5 +1,5 @@
-﻿using AsyncReactAwait.Bindable;
-using AsyncReactAwait.Promises;
+﻿using System.Threading.Tasks;
+using AsyncReactAwait.Bindable;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
@@ -30,8 +30,8 @@ namespace UnityMVVM.ViewManager.ViewLayer
         /// <summary>
         /// Close root view model.
         /// </summary>
-        /// <returns>A promise that indicates the close proccess.</returns>
-        IPromise Clear();
+        /// <returns>A handle, that indicates the close process.</returns>
+        ValueTask Clear();
 
         /// <summary>
         /// Destroy root view model.

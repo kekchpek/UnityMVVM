@@ -1,6 +1,6 @@
-﻿using AsyncReactAwait.Promises;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityMVVM.ViewManager.ViewLayer;
 
 namespace UnityMVVM.ViewModelCore
@@ -51,8 +51,8 @@ namespace UnityMVVM.ViewModelCore
         /// <summary>
         /// Fire <see cref="CloseStarted"/> event and internal view model close handling.
         /// </summary>
-        /// <returns>Promise, that indicates close process.</returns>
-        IPromise Close();
+        /// <returns>Handle, that indicates close process.</returns>
+        Task Close();
 
         /// <summary>
         /// Destroys the view modes and view instantly.
