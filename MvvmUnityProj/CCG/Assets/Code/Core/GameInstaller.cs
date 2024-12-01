@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityMVVM.DI;
+using UnityMVVM.DI.Config;
 using Zenject;
 
 namespace CCG.Core
