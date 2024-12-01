@@ -20,7 +20,7 @@ namespace CCG.Tests.Editor.Core
                 },
                 new MvvmContainerConfiguration
                 {
-                    ViewFactory = new TestViewFactory()
+                    viewFactory = new TestViewFactory()
                 });
             Container.Install<CoreInstaller>();
             

@@ -12,6 +12,7 @@ using UnityMVVM.DI.Config;
 using UnityMVVM.DI.Environment;
 using UnityMVVM.DI.Mapper;
 using UnityMVVM.Pool;
+using UnityMVVM.ViewModelCore.PrefabsProvider;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -73,13 +74,13 @@ namespace UnityMVVM.DI
             container.Bind<IViewsModelsContainerAdapter>().FromInstance(viewModelsContainerAdapter);
             container.FastBind<IViewManager, ViewManagerImpl>();
 
-            if (config.ViewFactory == null)
+            if (config.viewFactory == null)
             {
                 viewModelsContainer.Bind<IViewFactory>().To<ViewFactory>().AsSingle();
             }
             else
             {
-                viewModelsContainer.Bind<IViewFactory>().FromInstance(config.ViewFactory);
+                viewModelsContainer.Bind<IViewFactory>().FromInstance(config.viewFactory);
             }
             
             viewModelsContainer.Bind<IViewToViewModelMapper>().FromInstance(mapper);
@@ -100,7 +101,7 @@ namespace UnityMVVM.DI
         where TViewModel : class, IViewModel
         where TViewModelImpl : class, TViewModel
         {
-             container.InstallView<TView, TViewModel, TViewModelImpl>(viewName, () => viewPrefab);
+             container.InstallView<TView, TViewModel, TViewModelImpl>(viewName, _ => viewPrefab);
         }
 
         /// <summary>
@@ -108,39 +109,41 @@ namespace UnityMVVM.DI
         /// </summary>
         /// <param name="container">MVVM container to configure.</param>
         /// <param name="viewName">View identificator for opening.</param>
-        /// <param name="viewPrefabGetter">The method to obtain view prefab. View should contains <typeparamref name="TView"/> component inside.</param>
+        /// <param name="viewPrefabGetter">
+        /// The method to obtain view prefab by its bound name. View should contains <typeparamref name="TView"/> component inside.
+        /// There should be default viewPrefabProvider specified in config on UseAsMvvmContainer call if this
+        /// parameter is set to null.
+        /// </param>
         /// <typeparam name="TView">The type of a view</typeparam>
         /// <typeparam name="TViewModel">The type of a view model.</typeparam>
         /// <typeparam name="TViewModelImpl">The type, that implements a view model.</typeparam>
-        public static void InstallView<TView, TViewModel, TViewModelImpl>(this DiContainer container, string viewName, Func<GameObject> viewPrefabGetter)
+        public static void InstallView<TView, TViewModel, TViewModelImpl>(this DiContainer container, string viewName, Func<string, GameObject>? viewPrefabGetter = null)
             where TView : ViewBehaviour<TViewModel>
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
         {
-            if (viewPrefabGetter == null) throw new ArgumentNullException(nameof(viewPrefabGetter));
-            InstallViewInternal<TView, TViewModel, TViewModelImpl>(container, viewName, viewPrefabGetter, null);
+            InstallViewInternal<TView, TViewModel, TViewModelImpl>(container, viewName, null, viewPrefabGetter);
         }
 
-        /// <inheritdoc cref="InstallView{TView,TViewModel,TViewModelImpl}(Zenject.DiContainer,string,Func{UnityEngine.GameObject})"/>
+        /// <inheritdoc cref="InstallView{TView,TViewModel,TViewModelImpl}(Zenject.DiContainer,string,Func{string, UnityEngine.GameObject})"/>
         /// <param name="viewPool">The pool for views. Uses default <see cref="ViewPool{T}"/> object if null specified.</param>
         public static void InstallPoolableView
             <TView, TViewModel, TViewModelImpl>
 #pragma warning disable CS1573
             (this DiContainer container,
             string viewName,
-            Func<GameObject> viewPrefabGetter,
+            Func<string, GameObject>? viewPrefabGetter = null,
 #pragma warning restore CS1573
             IViewPool? viewPool = null)
             where TView : ViewBehaviour<TViewModel>, IPoolableView
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
         {
-            if (viewPrefabGetter == null) throw new ArgumentNullException(nameof(viewPrefabGetter));
             InstallViewInternal<TView, TViewModel, TViewModelImpl>(
                 container, 
                 viewName,
-                viewPrefabGetter,
-                viewPool ?? new ViewPool<TView>());
+                viewPool ?? new ViewPool<TView>(),
+                viewPrefabGetter);
         }
 
         /// <inheritdoc cref="InstallView{TView,TViewModel,TViewModelImpl}(Zenject.DiContainer,string,UnityEngine.GameObject)"/>
@@ -160,13 +163,13 @@ namespace UnityMVVM.DI
             InstallViewInternal<TView, TViewModel, TViewModelImpl>(
                 container, 
                 viewName,
-                () => viewPrefab,
-                viewPool ?? new ViewPool<TView>());
+                viewPool ?? new ViewPool<TView>(),
+                _ => viewPrefab);
         }
 
         private static void InstallViewInternal<TView, TViewModel, TViewModelImpl>(
-            DiContainer container, string viewName,
-            Func<GameObject> viewPrefabGetter, IViewPool? viewPool)
+            DiContainer container, string viewName, IViewPool? viewPool,
+            Func<string, GameObject>? viewPrefabGetter = null)
             where TView : ViewBehaviour<TViewModel>
             where TViewModel : class, IViewModel
             where TViewModelImpl : class, TViewModel
@@ -174,9 +177,10 @@ namespace UnityMVVM.DI
             if (!ContainerEnvironments.TryGetValue(container, out var env))
             {
                 throw new InvalidOperationException($"Provided container does not contain container for the view-model layer. " +
-                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure container.");
+                                                    $"Use {nameof(UseAsMvvmContainer)} method to configure the container.");
             }
             var viewModelsContainer = env.ViewsModelsContainerAdapter;
+            var extraArgs = new List<TypeValuePair>();
             viewModelsContainer.Container
                 .Bind<IViewModelsFactory>()
                 .WithId(viewName)
@@ -184,7 +188,7 @@ namespace UnityMVVM.DI
                 .AsTransient()
                 .WithArgumentsExplicit(new []
                 {
-                    new TypeValuePair(typeof(Func<GameObject>), viewPrefabGetter),
+                    new TypeValuePair(typeof(Func<string, GameObject>), viewPrefabGetter),
                     new TypeValuePair(typeof(IViewPool), viewPool),
                 });
             env.Mapper.Map<TView, TViewModelImpl>();
