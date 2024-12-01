@@ -1,4 +1,5 @@
 using CCG.Core.Camera;
+using CCG.Core.CustomViewManager;
 using CCG.Core.Installers;
 using CCG.Core.Screen;
 using CCG.Models.Hand.Model;
@@ -21,6 +22,7 @@ using CCG.Services.Startup;
 using SurvivedWarrior.MVVM.Models.Time;
 using UnityEngine;
 using UnityMVVM.DI;
+using UnityMVVM.ViewManager;
 using UnityMVVM.ViewModelCore;
 using Zenject;
 
@@ -30,6 +32,9 @@ namespace CCG.Core
     {
         public override void InstallBindings()
         {
+
+            Container.Decorate<IViewManager>().With<LogViewManagerDecorator>();
+            
             Container.InstallPoolableView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen,
                 () => Resources.Load<GameObject>("Prefabs/Views/MainScreenView"));
             Container.InstallView<MainScreen3dView, IViewModel, ViewModel>(ViewNames.MainScreen3d,
