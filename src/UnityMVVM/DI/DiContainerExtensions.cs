@@ -358,7 +358,7 @@ namespace UnityMVVM.DI
                 commonAccessInterfaces = modelAccessInterfaces;
             }
             env.ViewsModelsContainerAdapter.Container.Bind(commonAccessInterfaces)
-                .FromMethod<TImpl>(_ => (TImpl)container.Resolve(modelAccessInterfaces.First())).AsSingle();
+                .FromMethodUntyped(_ => container.Resolve(modelAccessInterfaces.First())).AsSingle();
         }
 
         /// <summary>
