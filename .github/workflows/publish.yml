@@ -43,6 +43,10 @@ jobs:
         then
         CURRENT_TAG_VERSION=$CURRENT_TAG_VERSION-raw
         fi
+        if [[ $CURRENT_BRANCH == develop ]]; 
+        then
+        CURRENT_TAG_VERSION=$CURRENT_TAG_VERSION-dev
+        fi
         git tag $CURRENT_TAG_VERSION
         git push origin --tags
         fi
