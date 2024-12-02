@@ -6,6 +6,8 @@ on:
      - 'master'
      - 'develop'
      - 'release/*'
+     - 'feature/*'
+     - 'fix/*'
 
 jobs:
   build:
@@ -36,6 +38,15 @@ jobs:
         then
         git remote set-url origin https://$RUNNER_USERNAME:$PAT_TOKEN@${REPO_URL:6}
         CURRENT_TAG_VERSION=$(python3 getVersion.py ./VERSION $UMVVM_BUILD_DATA_PATH/buildVersionV1.txt)
+        CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+        if [[ $CURRENT_BRANCH == feature* || $CURRENT_BRANCH == fix* ]]; 
+        then
+        CURRENT_TAG_VERSION=$CURRENT_TAG_VERSION-raw
+        fi
+        if [[ $CURRENT_BRANCH == develop ]]; 
+        then
+        CURRENT_TAG_VERSION=$CURRENT_TAG_VERSION-dev
+        fi
         git tag $CURRENT_TAG_VERSION
         git push origin --tags
         fi

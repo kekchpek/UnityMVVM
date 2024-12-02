@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ModestTree;
 using UnityEngine;
 using UnityEngine.Scripting;
 using UnityMVVM.DI.Mapper;
 using UnityMVVM.Pool;
 using UnityMVVM.ViewManager.ViewLayer;
+using UnityMVVM.ViewModelCore.PrefabsProvider;
 using Zenject;
 
 namespace UnityMVVM.ViewModelCore.ViewModelsFactory
@@ -20,8 +20,9 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         private readonly IInstantiator _instantiator;
         private readonly IViewToViewModelMapper _viewToViewModelMapper;
         private readonly IViewFactory _viewFactory;
-        private readonly Func<GameObject> _viewPrefabGetter;
+        private readonly Func<string, GameObject>? _viewPrefabGetter;
         private readonly IViewPool? _viewPool;
+        private readonly IViewsPrefabsProvider? _viewsPrefabsProvider;
 
         /// <summary>
         /// Default constructor for view factory.
@@ -31,28 +32,49 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         /// <param name="viewToViewModelMapper">Map of views and view models types.</param>
         /// <param name="viewFactory">The view factory to create and initialize views.</param>
         /// <param name="viewPool">The pool for views(if presented)</param>
+        /// <param name="viewsPrefabsProvider">The default provider for views prefabs.</param>
         [Preserve]
         public ViewModelsFactory( 
-            Func<GameObject> viewPrefabGetter,
+            Func<string, GameObject>? viewPrefabGetter,
             IInstantiator instantiator,
             IViewToViewModelMapper viewToViewModelMapper, 
             IViewFactory viewFactory,
-            IViewPool viewPool)
+            IViewPool viewPool,
+            [InjectOptional] IViewsPrefabsProvider viewsPrefabsProvider)
         {
             _viewPrefabGetter = viewPrefabGetter;
             _instantiator = instantiator;
             _viewToViewModelMapper = viewToViewModelMapper;
             _viewFactory = viewFactory;
             _viewPool = viewPool;
+            _viewsPrefabsProvider = viewsPrefabsProvider;
         }
 
-        /// <inheritdoc cref="IViewModelsFactory.Create(IViewLayer, IViewModel, Transform, IPayload)"/>
+        /// <inheritdoc cref="IViewModelsFactory.Create(IViewLayer, string, IViewModel, Transform, IPayload)"/>
         public IViewModel Create(IViewLayer viewLayer,
+            string viewName,
             IViewModel? parent,
             Transform transform,
             IPayload? payload = null)
         {
-            var view = _viewFactory.Instantiate<TView>(_viewPrefabGetter.Invoke(), transform, _viewPool);
+            GameObject viewPrefab;
+            if (_viewPrefabGetter != null)
+            {
+                viewPrefab = _viewPrefabGetter.Invoke(viewName);
+            }
+            else
+            {
+                if (_viewsPrefabsProvider != null)
+                {
+                    viewPrefab = _viewsPrefabsProvider!.GetViewPrefab(viewName);
+                }
+                else
+                {
+                    throw new Exception(
+                        "There should be either getter for prefab or default views prefabs provider bound.");
+                }
+            }
+            var view = _viewFactory.Instantiate<TView>(viewPrefab, transform, _viewPool);
 
             if (view is not Component c)
                 throw new Exception("View should be a Component");
