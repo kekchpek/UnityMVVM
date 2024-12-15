@@ -117,6 +117,8 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
             creationQueue.Enqueue((initialObj, initialParent));
             IViewModel? rootViewModel = null;
 
+            Stack<IViewModel> setupStack = new Stack<IViewModel>();
+
             // Iterate through entire hierarchy to create view-model for every view component
             while (creationQueue.Count > 0)
             {
@@ -139,6 +141,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                     }
                     implicitParams.Add(layer);
                     var viewModel = (IViewModel)_instantiator.Instantiate(viewModelType, implicitParams);
+                    setupStack.Push(viewModel);
                     // ReSharper disable once SuspiciousTypeConversion.Global
                     if (viewModel is IInitializable initializable)
                     {
@@ -164,6 +167,12 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                     creationQueue.Enqueue((data.obj.GetChild(i), parent));
                 }
             }
+
+            while (setupStack.TryPop(out var vm))
+            {
+                vm.SetupCompleted();
+            }
+            
             if (rootViewModel == null)
             {
                 throw new Exception("No view models were created during view instantiation.");

@@ -23,6 +23,11 @@ namespace UnityMVVM.ViewModelCore
         event Action<IViewModel> Destroyed;
 
         /// <summary>
+        /// Fired on some subview created for this view model.
+        /// </summary>
+        event SubviewCreatedDelegate SubviewCreated;
+
+        /// <summary>
         /// Layer, on which view was opened.
         /// </summary>
         public IViewLayer Layer { get; }
@@ -30,6 +35,8 @@ namespace UnityMVVM.ViewModelCore
         internal void AddSubview(IViewModel child);
         
         internal void OnOpened();
+        
+        internal void SetupCompleted();
         
         /// <summary>
         /// Obtains subview of specified type.

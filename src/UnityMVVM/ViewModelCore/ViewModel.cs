@@ -28,6 +28,10 @@ namespace UnityMVVM.ViewModelCore
 
         private IControllablePromise? _closePromise;
 
+        
+        /// <inheritdoc cref="IViewModel.SubviewCreated"/>
+        public event SubviewCreatedDelegate? SubviewCreated;
+
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
 
@@ -63,6 +67,11 @@ namespace UnityMVVM.ViewModelCore
         void IViewModel.OnOpened()
         {
             OnOpenedInternal();
+        }
+
+        void IViewModel.SetupCompleted()
+        {
+            OnSetupInternal();
         }
 
         /// <inheritdoc cref="CreateSubView(string, IPayload)"/>
@@ -157,9 +166,19 @@ namespace UnityMVVM.ViewModelCore
         }
         
         /// <summary>
-        /// Protected method to handle view opened.
+        /// Protected method to handle view opened. It is being called only for root view opened by view manager.
         /// </summary>
         protected virtual void OnOpenedInternal()
+        {
+            // Do noting.
+            // Supposed to be overriden.
+        }
+        
+        /// <summary>
+        /// Protected method to handle View-ViewModel tree creation completion.
+        /// Called after all initializations and view-viewModel pairings.
+        /// </summary>
+        protected virtual void OnSetupInternal()
         {
             // Do noting.
             // Supposed to be overriden.
@@ -169,6 +188,7 @@ namespace UnityMVVM.ViewModelCore
         {
             subview.Destroyed += OnSubviewDestroyed;
             _subviews.Add(subview);
+            SubviewCreated?.Invoke(this, subview);
         }
 
         private void OnSubviewDestroyed(IViewModel subview)
