@@ -6,6 +6,7 @@ using CCG.MVVM.Card.Model;
 using CCG.MVVM.Card.ViewModel;
 using CCG.MVVM.CoolPopup.Payload;
 using CCG.MVVM.MainScreen.Subviews.TextView;
+using CCG.MVVM.StatsChanger;
 using CCG.Services.Game;
 using UnityEngine;
 using UnityMVVM.ViewManager;
@@ -54,6 +55,7 @@ namespace CCG.MVVM.MainScreen.ViewModel
         protected override void OnSetupInternal()
         {
             CreateSubView(ViewNames.TextView, _cardsContainer, new TextViewPayload("SOME_TEXT"));
+            GetSubview<StatsChangerViewModel>().ChangeCardStat();
         }
 
         private void IntiGame()
