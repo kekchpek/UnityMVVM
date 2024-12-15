@@ -65,6 +65,11 @@ namespace UnityMVVM.ViewModelCore
             OnOpenedInternal();
         }
 
+        void IViewModel.SetupCompleted()
+        {
+            OnSetupInternal();
+        }
+
         /// <inheritdoc cref="CreateSubView(string, IPayload)"/>
         /// <typeparam name="T">Type of the view model.</typeparam>
         protected T CreateSubView<T>(string viewName, IPayload? payload = null) where T : class, IViewModel
@@ -157,9 +162,19 @@ namespace UnityMVVM.ViewModelCore
         }
         
         /// <summary>
-        /// Protected method to handle view opened.
+        /// Protected method to handle view opened. It is being called only for root view opened by view manager.
         /// </summary>
         protected virtual void OnOpenedInternal()
+        {
+            // Do noting.
+            // Supposed to be overriden.
+        }
+        
+        /// <summary>
+        /// Protected method to handle View-ViewModel tree creation completion.
+        /// Called after all initializations and view-viewModel pairings.
+        /// </summary>
+        protected virtual void OnSetupInternal()
         {
             // Do noting.
             // Supposed to be overriden.

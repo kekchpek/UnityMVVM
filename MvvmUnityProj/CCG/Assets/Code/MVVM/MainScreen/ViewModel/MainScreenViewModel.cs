@@ -5,6 +5,7 @@ using CCG.Models.ImageModel;
 using CCG.MVVM.Card.Model;
 using CCG.MVVM.Card.ViewModel;
 using CCG.MVVM.CoolPopup.Payload;
+using CCG.MVVM.MainScreen.Subviews.TextView;
 using CCG.Services.Game;
 using UnityEngine;
 using UnityMVVM.ViewManager;
@@ -49,7 +50,12 @@ namespace CCG.MVVM.MainScreen.ViewModel
         {
             CreateSubView(ViewNames.Card, _cardsContainer, new CardPayload(card));
         }
-        
+
+        protected override void OnSetupInternal()
+        {
+            CreateSubView(ViewNames.TextView, _cardsContainer, new TextViewPayload("SOME_TEXT"));
+        }
+
         private void IntiGame()
         {
             _imageService.LoadImages().OnSuccess(() =>

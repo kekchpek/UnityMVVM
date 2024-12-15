@@ -11,5 +11,6 @@
         public static string LoadingPopup => "LoadingPopup";
         public static string CoolPopup => "CoolPopup";
         public static string SameCoolPopupButWithOtherName => "CoolPopup2";
+        public static string TextView => "TextView";
     }
 }

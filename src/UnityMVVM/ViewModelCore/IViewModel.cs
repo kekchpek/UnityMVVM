@@ -31,6 +31,8 @@ namespace UnityMVVM.ViewModelCore
         
         internal void OnOpened();
         
+        internal void SetupCompleted();
+        
         /// <summary>
         /// Obtains subview of specified type.
         /// If there is no subview of specified type, returns null.
