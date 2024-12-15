@@ -28,6 +28,10 @@ namespace UnityMVVM.ViewModelCore
 
         private IControllablePromise? _closePromise;
 
+        
+        /// <inheritdoc cref="IViewModel.SubviewCreated"/>
+        public event SubviewCreatedDelegate? SubviewCreated;
+
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
 
@@ -184,6 +188,7 @@ namespace UnityMVVM.ViewModelCore
         {
             subview.Destroyed += OnSubviewDestroyed;
             _subviews.Add(subview);
+            SubviewCreated?.Invoke(this, subview);
         }
 
         private void OnSubviewDestroyed(IViewModel subview)

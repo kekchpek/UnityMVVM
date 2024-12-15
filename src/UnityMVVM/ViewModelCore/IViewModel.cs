@@ -23,6 +23,11 @@ namespace UnityMVVM.ViewModelCore
         event Action<IViewModel> Destroyed;
 
         /// <summary>
+        /// Fired on some subview created for this view model.
+        /// </summary>
+        event SubviewCreatedDelegate SubviewCreated;
+
+        /// <summary>
         /// Layer, on which view was opened.
         /// </summary>
         public IViewLayer Layer { get; }
