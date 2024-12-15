@@ -11,6 +11,7 @@ using CCG.MVVM.CoolPopup;
 using CCG.MVVM.HandController;
 using CCG.MVVM.LoadingPopup;
 using CCG.MVVM.MainMenu;
+using CCG.MVVM.MainScreen.Subviews.TextView;
 using CCG.MVVM.MainScreen.View;
 using CCG.MVVM.MainScreen.ViewModel;
 using CCG.MVVM.MainScreen3d;
@@ -57,6 +58,8 @@ namespace CCG.Core
                 _ => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
             Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.SameCoolPopupButWithOtherName, 
                 _ => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
+            Container.InstallView<TextView, ITextViewModel, TextViewModel>(ViewNames.TextView, 
+                _ => Resources.Load<GameObject>("Prefabs/Views/TextView"));
             Container.InstallView<TimeCounterView, ITimeCounterViewModel, TimeCounterViewModel>();
             
             Container.Install<ImageSystemInstaller>();
