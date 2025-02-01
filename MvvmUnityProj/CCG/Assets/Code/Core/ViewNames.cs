@@ -3,14 +3,15 @@
     public static class ViewNames
     {
         public const string MainScreen3d = nameof(MainScreen3d);
-        public static string MainMenu3d => "MainMenu3d";
-        public static string MainMenuUi => "MainMenuUi";
-        public static string MainScreen => "MainScreen";
-        public static string Card => "Card";
-        public static string HandController => "HandController";
-        public static string LoadingPopup => "LoadingPopup";
-        public static string CoolPopup => "CoolPopup";
-        public static string SameCoolPopupButWithOtherName => "CoolPopup2";
-        public static string TextView => "TextView";
+        public const string MainMenu3d = "MainMenu3d";
+        public const string MainMenuUi = "MainMenuUi";
+        public const string MainScreen = "MainScreen";
+        public const string Card = "Card";
+        public const string HandController = "HandController";
+        public const string LoadingPopup = "LoadingPopup";
+        public const string CoolPopup = "CoolPopup";
+        public const string ColorChanger = nameof(ColorChanger);
+        public const string SameCoolPopupButWithOtherName = "CoolPopup2";
+        public const string TextView = "TextView";
     }
 }

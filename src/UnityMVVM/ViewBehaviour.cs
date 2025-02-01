@@ -32,6 +32,12 @@ namespace UnityMVVM
         // ReSharper disable once MemberCanBePrivate.Global
         protected T? ViewModel { get; private set; }
 
+        /// <inheritdoc/>
+        public string GetViewName()
+        {
+            return gameObject.name;
+        }
+
         void IViewInitializer.SetViewModel(IViewModel viewModel)
         {
             SetViewModelInternal((T)viewModel);
@@ -87,7 +93,7 @@ namespace UnityMVVM
         protected virtual void OnViewModelSet()
         {
             ViewModel!.Destroyed += OnViewModelDestroyed;
-            ViewModel.CloseStarted += OnCloseStarted;
+            ViewModel!.CloseStarted += OnCloseStarted;
         }
 
         /// <summary>

@@ -148,9 +148,12 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
                         initializable.Initialize();
                     }
                     data.parent?.AddSubview(viewModel);
-                    
+
                     if (view is IViewInitializer initializer)
+                    {
+                        viewModel.SetName(initializer.GetViewName());
                         _viewFactory.Initialize(initializer, viewModel, isPoolableView);
+                    }
                     else 
                         throw new InvalidCastException($"All view types should be able to be casted to {nameof(IViewInitializer)}");
                     

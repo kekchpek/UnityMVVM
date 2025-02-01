@@ -16,20 +16,22 @@ namespace CCG.MVVM.MainMenu
         [SerializeField] private Button _cylinderButton;
         [SerializeField] private Button _capsuleButton;
         [SerializeField] private Button _coolPopupButton;
+        [SerializeField] private Button _colorChangerButton;
         
         protected override void OnViewModelSet()
         {
             base.OnViewModelSet();
-            ViewModel.IsInteractable.Bind(OnInteractableChanged);
-            ViewModel.PlayButtonShown.Bind(OnPlayButtonShownChange);
-            ViewModel.StatesButtonsShown.Bind(OnStatesButtonsShownChanged);
-            ViewModel.BackButtonShown.Bind(OnBackButtonShownChanged);
-            _cubeButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Cube));
-            _sphereButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Sphere));
-            _cylinderButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Cylinder));
-            _capsuleButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.Capsule));
-            _backButton.onClick.AddListener(() => ViewModel.OnSwitchStateButtonPressed(MainMenuState.None));
-            _coolPopupButton.onClick.AddListener(() => ViewModel.OnCoolPopupBtn());
+            ViewModel!.IsInteractable.Bind(OnInteractableChanged);
+            ViewModel!.PlayButtonShown.Bind(OnPlayButtonShownChange);
+            ViewModel!.StatesButtonsShown.Bind(OnStatesButtonsShownChanged);
+            ViewModel!.BackButtonShown.Bind(OnBackButtonShownChanged);
+            _cubeButton.onClick.AddListener(() => ViewModel!.OnSwitchStateButtonPressed(MainMenuState.Cube));
+            _sphereButton.onClick.AddListener(() => ViewModel!.OnSwitchStateButtonPressed(MainMenuState.Sphere));
+            _cylinderButton.onClick.AddListener(() => ViewModel!.OnSwitchStateButtonPressed(MainMenuState.Cylinder));
+            _capsuleButton.onClick.AddListener(() => ViewModel!.OnSwitchStateButtonPressed(MainMenuState.Capsule));
+            _backButton.onClick.AddListener(() => ViewModel!.OnSwitchStateButtonPressed(MainMenuState.None));
+            _coolPopupButton.onClick.AddListener(() => ViewModel!.OnCoolPopupBtn());
+            _colorChangerButton.onClick.AddListener(() => ViewModel!.OpenColorChanger());
         }
 
         private void OnPlayButtonShownChange(bool shown)
@@ -64,7 +66,7 @@ namespace CCG.MVVM.MainMenu
         protected override void OnViewModelClear()
         {
             base.OnViewModelClear();
-            ViewModel.IsInteractable.Unbind(OnInteractableChanged);
+            ViewModel!.IsInteractable.Unbind(OnInteractableChanged);
             ViewModel.PlayButtonShown.Unbind(OnPlayButtonShownChange);
             ViewModel.StatesButtonsShown.Unbind(OnStatesButtonsShownChanged);
             ViewModel.BackButtonShown.Unbind(OnBackButtonShownChanged);
@@ -75,6 +77,7 @@ namespace CCG.MVVM.MainMenu
             _capsuleButton.onClick.RemoveAllListeners();
             _backButton.onClick.RemoveAllListeners();
             _coolPopupButton.onClick.RemoveAllListeners();
+            _colorChangerButton.onClick.RemoveAllListeners();
         }
     }
 }
