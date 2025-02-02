@@ -17,6 +17,8 @@ using CCG.MVVM.MainScreen.ViewModel;
 using CCG.MVVM.MainScreen3d;
 using CCG.MVVM.PlayButton;
 using CCG.MVVM.StatsChanger;
+using CCG.MVVM.SubviewsColorChanger;
+using CCG.MVVM.SubviewsColorChanger.Color;
 using CCG.MVVM.TimeCounter;
 using CCG.Services.Game;
 using CCG.Services.Startup;
@@ -61,6 +63,8 @@ namespace CCG.Core
             Container.InstallView<TextView, ITextViewModel, TextViewModel>(ViewNames.TextView, 
                 _ => Resources.Load<GameObject>("Prefabs/Views/TextView"));
             Container.InstallView<TimeCounterView, ITimeCounterViewModel, TimeCounterViewModel>();
+            Container.InstallView<ColorView, IColorViewModel, ColorViewModel>();
+            Container.InstallView<ColorChangerView, IColorChangerViewModel, ColorChangerViewModel>(ViewNames.ColorChanger);
             
             Container.Install<ImageSystemInstaller>();
             

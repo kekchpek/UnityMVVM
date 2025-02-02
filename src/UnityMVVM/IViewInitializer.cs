@@ -12,6 +12,12 @@ namespace UnityMVVM
     {
 
         /// <summary>
+        /// Should return a view name, that shall be use for view and its view-model identification.
+        /// </summary>
+        /// <returns>The name of the view.</returns>
+        string GetViewId();
+
+        /// <summary>
         /// Sets the view model.
         /// </summary>
         /// <param name="viewModel"></param>
