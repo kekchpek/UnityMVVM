@@ -21,7 +21,10 @@ namespace UnityMVVM
 
         private Vector3 _initialScale;
 
-        private void Awake()
+        /// <summary>
+        /// Unity lifecycle event.
+        /// </summary>
+        protected virtual void Awake()
         {
             _initialScale = transform.localScale;
         }

@@ -13,8 +13,9 @@ namespace CCG.MVVM.SubviewsColorChanger
         [SerializeField]
         private Button _closeButton;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _changeColorButton.onClick.AddListener(() => ViewModel?.ChangeColor());
             _closeButton.onClick.AddListener(() => ViewModel?.Close());
         }
