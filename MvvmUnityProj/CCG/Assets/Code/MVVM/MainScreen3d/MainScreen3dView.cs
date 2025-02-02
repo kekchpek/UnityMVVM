@@ -18,8 +18,9 @@ namespace CCG.MVVM.MainScreen3d
             _cameraService = cameraService;
         }
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _cameraService.UseCamera(_camera);
         }
     }
