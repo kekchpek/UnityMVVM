@@ -35,8 +35,8 @@ namespace UnityMVVM.ViewModelCore
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
 
-        /// <inheritdoc cref="IViewModel.Name"/>
-        public string Name { get; private set; } = "<UNDEFINED>";
+        /// <inheritdoc cref="IViewModel.Id"/>
+        public string Id { get; private set; } = "<UNDEFINED>";
 
         /// <inheritdoc cref="IViewModel.Destroyed"/>
         public event Action<IViewModel>? Destroyed;
@@ -64,9 +64,9 @@ namespace UnityMVVM.ViewModelCore
             }
         }
 
-        void IViewModel.SetName(string name)
+        void IViewModel.SetId(string name)
         {
-            Name = name;
+            Id = name;
         }
 
         /// <summary>
@@ -146,11 +146,11 @@ namespace UnityMVVM.ViewModelCore
         }
 
         /// <inheritdoc />
-        public T? GetSubview<T>(string? viewName = null) where T : IViewModel
+        public T? GetSubview<T>(string? viewId = null) where T : IViewModel
         {
             foreach (var subview in _subviews)
             {
-                if (subview is T outcome && (viewName == null || subview.Name == viewName))
+                if (subview is T outcome && (viewId == null || subview.Id == viewId))
                 {
                     return outcome;
                 }

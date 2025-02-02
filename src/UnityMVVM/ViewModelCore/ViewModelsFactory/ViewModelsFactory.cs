@@ -151,7 +151,7 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
 
                     if (view is IViewInitializer initializer)
                     {
-                        viewModel.SetName(initializer.GetViewName());
+                        viewModel.SetId(initializer.GetViewId());
                         _viewFactory.Initialize(initializer, viewModel, isPoolableView);
                     }
                     else 

@@ -31,15 +31,15 @@ namespace UnityMVVM.ViewModelCore
         /// Layer, on which view was opened.
         /// </summary>
         public IViewLayer Layer { get; }
-        
+
         /// <summary>
-        /// The name of a view to be identified.
+        /// The id of a view.
         /// </summary>
-        public string Name { get; }
+        public string Id { get; }
         
         internal void AddSubview(IViewModel child);
-
-        internal void SetName(string name);
+        
+        internal void SetId(string name);
         
         internal void OnOpened();
         
@@ -51,9 +51,9 @@ namespace UnityMVVM.ViewModelCore
         /// If there are several subviews with this type, returns the first found.
         /// </summary>
         /// <typeparam name="T">The type of a subview.</typeparam>
-        /// <param name="viewName">The name of a subview to find. In case of null, any view name will be accepted.</param>
+        /// <param name="viewId">The id of a subview to find. In case of null, any view name will be accepted.</param>
         /// <returns>Returns subview of specified type or null.</returns>
-        T? GetSubview<T>(string? viewName = null) where T : IViewModel;
+        T? GetSubview<T>(string? viewId = null) where T : IViewModel;
         
         /// <summary>
         /// Obtains all subviews of specified type.
