@@ -33,7 +33,7 @@ namespace UnityMVVM
         protected T? ViewModel { get; private set; }
 
         /// <inheritdoc/>
-        public string GetViewId()
+        public virtual string GetViewId()
         {
             return gameObject.name;
         }
