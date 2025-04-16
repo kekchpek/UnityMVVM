@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AsyncReactAwait.Bindable;
-using AsyncReactAwait.Promises;
 using UnityEngine;
 using UnityMVVM.ViewManager.ViewLayer;
 using UnityMVVM.ViewModelCore;
@@ -53,7 +52,8 @@ namespace UnityMVVM.ViewManager
         /// <param name="viewLayerId">A layer, where view should be created.</param>
         /// <param name="viewName">The identifier of the view.</param>
         /// <param name="payload">View model payload.</param>
-        public IPromise<IViewModel?> Open(string viewLayerId, string viewName, IPayload? payload = null);
+        /// <returns>Handle, that indicates view opening process</returns>
+        public ValueTask<IViewModel?> Open(string viewLayerId, string viewName, IPayload? payload = null);
 
         /// <summary>
         /// Creates view model and corresponding view.
@@ -61,20 +61,22 @@ namespace UnityMVVM.ViewManager
         /// <param name="viewLayerId">A layer, where view should be created.</param>
         /// <param name="payload">View model payload.</param>
         /// <param name="viewName">The identifier of the view.</param>
-        /// <returns>The promise that indicates open process.</returns>
-        public IPromise OpenExact(string viewLayerId, string viewName, IPayload? payload = null);
+        /// <returns>The handle, that indicates open process.</returns>
+        public ValueTask OpenExact(string viewLayerId, string viewName, IPayload? payload = null);
 
         /// <summary>
         /// Destroys all view on specified layer.
         /// </summary>
         /// <param name="viewLayerId">A layer on which views should be closed.</param>
-        public IPromise CloseExact(string viewLayerId);
+        /// <returns>The handle, that indicates closing process.</returns>
+        public ValueTask CloseExact(string viewLayerId);
         
         /// <summary>
         /// Close all view on specified layer and all layer above(Starting from the top one).
         /// </summary>
         /// <param name="viewLayerId">A layer on which views should be closed.</param>
-        public IPromise Close(string viewLayerId);
+        /// <returns>The handle, that indicates closing process.</returns>
+        public ValueTask Close(string viewLayerId);
 
         /// <summary>
         /// Gets a name of the view on the specified layer.

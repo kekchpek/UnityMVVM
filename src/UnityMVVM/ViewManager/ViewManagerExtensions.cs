@@ -1,5 +1,5 @@
 using System;
-using AsyncReactAwait.Promises;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityMVVM.ViewModelCore;
 
@@ -22,7 +22,7 @@ namespace UnityMVVM.ViewManager
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
-        public static async IPromise<T?> Open<T>(this IViewManager viewManager, string viewLayerId, string viewName, IPayload? payload = null)
+        public static async ValueTask<T?> Open<T>(this IViewManager viewManager, string viewLayerId, string viewName, IPayload? payload = null)
             where T : class, IViewModel
         {
             var viewModel = await viewManager.Open(viewLayerId, viewName, payload);
