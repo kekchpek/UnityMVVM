@@ -1,4 +1,5 @@
 using CCG.Core.Camera;
+using CCG.Core.CustomViewManager;
 using CCG.Core.Installers;
 using CCG.Core.Screen;
 using CCG.Models.Hand.Model;
@@ -10,18 +11,23 @@ using CCG.MVVM.CoolPopup;
 using CCG.MVVM.HandController;
 using CCG.MVVM.LoadingPopup;
 using CCG.MVVM.MainMenu;
+using CCG.MVVM.MainScreen.Subviews.TextView;
 using CCG.MVVM.MainScreen.View;
 using CCG.MVVM.MainScreen.ViewModel;
 using CCG.MVVM.MainScreen3d;
 using CCG.MVVM.PlayButton;
 using CCG.MVVM.StatsChanger;
+using CCG.MVVM.SubviewsColorChanger;
+using CCG.MVVM.SubviewsColorChanger.Color;
 using CCG.MVVM.TimeCounter;
 using CCG.Services.Game;
 using CCG.Services.Startup;
 using SurvivedWarrior.MVVM.Models.Time;
 using UnityEngine;
 using UnityMVVM.DI;
+using UnityMVVM.ViewManager;
 using UnityMVVM.ViewModelCore;
+using UnityMVVM.ViewModelCore.PrefabsProvider;
 using Zenject;
 
 namespace CCG.Core
@@ -30,27 +36,35 @@ namespace CCG.Core
     {
         public override void InstallBindings()
         {
-            Container.InstallPoolableView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen,
-                () => Resources.Load<GameObject>("Prefabs/Views/MainScreenView"));
-            Container.InstallView<MainScreen3dView, IViewModel, ViewModel>(ViewNames.MainScreen3d,
-                () => Resources.Load<GameObject>("Prefabs/Views/MainScreen3dView"));
+
+            Container.Decorate<IViewManager>().With<LogViewManagerDecorator>();
+
+            Container.Bind<IViewsPrefabsProvider>().To<ResourcesPrefabProvider>().AsSingle();
+            Container.ProvideAccessForViewModelLayer<IViewsPrefabsProvider>();
+            
+            Container.InstallPoolableView<MainScreenView, IMainScreenViewModel, MainScreenViewModel>(ViewNames.MainScreen);
+            Container.InstallView<MainScreen3dView, IViewModel, ViewModel>(ViewNames.MainScreen3d);
             Container.InstallView<StatsChangerView, IStatsChangerViewModel, StatsChangerViewModel>();
             Container.InstallView<PlayButtonView, IPlayButtonViewModel, PlayButtonViewModel>();
             Container.InstallView<HandControllerView, IHandControllerViewModel, HandControllerViewModel>(ViewNames.HandController, 
-                () => Resources.Load<GameObject>("Prefabs/Views/HandController"));
+                _ => Resources.Load<GameObject>("Prefabs/Views/HandController"));
             Container.InstallPoolableView<CardView, ICardViewModel, CardViewModel>(ViewNames.Card, 
-                () => Resources.Load<GameObject>("Prefabs/Views/CardView"));
+                _ => Resources.Load<GameObject>("Prefabs/Views/CardView"));
             Container.InstallView<MainMenuView3d, IMainMenuViewModel3d, MainMenuViewModel3d>(ViewNames.MainMenu3d, 
-                () => Resources.Load<GameObject>("Prefabs/Views/MainMenu3d/MainMenu3dScene"));
+                _ => Resources.Load<GameObject>("Prefabs/Views/MainMenu3d/MainMenu3dScene"));
             Container.InstallView<MainMenuViewUi, IMainMenuViewModelUi, MainMenuViewModelUi>(ViewNames.MainMenuUi, 
-                () => Resources.Load<GameObject>("Prefabs/Views/MainMenuUi/MainMenuUi"));
+                _ => Resources.Load<GameObject>("Prefabs/Views/MainMenuUi/MainMenuUi"));
             Container.InstallView<LoadingPopupView, IViewModel, ViewModel>(ViewNames.LoadingPopup, 
-                () => Resources.Load<GameObject>("Prefabs/Views/LoadingPopup"));
+                _ => Resources.Load<GameObject>("Prefabs/Views/LoadingPopup"));
             Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.CoolPopup, 
-                () => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
+                _ => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
             Container.InstallView<CoolPopupView, ICoolPopupViewModel, CoolPopupViewModel>(ViewNames.SameCoolPopupButWithOtherName, 
-                () => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
+                _ => Resources.Load<GameObject>("Prefabs/Views/CoolPopup/CoolPopup"));
+            Container.InstallView<TextView, ITextViewModel, TextViewModel>(ViewNames.TextView, 
+                _ => Resources.Load<GameObject>("Prefabs/Views/TextView"));
             Container.InstallView<TimeCounterView, ITimeCounterViewModel, TimeCounterViewModel>();
+            Container.InstallView<ColorView, IColorViewModel, ColorViewModel>();
+            Container.InstallView<ColorChangerView, IColorChangerViewModel, ColorChangerViewModel>(ViewNames.ColorChanger);
             
             Container.Install<ImageSystemInstaller>();
             

@@ -47,5 +47,10 @@ namespace CCG.MVVM.MainMenu
         {
             await OpenView(ViewLayerIds.Popup, ViewNames.CoolPopup, new CoolPopupPayload(false));
         }
+
+        public async void OpenColorChanger()
+        {
+            await OpenView(ViewLayerIds.Popup, ViewNames.ColorChanger);
+        }
     }
 }

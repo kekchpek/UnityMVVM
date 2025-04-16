@@ -11,6 +11,6 @@ namespace UnityMVVM.DI.Config
         /// <summary>
         /// The view factory to use for views creation and initialization.
         /// </summary>
-        public IViewFactory? ViewFactory;
+        public IViewFactory? viewFactory;
     }
 }

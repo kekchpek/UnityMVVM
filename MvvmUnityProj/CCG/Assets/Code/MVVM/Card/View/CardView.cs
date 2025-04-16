@@ -54,8 +54,9 @@ namespace CCG.MVVM.Card.View
             _screenAdapter = screenAdapter;
         }
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _transform = transform;
         }
         

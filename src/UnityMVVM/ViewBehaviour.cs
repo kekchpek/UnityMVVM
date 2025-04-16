@@ -21,7 +21,10 @@ namespace UnityMVVM
 
         private Vector3 _initialScale;
 
-        private void Awake()
+        /// <summary>
+        /// Unity lifecycle event.
+        /// </summary>
+        protected virtual void Awake()
         {
             _initialScale = transform.localScale;
         }
@@ -31,6 +34,12 @@ namespace UnityMVVM
         /// </summary>
         // ReSharper disable once MemberCanBePrivate.Global
         protected T? ViewModel { get; private set; }
+
+        /// <inheritdoc/>
+        public virtual string GetViewId()
+        {
+            return gameObject.name;
+        }
 
         void IViewInitializer.SetViewModel(IViewModel viewModel)
         {
@@ -87,7 +96,7 @@ namespace UnityMVVM
         protected virtual void OnViewModelSet()
         {
             ViewModel!.Destroyed += OnViewModelDestroyed;
-            ViewModel.CloseStarted += OnCloseStarted;
+            ViewModel!.CloseStarted += OnCloseStarted;
         }
 
         /// <summary>

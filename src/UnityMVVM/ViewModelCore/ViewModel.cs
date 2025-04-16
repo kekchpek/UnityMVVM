@@ -29,8 +29,15 @@ namespace UnityMVVM.ViewModelCore
         private readonly TaskCompletionSource<bool> _closeTask = new();
         private bool _isClosing;
 
+        
+        /// <inheritdoc cref="IViewModel.SubviewCreated"/>
+        public event SubviewCreatedDelegate? SubviewCreated;
+
         /// <inheritdoc cref="IViewModel.Layer"/>
         public IViewLayer Layer => _layer;
+
+        /// <inheritdoc cref="IViewModel.Id"/>
+        public string Id { get; private set; } = "<UNDEFINED>";
 
         /// <inheritdoc cref="IViewModel.Destroyed"/>
         public event Action<IViewModel>? Destroyed;
@@ -58,6 +65,11 @@ namespace UnityMVVM.ViewModelCore
             }
         }
 
+        void IViewModel.SetId(string name)
+        {
+            Id = name;
+        }
+
         /// <summary>
         /// Invoked by MVVM core when view is opened.
         /// </summary>
@@ -66,8 +78,14 @@ namespace UnityMVVM.ViewModelCore
             OnOpenedInternal();
         }
 
+        void IViewModel.SetupCompleted()
+        {
+            OnSetupInternal();
+        }
+
         /// <inheritdoc cref="CreateSubView(string, IPayload)"/>
         /// <typeparam name="T">Type of the view model.</typeparam>
+        // ReSharper disable once UnusedMember.Global because it is supposed to be used by users
         protected T CreateSubView<T>(string viewName, IPayload? payload = null) where T : class, IViewModel
         {
             return CreateSubView<T>(viewName, _layer.Container, payload);
@@ -79,6 +97,7 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
         /// <returns>Created view model.</returns>
+        // ReSharper disable once UnusedMember.Global because it is supposed to be used by users
         protected IViewModel CreateSubView(string viewName, IPayload? payload = null)
         {
             return CreateSubView(viewName, _layer.Container, payload);
@@ -122,17 +141,18 @@ namespace UnityMVVM.ViewModelCore
         /// <param name="viewName">The view identifier to open.</param>
         /// <param name="payload">The view model payload.</param>
         /// <returns>A handle, that indicates opening process.</returns>
+        // ReSharper disable once UnusedMember.Global because it is supposed to be used by users
         protected async ValueTask OpenView(string viewLayerId, string viewName, IPayload? payload = null)
         {
             await _viewManager.Open(viewLayerId, viewName, payload);
         }
 
         /// <inheritdoc />
-        public T? GetSubview<T>() where T : IViewModel
+        public T? GetSubview<T>(string? viewId = null) where T : IViewModel
         {
             foreach (var subview in _subviews)
             {
-                if (subview is T outcome)
+                if (subview is T outcome && (viewId == null || subview.Id == viewId))
                 {
                     return outcome;
                 }
@@ -159,9 +179,19 @@ namespace UnityMVVM.ViewModelCore
         }
         
         /// <summary>
-        /// Protected method to handle view opened.
+        /// Protected method to handle view opened. It is being called only for root view opened by view manager.
         /// </summary>
         protected virtual void OnOpenedInternal()
+        {
+            // Do noting.
+            // Supposed to be overriden.
+        }
+        
+        /// <summary>
+        /// Protected method to handle View-ViewModel tree creation completion.
+        /// Called after all initializations and view-viewModel pairings.
+        /// </summary>
+        protected virtual void OnSetupInternal()
         {
             // Do noting.
             // Supposed to be overriden.
@@ -171,6 +201,7 @@ namespace UnityMVVM.ViewModelCore
         {
             subview.Destroyed += OnSubviewDestroyed;
             _subviews.Add(subview);
+            SubviewCreated?.Invoke(this, subview);
         }
 
         private void OnSubviewDestroyed(IViewModel subview)

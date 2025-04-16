@@ -146,7 +146,7 @@ namespace UnityMVVM.ViewManager
 
         public IViewModel Create(IViewModel parent, string viewName, Transform container, IPayload? payload = null)
         {
-            return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, parent, container, payload);
+            return _viewsContainer.ResolveViewFactory(viewName).Create(parent.Layer, viewName, parent, container, payload);
         }
 
         /// <inheritdoc cref="IViewManager.Open(string, string, IPayload)"/>
@@ -188,7 +188,7 @@ namespace UnityMVVM.ViewManager
 
         private IViewModel CreateViewOnLayer(string viewName, IViewLayer layer, IPayload? payload)
         {
-            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, null, layer.Container, payload);
+            var viewModel = _viewsContainer.ResolveViewFactory(viewName).Create(layer, viewName, null, layer.Container, payload);
             _createdViewsNames.Add(viewModel, viewName);
             viewModel.Destroyed += OnViewModelDestroyed;
             layer.Set(viewModel);

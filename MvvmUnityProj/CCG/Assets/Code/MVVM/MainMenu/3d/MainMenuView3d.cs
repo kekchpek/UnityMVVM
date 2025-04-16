@@ -24,8 +24,9 @@ namespace CCG.MVVM.MainMenu
             _cameraService = cameraService;
         }
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _cameraService.UseCamera(_camera);
         }
 

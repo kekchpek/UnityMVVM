@@ -11,5 +11,6 @@ namespace CCG.MVVM.MainMenu
         IBindable<bool> StatesButtonsShown { get; }
         void OnSwitchStateButtonPressed(MainMenuState state);
         void OnCoolPopupBtn();
+        void OpenColorChanger();
     }
 }

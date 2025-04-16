@@ -23,13 +23,27 @@ namespace UnityMVVM.ViewModelCore
         event Action<IViewModel> Destroyed;
 
         /// <summary>
+        /// Fired on some subview created for this view model.
+        /// </summary>
+        event SubviewCreatedDelegate SubviewCreated;
+
+        /// <summary>
         /// Layer, on which view was opened.
         /// </summary>
         public IViewLayer Layer { get; }
+
+        /// <summary>
+        /// The id of a view.
+        /// </summary>
+        public string Id { get; }
         
         internal void AddSubview(IViewModel child);
         
+        internal void SetId(string name);
+        
         internal void OnOpened();
+        
+        internal void SetupCompleted();
         
         /// <summary>
         /// Obtains subview of specified type.
@@ -37,8 +51,9 @@ namespace UnityMVVM.ViewModelCore
         /// If there are several subviews with this type, returns the first found.
         /// </summary>
         /// <typeparam name="T">The type of a subview.</typeparam>
+        /// <param name="viewId">The id of a subview to find. In case of null, any view name will be accepted.</param>
         /// <returns>Returns subview of specified type or null.</returns>
-        T? GetSubview<T>() where T : IViewModel;
+        T? GetSubview<T>(string? viewId = null) where T : IViewModel;
         
         /// <summary>
         /// Obtains all subviews of specified type.

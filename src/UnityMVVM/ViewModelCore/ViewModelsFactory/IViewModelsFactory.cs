@@ -13,11 +13,13 @@ namespace UnityMVVM.ViewModelCore.ViewModelsFactory
         /// Creates view and its view model
         /// </summary>
         /// <param name="viewLayer">Layer to place a view.</param>
+        /// <param name="viewName">The name of view to create.</param>
         /// <param name="parent">Parent view model to set to the created view model.</param>
         /// <param name="parentTransform">The transform to instantiate the view to.</param>
         /// <param name="payload">View model payload.</param>
         /// <returns>Returns created view model to control the view.</returns>
-        IViewModel Create(IViewLayer viewLayer, 
+        IViewModel Create(IViewLayer viewLayer,
+            string viewName,
             IViewModel? parent,
             Transform parentTransform,
             IPayload? payload = null);
